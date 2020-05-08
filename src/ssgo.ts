@@ -1,5 +1,9 @@
+import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
+
 import { walkSync } from "https://deno.land/std/fs/walk.ts";
 import { existsSync } from "https://deno.land/std/fs/exists.ts";
+import { writeFileStrSync } from "https://deno.land/std/fs/write_file_str.ts";
+import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
 
 import { CREATORS_DIR_ABS } from "./constants.ts";
 import {
@@ -10,6 +14,7 @@ import {
   IBuildPageCall,
 } from "./types.ts";
 import { isScript } from "./utils.ts";
+import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
 
@@ -49,11 +54,6 @@ function cacheBuildPageCall(
 }
 
 /**
- * Parse the templates
- */
-function parse() {}
-
-/**
  * Bind templates to the custom-components and static files they use
  */
 function bindTemplateToStatic() {}
@@ -71,13 +71,18 @@ function serialize() {}
 // ----- internals ----- //
 
 /**
+ * Build a given template with given data and write the file to fs
  * Function given to creators as first param
  */
 function buildPage(
   templateAbs: string,
   data: IContextData,
   options: IBuildPageOptions
-) {}
+) {
+  const read = readFileStrSync(templateAbs, { encoding: "utf8" });
+  const parsed = parse(read);
+  const built = parsed.map((inode) => buildHtml(inode, data));
+}
 
 /**
  * Build the project

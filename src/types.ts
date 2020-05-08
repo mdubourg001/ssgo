@@ -25,6 +25,10 @@ export interface ICreator {
   pageBuildCalls: IBuildPageCall[];
 }
 
+export interface IStaticFoundEvent {
+  staticAbs: string;
+}
+
 // ----- public ----- //
 
 export interface IContextData extends Record<string, any> {}
