@@ -1,4 +1,18 @@
+import { INode as IHTML5ParserNode } from "https://cdn.pika.dev/html5parser@^1.1.0";
+
 // ----- internal ----- //
+
+export type INode = IHTML5ParserNode & {
+  parent?: { body: { push: (node: INode) => void } } | INode;
+};
+
+export enum IAttribute {
+  IF = "if",
+  FOR = "for",
+  OF = "of",
+  EVAL = "eval:",
+  static = "static:",
+}
 
 export interface IStaticFile {
   name: string;

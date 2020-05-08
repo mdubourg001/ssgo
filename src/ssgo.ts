@@ -7,6 +7,7 @@ import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
 
 import { CREATORS_DIR_ABS } from "./constants.ts";
 import {
+  INode,
   ICreator,
   IContextData,
   IBuildPageOptions,
@@ -81,7 +82,19 @@ function buildPage(
 ) {
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
   const parsed = parse(read);
-  const built = parsed.map((inode) => buildHtml(inode, data));
+  // has for/of handling push node clones into parent's body, this allows it for root node
+  const parentHack = { body: { push: (node: INode) => parsed.push(node) } };
+  parsed.forEach((node: INode) => {
+    node.parent = parentHack;
+    buildHtml(
+      node,
+      data,
+      () => {},
+      () => {}
+    );
+  });
+
+  console.log(parsed);
 }
 
 /**
