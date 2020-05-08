@@ -14,7 +14,7 @@ import {
   IBuildPageParams,
   IBuildPageCall,
 } from "./types.ts";
-import { isScript } from "./utils.ts";
+import { isScript, mockParent, formatAttributes } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
@@ -60,14 +60,27 @@ function cacheBuildPageCall(
 function bindTemplateToStatic() {}
 
 /**
- * Do the expressions evaluation work
- */
-function evaluate() {}
-
-/**
  * Serialize back to HTML files
  */
-function serialize() {}
+function serialize(node: INode) {
+  let result = "";
+
+  if ("rawName" in node && node.rawName === "!--") {
+    return "";
+  } else if (node.type === "Text") {
+    result += node.value;
+  } else if (node.type === "Tag") {
+    result += `<${node.rawName} ${formatAttributes(node.attributes)}`;
+    if (node.close === null) return result + "/>";
+    else result += ">";
+
+    for (let child of node.body || []) result += serialize(child);
+
+    result += node.close?.value;
+  }
+
+  return result;
+}
 
 // ----- internals ----- //
 
@@ -82,10 +95,10 @@ function buildPage(
 ) {
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
   const parsed = parse(read);
-  // has for/of handling push node clones into parent's body, this allows it for root node
-  const parentHack = { body: { push: (node: INode) => parsed.push(node) } };
+  const root = mockParent(parsed);
+
   parsed.forEach((node: INode) => {
-    node.parent = parentHack;
+    node.parent = root;
     buildHtml(
       node,
       data,
@@ -94,7 +107,9 @@ function buildPage(
     );
   });
 
-  console.log(parsed);
+  const serialized = parsed.map((node: INode) => serialize(node)).join("");
+
+  console.log(serialized);
 }
 
 /**

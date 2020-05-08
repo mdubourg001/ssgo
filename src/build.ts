@@ -1,3 +1,4 @@
+import { v4 } from "https://deno.land/std/uuid/mod.ts";
 import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
 
 import { INode, IAttribute, IContextData, IStaticFoundEvent } from "./types.ts";
@@ -64,6 +65,9 @@ function computeForOf(
         )
     );
 
+    // generating a unique uuid for all clones
+    node.cloneId = v4.generate();
+
     let index = 0;
     for (const item of evaluatedOf) {
       const clone: INode = cloneDeep(node);
@@ -77,8 +81,15 @@ function computeForOf(
 
       if (!!node.parent && "body" in node.parent) {
         clone.parent = node.parent;
-        (clone.parent.body || []).push(clone);
+        (clone.parent.body as INode[]).push(clone);
       }
+    }
+
+    // remove the node itself from parent's body
+    if (!!node.parent && "body" in node.parent) {
+      node.parent.body = (node.parent.body as INode[]).filter(
+        (n) => n !== node
+      );
     }
   }
 }
@@ -122,6 +133,9 @@ export function buildHtml(
   onCustomComponentFound: (event: IStaticFoundEvent) => void,
   onStaticFileFound: (event: IStaticFoundEvent) => void
 ) {
+  // preventing double builds of nodes
+  if (alreadyBuilt.includes(node)) return;
+
   computeForOf(node, data, onCustomComponentFound, onStaticFileFound);
   computeIf(node, data);
   computeCustomComponents(node, data, onCustomComponentFound);
@@ -134,4 +148,6 @@ export function buildHtml(
       buildHtml(childNode, data, onCustomComponentFound, onStaticFileFound);
     }
   }
+
+  alreadyBuilt.push(node);
 }

@@ -4,6 +4,7 @@ import { INode as IHTML5ParserNode } from "https://cdn.pika.dev/html5parser@^1.1
 
 export type INode = IHTML5ParserNode & {
   parent?: { body: { push: (node: INode) => void } } | INode;
+  cloneId?: string;
 };
 
 export enum IAttribute {
