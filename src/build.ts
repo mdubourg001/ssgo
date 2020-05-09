@@ -66,7 +66,7 @@ function computeForOf(
     );
 
     // generating a unique uuid for all clones
-    node.cloneId = v4.generate();
+    node.uuid = v4.generate();
     const clones: INode[] = [];
 
     let index = 0;
@@ -89,8 +89,8 @@ function computeForOf(
     if (!!node.parent) {
       const parent = "body" in node.parent ? node.parent.body : node.parent;
       const index = (parent as Array<INode>)
-        .map((item) => item.cloneId)
-        .lastIndexOf(node.cloneId ?? "");
+        .map((item) => item.uuid)
+        .lastIndexOf(node.uuid ?? "");
 
       if (index !== -1) {
         // add clones next to node in parent's body
@@ -105,6 +105,46 @@ function computeForOf(
  * Handle the if attribute pair
  */
 function computeIf(node: INode, data: IContextData): boolean {
+  // ----- errors handling ----- //
+
+  if ("attributes" in node) {
+    const ifAttr = node.attributes.find(
+      (attr) => attr.name.value === IAttribute.IF
+    );
+
+    if (!ifAttr) return true;
+
+    if (ifAttr && typeof ifAttr.value === "undefined")
+      throw new Error(
+        `When parsing "${node.open.value}" : The ${IAttribute.IF} attribute must be given a value.`
+      );
+
+    // ----- logic ----- //
+
+    const evaluatedIf: boolean = contextEval(ifAttr?.value?.value ?? "", data);
+
+    if (!evaluatedIf && !!node.parent) {
+      // generating a unique uuid for clone to remove
+      node.uuid = v4.generate();
+      const parent = "body" in node.parent ? node.parent.body : node.parent;
+      const index = (parent as Array<INode>).findIndex(
+        (n) => n.uuid === node.uuid
+      );
+
+      if (index !== -1) {
+        // remove the node from parent's body
+        (parent as Array<INode>).splice(index, 1);
+      }
+
+      return false;
+    }
+
+    // remove the if attribute from node attributes
+    node.attributes = node.attributes.filter(
+      (attr) => attr.name.value !== IAttribute.IF.toString()
+    );
+  }
+
   return true;
 }
 
@@ -148,7 +188,7 @@ export function buildHtml(
   if (alreadyBuilt.includes(node)) return;
 
   computeForOf(node, data, onCustomComponentFound, onStaticFileFound);
-  computeIf(node, data);
+  if (!computeIf(node, data)) return;
   computeCustomComponents(node, data, onCustomComponentFound);
   computeStaticFiles(node, data, onStaticFileFound);
   computeText(node, data);
