@@ -1,1 +1,1 @@
-- [ ] Fix `mockParent` to properly allow top-level for/of 
+- [x] Fix top-level for/of 

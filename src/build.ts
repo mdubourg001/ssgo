@@ -2,7 +2,7 @@ import { v4 } from "https://deno.land/std/uuid/mod.ts";
 import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
 
 import { INode, IAttribute, IContextData, IStaticFoundEvent } from "./types.ts";
-import { contextEval } from "./utils.ts";
+import { contextEval, interpolate } from "./utils.ts";
 
 const alreadyBuilt: INode[] = [];
 
@@ -67,10 +67,12 @@ function computeForOf(
 
     // generating a unique uuid for all clones
     node.cloneId = v4.generate();
+    const clones: INode[] = [];
 
     let index = 0;
     for (const item of evaluatedOf) {
       const clone: INode = cloneDeep(node);
+      clones.push(clone);
 
       buildHtml(
         clone,
@@ -81,15 +83,20 @@ function computeForOf(
 
       if (!!node.parent && "body" in node.parent) {
         clone.parent = node.parent;
-        (clone.parent.body as INode[]).push(clone);
       }
     }
 
-    // remove the node itself from parent's body
-    if (!!node.parent && "body" in node.parent) {
-      node.parent.body = (node.parent.body as INode[]).filter(
-        (n) => n !== node
-      );
+    if (!!node.parent) {
+      const parent = "body" in node.parent ? node.parent.body : node.parent;
+      const index = (parent as Array<INode>)
+        .map((item) => item.cloneId)
+        .lastIndexOf(node.cloneId ?? "");
+
+      if (index !== -1) {
+        // add clones next to node in parent's body
+        // remove the node itself from parent's body
+        (parent as Array<INode>).splice(index, 1, ...clones);
+      }
     }
   }
 }
@@ -122,7 +129,11 @@ function computeStaticFiles(
 /**
  * Handle interpolation of given text node
  */
-function computeText(node: INode, data: IContextData) {}
+function computeText(node: INode, data: IContextData) {
+  if (node.type === "Text") {
+    node.value = interpolate(node.value, data);
+  }
+}
 
 /**
  * Drive the node build, and recursively call on node's children

@@ -1,7 +1,6 @@
-import eqDeep from "https://deno.land/x/lodash/eqDeep.js";
 import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
 
-import { INode, IContextData } from "./types.ts";
+import { IContextData } from "./types.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
@@ -25,25 +24,6 @@ export function contextEval(expression: string, context: IContextData) {
 }
 
 /**
- * Has for/of handling push node clones into parent's body, this allows it for root node
- */
-export function mockParent(root: INode[]) {
-  return {
-    body: {
-      push: (node: INode) => {
-        const updated: INode[] = [];
-        for (let i = root.length - 1; i >= 0; i--) {
-          if (root[i].cloneId === node.cloneId) updated.push(node, root[i]);
-          else updated.push(root[i]);
-        }
-        root = updated;
-      },
-      filter: root.filter,
-    },
-  };
-}
-
-/**
  * Get attributes as a name="value" string
  */
 export function formatAttributes(attributes: IAttribute[]) {
@@ -58,4 +38,12 @@ export function formatAttributes(attributes: IAttribute[]) {
   return result;
 }
 
-console.log();
+/**
+ * Handle interpolation of text with context data
+ */
+export function interpolate(templateStr: string, data?: IContextData) {
+  // FIXME - This allow everything as long as the second char isn't a opening bracket ('{')
+  return templateStr.replace(/{{\s*{{0,1}[^{]+\s*}}/g, (match) => {
+    return contextEval(match, data ?? {});
+  });
+}

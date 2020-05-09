@@ -14,7 +14,7 @@ import {
   IBuildPageParams,
   IBuildPageCall,
 } from "./types.ts";
-import { isScript, mockParent, formatAttributes } from "./utils.ts";
+import { isScript, formatAttributes } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
@@ -95,10 +95,9 @@ function buildPage(
 ) {
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
   const parsed = parse(read);
-  const root = mockParent(parsed);
 
   parsed.forEach((node: INode) => {
-    node.parent = root;
+    node.parent = parsed;
     buildHtml(
       node,
       data,
