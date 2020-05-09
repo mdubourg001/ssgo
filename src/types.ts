@@ -5,15 +5,16 @@ import { INode as IHTML5ParserNode } from "https://cdn.pika.dev/html5parser@^1.1
 export type INode = IHTML5ParserNode & {
   parent?: INode | INode[];
   uuid?: string;
+  built?: boolean;
 };
 
-export enum IAttribute {
-  IF = "if",
-  FOR = "for",
-  OF = "of",
-  EVAL = "eval:",
-  static = "static:",
-}
+export const IAttribute = {
+  IF: "if",
+  FOR: "for",
+  OF: "of",
+  EVAL: "eval:",
+  static: "static:",
+};
 
 export interface IStaticFile {
   name: string;
@@ -22,6 +23,7 @@ export interface IStaticFile {
 
 export interface ICustomComponent {
   name: string;
+  path: string;
 }
 
 export interface ITemplate {

@@ -1,11 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <h1 for="title" of="title">{title}</h1>
-  </body>
-</html>
+<p if="true">true</p>
+<p if="false">false</p>
+<p if="title">{{ title }}</p>
+
+<div id="wrapper" class="fruit" hidden>
+  <p if="true">true</p>
+  <p if="false">false</p>
+
+  <p if="fruit === 'apple'" for="fruit" of="['apple', 'banana']">
+    {{ index + 1 }} - {{ fruit }}
+  </p>
+</div>

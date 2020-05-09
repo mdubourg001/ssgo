@@ -1,10 +1,23 @@
-import { v4 } from "https://deno.land/std/uuid/mod.ts";
 import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
+import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
 
-import { INode, IAttribute, IContextData, IStaticFoundEvent } from "./types.ts";
-import { contextEval, interpolate } from "./utils.ts";
+import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
 
-const alreadyBuilt: INode[] = [];
+import {
+  INode,
+  IAttribute,
+  IContextData,
+  IStaticFoundEvent,
+  ICustomComponent,
+} from "./types.ts";
+import {
+  contextEval,
+  interpolate,
+  removeExt,
+  isComment,
+  removeFromParent,
+  pushNextTo,
+} from "./utils.ts";
 
 /**
  * Handle the for/of attributes pair
@@ -12,6 +25,7 @@ const alreadyBuilt: INode[] = [];
 function computeForOf(
   node: INode,
   data: IContextData,
+  availableComponents: ICustomComponent[],
   onCustomComponentFound: (event: IStaticFoundEvent) => void,
   onStaticFileFound: (event: IStaticFoundEvent) => void
 ) {
@@ -49,7 +63,12 @@ function computeForOf(
 
     const evaluatedOf: Array<any> = contextEval(
       ofAttr?.value?.value ?? "",
-      data
+      data,
+      node.open.value
+    );
+
+    const isCustomComponent = availableComponents.some(
+      (component) => removeExt(component.name) === node.name
     );
 
     if (typeof evaluatedOf[Symbol.iterator] !== "function")
@@ -65,40 +84,30 @@ function computeForOf(
         )
     );
 
-    // generating a unique uuid for all clones
-    node.uuid = v4.generate();
-    const clones: INode[] = [];
+    // @ts-ignore
+    const parent = "body" in node.parent ? node.parent.body : node.parent;
 
     let index = 0;
-    for (const item of evaluatedOf) {
+    for (const item of evaluatedOf.reverse()) {
       const clone: INode = cloneDeep(node);
-      clones.push(clone);
+      clone.parent = node.parent;
+      pushNextTo(parent as INode[], node, clone);
 
       buildHtml(
         clone,
         { ...data, index: index++, [forAttr?.value?.value ?? "item"]: item },
+        availableComponents,
         onCustomComponentFound,
         onStaticFileFound
       );
-
-      if (!!node.parent && "body" in node.parent) {
-        clone.parent = node.parent;
-      }
     }
 
-    if (!!node.parent) {
-      const parent = "body" in node.parent ? node.parent.body : node.parent;
-      const index = (parent as Array<INode>)
-        .map((item) => item.uuid)
-        .lastIndexOf(node.uuid ?? "");
-
-      if (index !== -1) {
-        // add clones next to node in parent's body
-        // remove the node itself from parent's body
-        (parent as Array<INode>).splice(index, 1, ...clones);
-      }
-    }
+    // removing the node itself from its parent
+    removeFromParent(node);
+    return true;
   }
+
+  return false;
 }
 
 /**
@@ -121,15 +130,15 @@ function computeIf(node: INode, data: IContextData): boolean {
 
     // ----- logic ----- //
 
-    const evaluatedIf: boolean = contextEval(ifAttr?.value?.value ?? "", data);
+    const evaluatedIf: boolean = contextEval(
+      ifAttr?.value?.value ?? "",
+      data,
+      node.open.value
+    );
 
     if (!evaluatedIf && !!node.parent) {
-      // generating a unique uuid for clone to remove
-      node.uuid = v4.generate();
       const parent = "body" in node.parent ? node.parent.body : node.parent;
-      const index = (parent as Array<INode>).findIndex(
-        (n) => n.uuid === node.uuid
-      );
+      const index = (parent as Array<INode>).findIndex((n) => n === node);
 
       if (index !== -1) {
         // remove the node from parent's body
@@ -154,8 +163,59 @@ function computeIf(node: INode, data: IContextData): boolean {
 function computeCustomComponents(
   node: INode,
   data: IContextData,
-  onCustomComponentFound: (event: IStaticFoundEvent) => void
-) {}
+  availableComponents: ICustomComponent[],
+  onCustomComponentFound: (event: IStaticFoundEvent) => void,
+  onStaticFileFound: (event: IStaticFoundEvent) => void
+) {
+  if ("name" in node) {
+    const component: ICustomComponent | undefined = availableComponents.find(
+      (file) => removeExt(file.name) === node.name
+    );
+    if (!component) return;
+
+    const props: IContextData = {};
+
+    if ("attributes" in node) {
+      for (const attr of node.attributes) {
+        if (!Object.values(IAttribute).includes(attr.name.value))
+          props[attr.name.value] = contextEval(
+            attr.value?.value ?? "",
+            data,
+            node.open.value
+          );
+      }
+    }
+
+    const read = readFileStrSync(component.path, { encoding: "utf8" });
+    const parsed = parse(read);
+
+    parsed.forEach((componentNode: INode) => {
+      componentNode.parent = parsed;
+      buildHtml(
+        componentNode,
+        props,
+        availableComponents,
+        onCustomComponentFound,
+        onStaticFileFound
+      );
+      componentNode.parent = node.parent;
+    });
+
+    if (!!node.parent) {
+      const parent = "body" in node.parent ? node.parent.body : node.parent;
+      const index = (parent as INode[]).findIndex((n) => n === node);
+
+      if (index !== -1) {
+        // add new built nodes next to node in parent's body
+        (parent as Array<INode>).splice(index, 1, ...parsed);
+      }
+    }
+
+    return true;
+  }
+
+  return false;
+}
 
 /**
  * Handle resolving and bundling static files
@@ -181,24 +241,58 @@ function computeText(node: INode, data: IContextData) {
 export function buildHtml(
   node: INode,
   data: IContextData,
+  availableComponents: ICustomComponent[],
   onCustomComponentFound: (event: IStaticFoundEvent) => void,
   onStaticFileFound: (event: IStaticFoundEvent) => void
 ) {
-  // preventing double builds of nodes
-  if (alreadyBuilt.includes(node)) return;
+  // preventing double builds of nodes or build of comments
+  if (node.built) return;
+  if (isComment(node)) return;
 
-  computeForOf(node, data, onCustomComponentFound, onStaticFileFound);
-  if (!computeIf(node, data)) return;
-  computeCustomComponents(node, data, onCustomComponentFound);
+  if (
+    computeForOf(
+      node,
+      data,
+      availableComponents,
+      onCustomComponentFound,
+      onStaticFileFound
+    )
+  ) {
+    node.built = true;
+    return;
+  }
+  if (!computeIf(node, data)) {
+    node.built = true;
+    return;
+  }
+  if (
+    computeCustomComponents(
+      node,
+      data,
+      availableComponents,
+      onCustomComponentFound,
+      onStaticFileFound
+    )
+  ) {
+    node.built = true;
+    return;
+  }
   computeStaticFiles(node, data, onStaticFileFound);
   computeText(node, data);
 
-  if ("body" in node) {
-    for (const childNode of node.body || []) {
+  if ("body" in node && !!node.body) {
+    for (const childNode of node.body.reverse() as INode[]) {
       (childNode as INode).parent = node;
-      buildHtml(childNode, data, onCustomComponentFound, onStaticFileFound);
+      buildHtml(
+        childNode,
+        data,
+        availableComponents,
+        onCustomComponentFound,
+        onStaticFileFound
+      );
     }
+    node.body.reverse();
   }
 
-  alreadyBuilt.push(node);
+  node.built = true;
 }

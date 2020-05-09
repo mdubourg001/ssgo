@@ -5,16 +5,17 @@ import { existsSync } from "https://deno.land/std/fs/exists.ts";
 import { writeFileStrSync } from "https://deno.land/std/fs/write_file_str.ts";
 import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
 
-import { CREATORS_DIR_ABS } from "./constants.ts";
+import { CREATORS_DIR_ABS, COMPONENTS_DIR_ABS } from "./constants.ts";
 import {
   INode,
   ICreator,
+  ICustomComponent,
   IContextData,
   IBuildPageOptions,
   IBuildPageParams,
   IBuildPageCall,
 } from "./types.ts";
-import { isScript, formatAttributes } from "./utils.ts";
+import { isScript, isTemplate, formatAttributes, isComment } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
@@ -65,7 +66,7 @@ function bindTemplateToStatic() {}
 function serialize(node: INode) {
   let result = "";
 
-  if ("rawName" in node && node.rawName === "!--") {
+  if (isComment(node)) {
     return "";
   } else if (node.type === "Text") {
     result += node.value;
@@ -91,22 +92,27 @@ function serialize(node: INode) {
 function buildPage(
   templateAbs: string,
   data: IContextData,
-  options: IBuildPageOptions
+  options: IBuildPageOptions,
+  availableComponents: ICustomComponent[]
 ) {
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
-  const parsed = parse(read);
+  const parsed = parse(read).reverse();
 
   parsed.forEach((node: INode) => {
     node.parent = parsed;
     buildHtml(
       node,
       data,
+      availableComponents,
       () => {},
       () => {}
     );
   });
 
-  const serialized = parsed.map((node: INode) => serialize(node)).join("");
+  const serialized = parsed
+    .reverse()
+    .map((node: INode) => serialize(node))
+    .join("");
 
   console.log(serialized);
 }
@@ -115,29 +121,32 @@ function buildPage(
  * Build the project
  */
 export async function build() {
-  const creators = walkSync(CREATORS_DIR_ABS);
+  const creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file) =>
+    isScript(file.name)
+  );
+  const components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
+    isTemplate(file.name)
+  );
 
   for (let creator of creators) {
-    if (isScript(creator.name)) {
-      const module = await import(creator.path);
-      // as every valid creator should export a default function
-      if (!module.default || typeof module.default !== "function") continue;
+    const module = await import(creator.path);
+    // as every valid creator should export a default function
+    if (!module.default || typeof module.default !== "function") continue;
 
-      module.default(function (
-        template: string,
-        data: IContextData,
-        options: IBuildPageOptions
-      ): void {
-        const templateAbs = `${Deno.cwd()}/${template}`;
-        // caching the call to buildPage on the fly
-        cacheBuildPageCall(creator.path, {
-          template: templateAbs,
-          data,
-          options,
-        });
-        buildPage(templateAbs, data, options);
+    module.default(function (
+      template: string,
+      data: IContextData,
+      options: IBuildPageOptions
+    ): void {
+      const templateAbs = `${Deno.cwd()}/${template}`;
+      // caching the call to buildPage on the fly
+      cacheBuildPageCall(creator.path, {
+        template: templateAbs,
+        data,
+        options,
       });
-    }
+      buildPage(templateAbs, data, options, components);
+    });
   }
 }
 

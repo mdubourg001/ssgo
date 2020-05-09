@@ -1,12 +1,48 @@
-<p if="true">true</p>
-<p if="false">false</p>
-<p if="title">{{ title }}</p>
+<template>
+  <p if="true" />
 
-<div id="wrapper" class="fruit" hidden>
-  <p if="true">true</p>
-  <p if="false">false</p>
+  <div>
+    <rounded-button
+      label="title"
+      fruit="fruit"
+      for="fruit"
+      of="['apple', 'banana']"
+    />
 
-  <p if="fruit === 'apple'" for="fruit" of="['apple', 'banana']">
-    {{ index + 1 }} - {{ fruit }}
-  </p>
-</div>
+    <div2>
+      <rounded-button
+        label="title"
+        fruit="fruit"
+        for="fruit"
+        of="['apple', 'banana']"
+      />
+    </div2>
+  </div>
+
+  <rounded-button
+    label="title"
+    fruit="fruit"
+    for="fruit"
+    of="['apple', 'banana']"
+  />
+
+  <div>
+    <rounded-button
+      label="title"
+      fruit="fruit"
+      for="fruit"
+      of="['apple', 'banana']"
+    />
+
+    <rounded-button
+      label="title"
+      fruit="fruit"
+      for="fruit"
+      of="['apple', 'banana']"
+    />
+
+    <rounded-button label="title" fruit="'kiwi'" />
+
+    <p hidden />
+  </div>
+</template>
