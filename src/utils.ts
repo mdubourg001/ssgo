@@ -120,6 +120,13 @@ export function pushNextTo<T>(array: T[], nextTo: T, ...items: T[]) {
   array.splice(index, 0, ...items);
 }
 
+/**
+ * Get attribute name without its prefix (eval:, static:)
+ */
+export function getUnprefixedAttributeName(attribute: IAttribute) {
+  return attribute.name.value.split(":").slice(1).join(":");
+}
+
 // ----- errors ----- //
 
 /**

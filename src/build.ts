@@ -19,6 +19,7 @@ import {
   removeFromParent,
   pushNextTo,
   checkRecursiveComponent,
+  getUnprefixedAttributeName,
 } from "./utils.ts";
 
 /**
@@ -224,6 +225,36 @@ function computeCustomComponents(
 }
 
 /**
+ * Handle eval: prefixed attributes
+ */
+function computeEval(node: INode, data: IContextData) {
+  if ("attributes" in node) {
+    for (const attr of node.attributes) {
+      if (attr.name.value.startsWith(IAttribute.EVAL)) {
+        if (typeof attr.value?.value === "undefined")
+          return log.warning(
+            `When parsing ${node.open.value}: ${attr.name.value} has been given no value to evaluate.`
+          );
+
+        attr.name.value = getUnprefixedAttributeName(attr);
+        let evaluatedValue = contextEval(attr.value?.value || "", data);
+
+        // special treatment for eval:class="{ foo: true, bar: false }"
+        if (attr.name.value === "class" && typeof evaluatedValue === "object") {
+          let value = "";
+          for (const key of Object.keys(evaluatedValue)) {
+            if (evaluatedValue[key]) value += `${key} `;
+          }
+          evaluatedValue = value.trim();
+        }
+
+        attr.value.value = evaluatedValue;
+      }
+    }
+  }
+}
+
+/**
  * Handle resolving and bundling static files
  */
 function computeStaticFiles(
@@ -283,6 +314,7 @@ export function buildHtml(
     node.built = true;
     return;
   }
+  computeEval(node, data);
   computeStaticFiles(node, data, onStaticFileFound);
   computeText(node, data);
 

@@ -13,7 +13,7 @@ export const IAttribute = {
   FOR: "for",
   OF: "of",
   EVAL: "eval:",
-  static: "static:",
+  STATIC: "static:",
 };
 
 export interface IStaticFile {
