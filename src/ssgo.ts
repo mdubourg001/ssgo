@@ -70,7 +70,7 @@ function bindTemplateToStatic() {}
 /**
  * Serialize back to HTML files
  */
-function serialize(node: INode) {
+export function serialize(node: INode) {
   let result = "";
 
   if (isComment(node)) {
