@@ -4,7 +4,6 @@ import { walkSync } from "https://deno.land/std/fs/walk.ts";
 import { existsSync } from "https://deno.land/std/fs/exists.ts";
 import { writeFileStrSync } from "https://deno.land/std/fs/write_file_str.ts";
 import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
-import { relative } from "https://deno.land/std/path/mod.ts";
 
 import { CREATORS_DIR_ABS, COMPONENTS_DIR_ABS } from "./constants.ts";
 import {
@@ -21,7 +20,9 @@ import {
   isTemplate,
   formatAttributes,
   isComment,
-  log,
+  checkTopLevelNodesCount,
+  checkEmptyTemplate,
+  checkComponentNameUnicity,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -107,18 +108,8 @@ function buildPage(
     "value" in n ? n.value !== "\n" : true
   );
 
-  if (parsed.length > 1) {
-    const templateRel = relative(Deno.cwd(), templateAbs);
-    log.error(
-      `When parsing '${templateRel}': A template/component file can't have more than one top-level node.`,
-      true
-    );
-  } else if (parsed.length === 0) {
-    const templateRel = relative(Deno.cwd(), templateAbs);
-    log.warning(
-      `When parsing '${templateRel}': This template/component file is empty.`
-    );
-  }
+  checkTopLevelNodesCount(parsed, templateAbs);
+  checkEmptyTemplate(parsed, templateAbs);
 
   parsed.forEach((node: INode) => {
     node.parent = parsed;
@@ -146,6 +137,8 @@ export async function build() {
   const components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
     isTemplate(file.name)
   );
+
+  checkComponentNameUnicity(components);
 
   for (let creator of creators) {
     const module = await import(creator.path);

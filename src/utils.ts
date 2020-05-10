@@ -1,7 +1,8 @@
 import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
 import { red, blue, yellow, green } from "https://deno.land/std/fmt/colors.ts";
+import { relative, basename } from "https://deno.land/std/path/mod.ts";
 
-import { INode, IContextData } from "./types.ts";
+import { INode, IContextData, ICustomComponent } from "./types.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
@@ -117,4 +118,76 @@ export function removeFromParent(node: INode) {
 export function pushNextTo<T>(array: T[], nextTo: T, ...items: T[]) {
   const index = array.findIndex((i) => i === nextTo);
   array.splice(index, 0, ...items);
+}
+
+// ----- errors ----- //
+
+/**
+ * Check unicity of top-level node
+ */
+export function checkTopLevelNodesCount(
+  parsedTemplate: INode[],
+  templateAbs: string
+) {
+  if (parsedTemplate.length > 1) {
+    const templateRel = relative(Deno.cwd(), templateAbs);
+    log.error(
+      `When parsing '${templateRel}': A template/component file can't have more than one top-level node.`,
+      true
+    );
+  }
+}
+
+/**
+ * Check that a template has at least one node
+ */
+export function checkEmptyTemplate(
+  parsedTemplate: INode[],
+  templateAbs: string
+) {
+  if (parsedTemplate.length === 0) {
+    const templateRel = relative(Deno.cwd(), templateAbs);
+    log.warning(
+      `When parsing '${templateRel}': This template/component file is empty.`
+    );
+  }
+}
+
+/**
+ * Check if two components have the same name
+ */
+export function checkComponentNameUnicity(components: ICustomComponent[]) {
+  for (let component of components) {
+    if (
+      components.some(
+        (c) =>
+          removeExt(c.name) === removeExt(component.name) &&
+          c.path !== component.path
+      )
+    )
+      log.error(
+        `When listing custom components: Two components with the same name '${removeExt(
+          component.name
+        )}' found.`,
+        true
+      );
+  }
+}
+
+/**
+ * Check if component contains a recursive call
+ */
+export function checkRecursiveComponent(node: INode, componentName: string) {
+  if ("name" in node && node.name === removeExt(componentName)) {
+    log.error(
+      `When parsing '${componentName}': Recursive call of component found.`,
+      true
+    );
+  }
+
+  if ("body" in node && !!node.body) {
+    for (const childNode of node.body as INode[]) {
+      checkRecursiveComponent(childNode, componentName);
+    }
+  }
 }

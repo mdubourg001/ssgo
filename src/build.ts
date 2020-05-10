@@ -18,6 +18,7 @@ import {
   isComment,
   removeFromParent,
   pushNextTo,
+  checkRecursiveComponent,
 } from "./utils.ts";
 
 /**
@@ -193,6 +194,8 @@ function computeCustomComponents(
     const parsed = parse(read);
 
     parsed.forEach((componentNode: INode) => {
+      checkRecursiveComponent(componentNode, component.name);
+
       componentNode.parent = parsed;
       buildHtml(
         componentNode,
