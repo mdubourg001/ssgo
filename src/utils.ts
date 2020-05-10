@@ -1,8 +1,14 @@
 import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
 import { red, blue, yellow, green } from "https://deno.land/std/fmt/colors.ts";
-import { relative, basename } from "https://deno.land/std/path/mod.ts";
+import { relative, resolve } from "https://deno.land/std/path/mod.ts";
+import { DIST_DIR_ABS } from "./constants.ts";
 
-import { INode, IContextData, ICustomComponent } from "./types.ts";
+import {
+  INode,
+  IContextData,
+  ICustomComponent,
+  IBuildPageOptions,
+} from "./types.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
@@ -127,6 +133,17 @@ export function getUnprefixedAttributeName(attribute: IAttribute) {
   return attribute.name.value.split(":").slice(1).join(":");
 }
 
+export function getTargetDistFile(options: IBuildPageOptions) {
+  return resolve(
+    Deno.cwd(),
+    DIST_DIR_ABS,
+    options.dir ?? "",
+    options.filename.endsWith(".html")
+      ? options.filename
+      : options.filename + ".html"
+  );
+}
+
 // ----- errors ----- //
 
 /**
@@ -196,5 +213,21 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
     for (const childNode of node.body as INode[]) {
       checkRecursiveComponent(childNode, componentName);
     }
+  }
+}
+
+/**
+ * Check that buildPage options are valid
+ */
+export function checkBuildPageOptions(
+  templateAbs: string,
+  options: IBuildPageOptions
+) {
+  if (typeof options.filename === "undefined") {
+    const templateRel = relative(Deno.cwd(), templateAbs);
+    log.error(
+      `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
+      true
+    );
   }
 }

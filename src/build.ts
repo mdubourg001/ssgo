@@ -178,6 +178,8 @@ function computeCustomComponents(
     );
     if (!component) return;
 
+    onCustomComponentFound({ staticAbs: component.path });
+
     const props: IContextData = {};
 
     if ("attributes" in node) {

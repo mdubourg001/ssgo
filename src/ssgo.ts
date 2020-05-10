@@ -4,8 +4,14 @@ import { walkSync } from "https://deno.land/std/fs/walk.ts";
 import { existsSync } from "https://deno.land/std/fs/exists.ts";
 import { writeFileStrSync } from "https://deno.land/std/fs/write_file_str.ts";
 import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
+import { ensureDirSync } from "https://deno.land/std/fs/ensure_dir.ts";
+import { emptyDirSync } from "https://deno.land/std/fs/empty_dir.ts";
 
-import { CREATORS_DIR_ABS, COMPONENTS_DIR_ABS } from "./constants.ts";
+import {
+  CREATORS_DIR_ABS,
+  COMPONENTS_DIR_ABS,
+  DIST_DIR_ABS,
+} from "./constants.ts";
 import {
   INode,
   ICreator,
@@ -16,16 +22,19 @@ import {
   IBuildPageCall,
 } from "./types.ts";
 import {
+  log,
   isScript,
   isTemplate,
   formatAttributes,
   isComment,
+  getTargetDistFile,
   checkTopLevelNodesCount,
   checkEmptyTemplate,
   checkComponentNameUnicity,
+  checkBuildPageOptions,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
-
+import { relative } from "https://deno.land/std/path/win32.ts";
 // ----- globals ----- //
 
 let projectMap: ICreator[] = [];
@@ -124,7 +133,13 @@ function buildPage(
 
   const serialized = parsed.map((node: INode) => serialize(node)).join("");
 
-  console.log(serialized);
+  log.info(`Creating or emptying ${DIST_DIR_ABS} directory...`);
+  ensureDirSync(DIST_DIR_ABS);
+  emptyDirSync(DIST_DIR_ABS);
+
+  const targetFile = getTargetDistFile(options);
+  log.info(`Writing ${relative(Deno.cwd(), targetFile)}...`);
+  writeFileStrSync(targetFile, serialized);
 }
 
 /**
@@ -140,12 +155,14 @@ export async function build() {
 
   checkComponentNameUnicity(components);
 
+  const builds = [];
   for (let creator of creators) {
     const module = await import(creator.path);
     // as every valid creator should export a default function
     if (!module.default || typeof module.default !== "function") continue;
 
-    module.default(function (
+    log.info(`Running ${relative(Deno.cwd(), creator.path)}...`);
+    const build = module.default(function (
       template: string,
       data: IContextData,
       options: IBuildPageOptions
@@ -157,9 +174,19 @@ export async function build() {
         data,
         options,
       });
+
+      checkBuildPageOptions(templateAbs, options);
+
+      log.info(
+        `Building ${relative(Deno.cwd(), getTargetDistFile(options))}...`
+      );
       buildPage(templateAbs, data, options, components);
     });
+
+    builds.push(build);
   }
+
+  Promise.all(builds).then(() => log.success("Project built."));
 }
 
 /**
