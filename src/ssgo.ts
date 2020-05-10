@@ -4,6 +4,7 @@ import { walkSync } from "https://deno.land/std/fs/walk.ts";
 import { existsSync } from "https://deno.land/std/fs/exists.ts";
 import { writeFileStrSync } from "https://deno.land/std/fs/write_file_str.ts";
 import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
+import { relative } from "https://deno.land/std/path/mod.ts";
 
 import { CREATORS_DIR_ABS, COMPONENTS_DIR_ABS } from "./constants.ts";
 import {
@@ -15,7 +16,13 @@ import {
   IBuildPageParams,
   IBuildPageCall,
 } from "./types.ts";
-import { isScript, isTemplate, formatAttributes, isComment } from "./utils.ts";
+import {
+  isScript,
+  isTemplate,
+  formatAttributes,
+  isComment,
+  log,
+} from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
@@ -96,7 +103,20 @@ function buildPage(
   availableComponents: ICustomComponent[]
 ) {
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
-  const parsed = parse(read).reverse();
+  const parsed = parse(read);
+
+  if (parsed.length > 1) {
+    const templateRel = relative(Deno.cwd(), templateAbs);
+    log.error(
+      `When parsing '${templateRel}': A template/component file can't have more than one top-level node.`,
+      true
+    );
+  } else if (parsed.length === 0) {
+    const templateRel = relative(Deno.cwd(), templateAbs);
+    log.warning(
+      `When parsing '${templateRel}': This template/component file is empty.`
+    );
+  }
 
   parsed.forEach((node: INode) => {
     node.parent = parsed;
@@ -109,10 +129,7 @@ function buildPage(
     );
   });
 
-  const serialized = parsed
-    .reverse()
-    .map((node: INode) => serialize(node))
-    .join("");
+  const serialized = parsed.map((node: INode) => serialize(node)).join("");
 
   console.log(serialized);
 }

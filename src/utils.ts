@@ -12,8 +12,9 @@ export const log = {
   info: (message: string) => {
     console.log(blue("info"), message);
   },
-  error: (message: string) => {
-    console.log(red("error"), message);
+  error: (message: string, throwErr: boolean = false) => {
+    if (throwErr) throw message;
+    else console.log(red("error"), message);
   },
   warning: (message: string) => {
     console.log(yellow("warning"), message);
