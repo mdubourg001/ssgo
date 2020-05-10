@@ -1,0 +1,64 @@
+import {
+  assertEquals,
+  assertThrows,
+} from "https://deno.land/std/testing/asserts.ts";
+
+import { buildHtmlAndSerialize } from "./utils.ts";
+
+Deno.test("for/of attribute should be properly computed", () => {
+  // no of paired
+  assertThrows(() => buildHtmlAndSerialize('<p for="foo" />', {}));
+  // no for paired
+  assertThrows(() => buildHtmlAndSerialize('<p of="bar" />', {}));
+  // no value given to of
+  assertThrows(() => buildHtmlAndSerialize('<p for="foo" of />', {}));
+  // no value given to for
+  assertThrows(() => buildHtmlAndSerialize('<p for of="bar" />', {}));
+  // invalid syntax
+  assertThrows(() => buildHtmlAndSerialize(`<p for="foo" of="["aaa"]" />`, {}));
+  // value given to for isn't an iterable
+  assertThrows(() => buildHtmlAndSerialize(`<p for="foo" of="{foo: 1}"/>`, {}));
+
+  // simple
+  assertEquals(
+    buildHtmlAndSerialize(
+      `<p for="item" of="['foo', 'bar']">{{ index }} - {{ item }}</p>`,
+      {}
+    ),
+    "<p >0 - foo</p><p >1 - bar</p>"
+  );
+
+  // with value computed from context
+  assertEquals(
+    buildHtmlAndSerialize(
+      `<p for="item" of="items">{{ index }} - {{ item }}</p>`,
+      { items: ["foo", "bar"] }
+    ),
+    "<p >0 - foo</p><p >1 - bar</p>"
+  );
+  assertEquals(
+    buildHtmlAndSerialize(
+      `<p for="item" of="items">{{ index }} - {{ item }} - {{ item === superItem }}</p>`,
+      { items: ["foo", "bar"], superItem: "bar" }
+    ),
+    "<p >0 - foo - false</p><p >1 - bar - true</p>"
+  );
+
+  // nested
+  assertEquals(
+    buildHtmlAndSerialize(
+      `<div><p for="item" of="['foo', 'bar']">{{ index }} - {{ item }}</p></div>`,
+      {}
+    ),
+    "<div ><p >0 - foo</p><p >1 - bar</p></div>"
+  );
+
+  // nested with value computed from context
+  assertEquals(
+    buildHtmlAndSerialize(
+      `<div><p for="item" of="items">{{ index }} - {{ item }} - {{ item === superItem }}</p></div>`,
+      { items: ["foo", "bar"], superItem: "bar" }
+    ),
+    "<div ><p >0 - foo - false</p><p >1 - bar - true</p></div>"
+  );
+});

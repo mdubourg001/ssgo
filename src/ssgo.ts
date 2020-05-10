@@ -103,7 +103,9 @@ function buildPage(
   availableComponents: ICustomComponent[]
 ) {
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
-  const parsed = parse(read);
+  const parsed = parse(read).filter((n) =>
+    "value" in n ? n.value !== "\n" : true
+  );
 
   if (parsed.length > 1) {
     const templateRel = relative(Deno.cwd(), templateAbs);

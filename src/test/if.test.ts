@@ -1,8 +1,16 @@
-import { assertEquals } from "https://deno.land/std/testing/asserts.ts";
+import {
+  assertEquals,
+  assertThrows,
+} from "https://deno.land/std/testing/asserts.ts";
 
 import { buildHtmlAndSerialize } from "./utils.ts";
 
 Deno.test("if attribute should be properly computed", () => {
+  // no value given to attribute
+  assertThrows(() => buildHtmlAndSerialize("<p if />", {}));
+  // unknown context value
+  assertThrows(() => buildHtmlAndSerialize('<p if="unknownVal" />', {}));
+
   // simple
   assertEquals(buildHtmlAndSerialize('<p if="true" />', {}), "<p />");
   assertEquals(buildHtmlAndSerialize('<p if="false" />', {}), "");

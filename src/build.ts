@@ -11,6 +11,7 @@ import {
   ICustomComponent,
 } from "./types.ts";
 import {
+  log,
   contextEval,
   interpolate,
   removeExt,
@@ -42,21 +43,25 @@ function computeForOf(
     if (!forAttr && !ofAttr) return;
 
     if (forAttr && typeof forAttr.value === "undefined")
-      throw new Error(
-        `When parsing "${node.open.value}" : The ${IAttribute.FOR} attribute must be given a value.`
+      log.error(
+        `When parsing "${node.open.value}" : The ${IAttribute.FOR} attribute must be given a value.`,
+        true
       );
     else if (ofAttr && typeof ofAttr.value === "undefined")
-      throw new Error(
-        `When parsing "${node.open.value}" : The ${IAttribute.OF} attribute must be given a value.`
+      log.error(
+        `When parsing "${node.open.value}" : The ${IAttribute.OF} attribute must be given a value.`,
+        true
       );
 
     if (forAttr && !ofAttr)
-      throw new Error(
-        `The use of ${forAttr.name.value}="${forAttr.value?.value}" must be paired with the use of ${IAttribute.OF}="<iterable>".`
+      log.error(
+        `The use of ${forAttr.name.value}="${forAttr.value?.value}" must be paired with the use of ${IAttribute.OF}="<iterable>".`,
+        true
       );
     else if (ofAttr && !forAttr)
-      throw new Error(
-        `The use of ${ofAttr.name.value}="${ofAttr.value?.value}" must be paired with the use of ${IAttribute.FOR}="<iterator>".`
+      log.error(
+        `The use of ${ofAttr.name.value}="${ofAttr.value?.value}" must be paired with the use of ${IAttribute.FOR}="<iterator>".`,
+        true
       );
 
     // ----- logic ----- //
@@ -67,13 +72,10 @@ function computeForOf(
       node.open.value
     );
 
-    const isCustomComponent = availableComponents.some(
-      (component) => removeExt(component.name) === node.name
-    );
-
     if (typeof evaluatedOf[Symbol.iterator] !== "function")
-      throw new Error(
-        `When parsing "${node.open.value}": "${ofAttr?.value?.value} is not an iterable.`
+      log.error(
+        `When parsing "${node.open.value}": "${ofAttr?.value?.value} is not an iterable.`,
+        true
       );
 
     // remove the for/of attributes from node attributes
@@ -87,7 +89,7 @@ function computeForOf(
     // @ts-ignore
     const parent = "body" in node.parent ? node.parent.body : node.parent;
 
-    let index = 0;
+    let index = evaluatedOf.length - 1;
     for (const item of evaluatedOf.reverse()) {
       const clone: INode = cloneDeep(node);
       clone.parent = node.parent;
@@ -95,7 +97,7 @@ function computeForOf(
 
       buildHtml(
         clone,
-        { ...data, index: index++, [forAttr?.value?.value ?? "item"]: item },
+        { ...data, index: index--, [forAttr?.value?.value ?? "item"]: item },
         availableComponents,
         onCustomComponentFound,
         onStaticFileFound
@@ -124,8 +126,9 @@ function computeIf(node: INode, data: IContextData): boolean {
     if (!ifAttr) return true;
 
     if (ifAttr && typeof ifAttr.value === "undefined")
-      throw new Error(
-        `When parsing "${node.open.value}" : The ${IAttribute.IF} attribute must be given a value.`
+      log.error(
+        `When parsing "${node.open.value}" : The ${IAttribute.IF} attribute must be given a value.`,
+        true
       );
 
     // ----- logic ----- //

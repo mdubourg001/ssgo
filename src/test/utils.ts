@@ -8,7 +8,7 @@ export function buildHtmlAndSerialize(
   templateStr: string,
   data: IContextData
 ): string {
-  const parsed = parse(templateStr);
+  const parsed = parse(templateStr).reverse();
 
   parsed.forEach((node: INode) => {
     node.parent = parsed;
@@ -21,5 +21,8 @@ export function buildHtmlAndSerialize(
     );
   });
 
-  return parsed.map((node: INode) => serialize(node).trim()).join("");
+  return parsed
+    .reverse()
+    .map((node: INode) => serialize(node).trim())
+    .join("");
 }
