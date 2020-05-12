@@ -4,22 +4,24 @@ import { buildHtml } from "../build.ts";
 import { serialize } from "../ssgo.ts";
 import { INode, IContextData } from "../types.ts";
 
-export function buildHtmlAndSerialize(
+export async function buildHtmlAndSerialize(
   templateStr: string,
   data: IContextData
-): string {
+): Promise<string> {
   const parsed = parse(templateStr).reverse();
 
-  parsed.forEach((node: INode) => {
-    node.parent = parsed;
-    buildHtml(
+  for (const node of parsed) {
+    (node as INode).parent = parsed;
+    await buildHtml(
       node,
       data,
       [],
       () => {},
       () => {}
-    );
-  });
+    ).catch((e) => {
+      throw Error(e);
+    });
+  }
 
   return parsed
     .reverse()

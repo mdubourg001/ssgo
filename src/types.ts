@@ -13,11 +13,10 @@ export const IAttribute = {
   FOR: "for",
   OF: "of",
   EVAL: "eval:",
-  STATIC: "static:",
 };
 
 export interface IStaticFile {
-  name: string;
+  path: string;
   isCompiled: boolean;
 }
 
@@ -40,10 +39,6 @@ export interface IBuildPageCall
 export interface ICreator {
   name: string;
   pageBuildCalls: IBuildPageCall[];
-}
-
-export interface IStaticFoundEvent {
-  staticAbs: string;
 }
 
 // ----- public ----- //

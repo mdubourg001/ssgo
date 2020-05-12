@@ -1,14 +1,29 @@
 import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
 import { red, blue, yellow, green } from "https://deno.land/std/fmt/colors.ts";
-import { relative, resolve } from "https://deno.land/std/path/mod.ts";
-import { DIST_DIR_ABS } from "./constants.ts";
+import {
+  relative,
+  resolve,
+  basename,
+  posix,
+  normalize,
+  extname,
+  common,
+} from "https://deno.land/std/path/mod.ts";
+import { existsSync } from "https://deno.land/std/fs/mod.ts";
 
 import {
   INode,
   IContextData,
   ICustomComponent,
   IBuildPageOptions,
+  IStaticFile,
 } from "./types.ts";
+import {
+  STATIC_DIR_ABS,
+  DIST_DIR_ABS,
+  DIST_STATIC_BASE,
+  BUILDABLE_STATIC_EXT,
+} from "./constants.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
@@ -20,7 +35,7 @@ export const log = {
     console.log(blue("info"), message);
   },
   error: (message: string, throwErr: boolean = false) => {
-    if (throwErr) throw message;
+    if (throwErr) throw new Error(message);
     else console.log(red("error"), message);
   },
   warning: (message: string) => {
@@ -133,6 +148,9 @@ export function getUnprefixedAttributeName(attribute: IAttribute) {
   return attribute.name.value.split(":").slice(1).join(":");
 }
 
+/**
+ * Get path of dist built page
+ */
 export function getTargetDistFile(options: IBuildPageOptions) {
   return resolve(
     Deno.cwd(),
@@ -142,6 +160,37 @@ export function getTargetDistFile(options: IBuildPageOptions) {
       ? options.filename
       : options.filename + ".html"
   );
+}
+
+/**
+ * Check if a URL leads to an external ressource
+ */
+export function isExternalURL(url: string) {
+  return new RegExp("^(?:[a-z]+:)?//", "i").test(url);
+}
+
+export function getStaticFileFromRel(staticRel: string): IStaticFile {
+  const staticFileAbs = normalize(`${STATIC_DIR_ABS}/${staticRel}`);
+  const staticFileBasename = basename(staticFileAbs);
+
+  return {
+    path: staticFileAbs,
+    isCompiled: BUILDABLE_STATIC_EXT.includes(
+      posix.extname(staticFileBasename)
+    ),
+  };
+}
+
+/**
+ * Get future path of static file in bundle
+ */
+export function getStaticFileBundlePath(staticRel: string): string {
+  const ext = [".jsx", ".tsx", ".ts"].includes(extname(staticRel))
+    ? ".js"
+    : extname(staticRel);
+  const filename = removeExt(staticRel);
+
+  return normalize(`/${filename}${ext}`);
 }
 
 // ----- errors ----- //
@@ -230,4 +279,36 @@ export function checkBuildPageOptions(
       true
     );
   }
+}
+
+/**
+ * Check that a static file exists and can be included in bundle
+ */
+export function checkStaticFileExists(
+  staticFileAbs: string,
+  staticAttrValue: string
+): boolean {
+  if (!existsSync(staticFileAbs)) {
+    log.warning(
+      `Could not resolve ${staticAttrValue}: won't be included in output build.`
+    );
+    return false;
+  }
+  return true;
+}
+
+/**
+ * Check if a file is inside static/ dir
+ */
+export function checkStaticFileIsInsideStaticDir(
+  staticFileAbs: string,
+  staticAttrValue: string
+) {
+  if (common([staticFileAbs, STATIC_DIR_ABS]) !== STATIC_DIR_ABS) {
+    log.warning(
+      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`
+    );
+    return false;
+  }
+  return true;
 }

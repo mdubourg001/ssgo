@@ -1,21 +1,32 @@
 import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
 
-import { walkSync } from "https://deno.land/std/fs/walk.ts";
-import { existsSync } from "https://deno.land/std/fs/exists.ts";
-import { writeFileStrSync } from "https://deno.land/std/fs/write_file_str.ts";
-import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
-import { ensureDirSync } from "https://deno.land/std/fs/ensure_dir.ts";
-import { emptyDirSync } from "https://deno.land/std/fs/empty_dir.ts";
+import {
+  emptyDirSync,
+  walkSync,
+  existsSync,
+  writeFileStrSync,
+  readFileStrSync,
+  ensureDirSync,
+  copySync,
+} from "https://deno.land/std/fs/mod.ts";
+import {
+  relative,
+  normalize,
+  dirname,
+} from "https://deno.land/std/path/mod.ts";
 
 import {
   CREATORS_DIR_ABS,
   COMPONENTS_DIR_ABS,
   DIST_DIR_ABS,
+  DIST_STATIC_ABS,
 } from "./constants.ts";
 import {
   INode,
+  ITemplate,
   ICreator,
   ICustomComponent,
+  IStaticFile,
   IContextData,
   IBuildPageOptions,
   IBuildPageParams,
@@ -34,10 +45,11 @@ import {
   checkBuildPageOptions,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
-import { relative } from "https://deno.land/std/path/win32.ts";
+
 // ----- globals ----- //
 
 let projectMap: ICreator[] = [];
+let compilations: Promise<any>[] = [];
 
 // ----- build misc. ----- //
 
@@ -73,9 +85,90 @@ function cacheBuildPageCall(
 }
 
 /**
- * Bind templates to the custom-components and static files they use
+ * Bind templates to the custom components they use
  */
-function bindTemplateToStatic() {}
+function bindTemplateToCustomComponent(
+  templateAbs: string,
+  event: ICustomComponent
+) {
+  const existingEntries: ITemplate[] = projectMap.reduce(
+    (acc: ITemplate[], { pageBuildCalls }: ICreator) => {
+      return [
+        ...acc,
+        ...pageBuildCalls
+          .filter((c) => c.template.name === templateAbs)
+          .map((c) => c.template),
+      ];
+    },
+    []
+  );
+
+  existingEntries.forEach((entry) => {
+    entry.customComponents = Array.from(
+      new Set([...entry.customComponents, event])
+    );
+  });
+}
+
+/**
+ * Bind templates to the static files they use
+ */
+function bindTemplateToStatic(templateAbs: string, event: IStaticFile) {
+  const existingEntries: ITemplate[] = projectMap.reduce(
+    (acc: ITemplate[], { pageBuildCalls }: ICreator) => {
+      return [
+        ...acc,
+        ...pageBuildCalls
+          .filter((c) => c.template.name === templateAbs)
+          .map((c) => c.template),
+      ];
+    },
+    []
+  );
+
+  existingEntries.forEach((entry) => {
+    entry.staticFiles = Array.from(new Set([...entry.staticFiles, event]));
+  });
+}
+
+/**
+ * Compile if needed, and add file to bundle
+ */
+function addStaticToBundle(staticFile: IStaticFile, destRel: string) {
+  const destAbs = normalize(`${DIST_STATIC_ABS}/${destRel}`);
+  if (existsSync(destAbs)) return;
+
+  ensureDirSync(dirname(destAbs));
+
+  if (staticFile.isCompiled) {
+    compilations.push(
+      new Promise(async (resolve) => {
+        // @ts-ignore
+        const [diag, emit] = await Deno.bundle(staticFile.path, undefined, {
+          lib: ["dom", "esnext", "deno.ns"],
+        });
+
+        if (diag === null) {
+          writeFileStrSync(destAbs, emit);
+          resolve({
+            destRel,
+            result: emit,
+          });
+        } else {
+          log.error(
+            `Error when calling Deno.bundle on ${relative(
+              Deno.cwd(),
+              staticFile.path
+            )}:`
+          );
+          throw new Error(JSON.stringify(diag, null, 1));
+        }
+      })
+    );
+  } else {
+    copySync(staticFile.path, destAbs, { overwrite: true });
+  }
+}
 
 /**
  * Serialize back to HTML files
@@ -106,7 +199,7 @@ export function serialize(node: INode) {
  * Build a given template with given data and write the file to fs
  * Function given to creators as first param
  */
-function buildPage(
+async function buildPage(
   templateAbs: string,
   data: IContextData,
   options: IBuildPageOptions,
@@ -120,25 +213,23 @@ function buildPage(
   checkTopLevelNodesCount(parsed, templateAbs);
   checkEmptyTemplate(parsed, templateAbs);
 
-  parsed.forEach((node: INode) => {
+  parsed.forEach(async (node: INode) => {
     node.parent = parsed;
-    buildHtml(
+    await buildHtml(
       node,
       data,
       availableComponents,
-      () => {},
-      () => {}
+      (e: ICustomComponent) => bindTemplateToCustomComponent(templateAbs, e),
+      (e: IStaticFile, destRel: string) => {
+        bindTemplateToStatic(templateAbs, e);
+        addStaticToBundle(e, destRel);
+      }
     );
   });
 
   const serialized = parsed.map((node: INode) => serialize(node)).join("");
 
-  log.info(`Creating or emptying ${DIST_DIR_ABS} directory...`);
-  ensureDirSync(DIST_DIR_ABS);
-  emptyDirSync(DIST_DIR_ABS);
-
   const targetFile = getTargetDistFile(options);
-  log.info(`Writing ${relative(Deno.cwd(), targetFile)}...`);
   writeFileStrSync(targetFile, serialized);
 }
 
@@ -155,6 +246,12 @@ export async function build() {
 
   checkComponentNameUnicity(components);
 
+  log.info(
+    `Creating or emptying ${relative(Deno.cwd(), DIST_DIR_ABS)} directory...`
+  );
+  ensureDirSync(DIST_DIR_ABS);
+  emptyDirSync(DIST_DIR_ABS);
+
   const builds = [];
   for (let creator of creators) {
     const module = await import(creator.path);
@@ -162,11 +259,11 @@ export async function build() {
     if (!module.default || typeof module.default !== "function") continue;
 
     log.info(`Running ${relative(Deno.cwd(), creator.path)}...`);
-    const build = module.default(function (
+    const build = module.default(async function (
       template: string,
       data: IContextData,
       options: IBuildPageOptions
-    ): void {
+    ) {
       const templateAbs = `${Deno.cwd()}/${template}`;
       // caching the call to buildPage on the fly
       cacheBuildPageCall(creator.path, {
@@ -180,13 +277,17 @@ export async function build() {
       log.info(
         `Building ${relative(Deno.cwd(), getTargetDistFile(options))}...`
       );
-      buildPage(templateAbs, data, options, components);
+      await buildPage(templateAbs, data, options, components);
     });
 
     builds.push(build);
   }
 
-  Promise.all(builds).then(() => log.success("Project built."));
+  Promise.all(builds).then(async () => {
+    // wait for Deno.bundle calls to end
+    await Promise.all(compilations);
+    log.success("Project built.");
+  });
 }
 
 /**

@@ -1,14 +1,14 @@
 import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
 import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
 
-import { readFileStrSync } from "https://deno.land/std/fs/read_file_str.ts";
+import { readFileStrSync } from "https://deno.land/std/fs/mod.ts";
 
 import {
   INode,
   IAttribute,
   IContextData,
-  IStaticFoundEvent,
   ICustomComponent,
+  IStaticFile,
 } from "./types.ts";
 import {
   log,
@@ -19,8 +19,14 @@ import {
   removeFromParent,
   pushNextTo,
   checkRecursiveComponent,
+  checkStaticFileExists,
   getUnprefixedAttributeName,
+  isExternalURL,
+  getStaticFileFromRel,
+  getStaticFileBundlePath,
+  checkStaticFileIsInsideStaticDir,
 } from "./utils.ts";
+import { POTENTIAL_STATIC_ATTR } from "./constants.ts";
 
 /**
  * Handle the for/of attributes pair
@@ -29,8 +35,8 @@ function computeForOf(
   node: INode,
   data: IContextData,
   availableComponents: ICustomComponent[],
-  onCustomComponentFound: (event: IStaticFoundEvent) => void,
-  onStaticFileFound: (event: IStaticFoundEvent) => void
+  onCustomComponentFound: (event: ICustomComponent) => void,
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
 ) {
   // ----- errors handling ----- //
 
@@ -169,8 +175,8 @@ function computeCustomComponents(
   node: INode,
   data: IContextData,
   availableComponents: ICustomComponent[],
-  onCustomComponentFound: (event: IStaticFoundEvent) => void,
-  onStaticFileFound: (event: IStaticFoundEvent) => void
+  onCustomComponentFound: (component: ICustomComponent) => void,
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
 ) {
   if ("name" in node) {
     const component: ICustomComponent | undefined = availableComponents.find(
@@ -178,7 +184,7 @@ function computeCustomComponents(
     );
     if (!component) return;
 
-    onCustomComponentFound({ staticAbs: component.path });
+    onCustomComponentFound(component);
 
     const props: IContextData = {};
 
@@ -261,9 +267,28 @@ function computeEval(node: INode, data: IContextData) {
  */
 function computeStaticFiles(
   node: INode,
-  data: IContextData,
-  onStaticFileFound: (event: IStaticFoundEvent) => void
-) {}
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
+) {
+  if ("attributes" in node) {
+    for (const attr of node.attributes) {
+      if (POTENTIAL_STATIC_ATTR.includes(attr.name.value)) {
+        if (typeof attr.value?.value === "undefined") continue;
+        if (isExternalURL(attr.value.value)) continue;
+
+        const staticFile = getStaticFileFromRel(attr.value.value);
+
+        if (!checkStaticFileExists(staticFile.path, attr.value.value)) continue;
+        if (
+          !checkStaticFileIsInsideStaticDir(staticFile.path, attr.value.value)
+        )
+          continue;
+
+        attr.value.value = getStaticFileBundlePath(attr.value.value);
+        onStaticFileFound(staticFile, attr.value.value);
+      }
+    }
+  }
+}
 
 /**
  * Handle interpolation of given text node
@@ -277,12 +302,12 @@ function computeText(node: INode, data: IContextData) {
 /**
  * Drive the node build, and recursively call on node's children
  */
-export function buildHtml(
+export async function buildHtml(
   node: INode,
   data: IContextData,
   availableComponents: ICustomComponent[],
-  onCustomComponentFound: (event: IStaticFoundEvent) => void,
-  onStaticFileFound: (event: IStaticFoundEvent) => void
+  onCustomComponentFound: (component: ICustomComponent) => void,
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
 ) {
   // preventing double builds of nodes or build of comments
   if (node.built) return;
@@ -317,7 +342,7 @@ export function buildHtml(
     return;
   }
   computeEval(node, data);
-  computeStaticFiles(node, data, onStaticFileFound);
+  computeStaticFiles(node, onStaticFileFound);
   computeText(node, data);
 
   if ("body" in node && !!node.body) {

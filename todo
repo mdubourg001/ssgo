@@ -1,1 +1,2 @@
-- [x] Fix top-level for/of 
+- [ ] Accept multiple top-level nodes in templates
+- [ ] Prevent multiple output files with same names (pages / static)

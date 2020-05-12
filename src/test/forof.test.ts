@@ -1,27 +1,39 @@
 import {
   assertEquals,
-  assertThrows,
+  assertThrowsAsync,
 } from "https://deno.land/std/testing/asserts.ts";
 
 import { buildHtmlAndSerialize } from "./utils.ts";
 
-Deno.test("for/of attribute should be properly computed", () => {
+Deno.test("for/of attribute should be properly computed", async () => {
   // no of paired
-  assertThrows(() => buildHtmlAndSerialize('<p for="foo" />', {}));
+  await assertThrowsAsync(async () => {
+    buildHtmlAndSerialize('<p for="foo" />', {});
+  });
   // no for paired
-  assertThrows(() => buildHtmlAndSerialize('<p of="bar" />', {}));
+  await assertThrowsAsync(async () => {
+    buildHtmlAndSerialize('<p of="bar" />', {});
+  });
   // no value given to of
-  assertThrows(() => buildHtmlAndSerialize('<p for="foo" of />', {}));
+  await assertThrowsAsync(async () => {
+    buildHtmlAndSerialize('<p for="foo" of />', {});
+  });
   // no value given to for
-  assertThrows(() => buildHtmlAndSerialize('<p for of="bar" />', {}));
+  await assertThrowsAsync(async () => {
+    buildHtmlAndSerialize('<p for of="bar" />', {});
+  });
   // invalid syntax
-  assertThrows(() => buildHtmlAndSerialize(`<p for="foo" of="["aaa"]" />`, {}));
+  await assertThrowsAsync(async () => {
+    buildHtmlAndSerialize(`<p for="foo" of="["aaa"]" />`, {});
+  });
   // value given to for isn't an iterable
-  assertThrows(() => buildHtmlAndSerialize(`<p for="foo" of="{foo: 1}"/>`, {}));
+  await assertThrowsAsync(async () => {
+    buildHtmlAndSerialize(`<p for="foo" of="{foo: 1}"/>`, {});
+  });
 
   // simple
   assertEquals(
-    buildHtmlAndSerialize(
+    await buildHtmlAndSerialize(
       `<p for="item" of="['foo', 'bar']">{{ index }} - {{ item }}</p>`,
       {}
     ),
@@ -30,14 +42,14 @@ Deno.test("for/of attribute should be properly computed", () => {
 
   // with value computed from context
   assertEquals(
-    buildHtmlAndSerialize(
+    await buildHtmlAndSerialize(
       `<p for="item" of="items">{{ index }} - {{ item }}</p>`,
       { items: ["foo", "bar"] }
     ),
     "<p >0 - foo</p><p >1 - bar</p>"
   );
   assertEquals(
-    buildHtmlAndSerialize(
+    await buildHtmlAndSerialize(
       `<p for="item" of="items">{{ index }} - {{ item }} - {{ item === superItem }}</p>`,
       { items: ["foo", "bar"], superItem: "bar" }
     ),
@@ -46,7 +58,7 @@ Deno.test("for/of attribute should be properly computed", () => {
 
   // nested
   assertEquals(
-    buildHtmlAndSerialize(
+    await buildHtmlAndSerialize(
       `<div><p for="item" of="['foo', 'bar']">{{ index }} - {{ item }}</p></div>`,
       {}
     ),
@@ -55,7 +67,7 @@ Deno.test("for/of attribute should be properly computed", () => {
 
   // nested with value computed from context
   assertEquals(
-    buildHtmlAndSerialize(
+    await buildHtmlAndSerialize(
       `<div><p for="item" of="items">{{ index }} - {{ item }} - {{ item === superItem }}</p></div>`,
       { items: ["foo", "bar"], superItem: "bar" }
     ),
