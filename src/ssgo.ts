@@ -10,11 +10,7 @@ import {
   copySync,
   WalkEntry,
 } from "https://deno.land/std/fs/mod.ts";
-import {
-  relative,
-  normalize,
-  dirname,
-} from "https://deno.land/std/path/mod.ts";
+import { normalize, dirname } from "https://deno.land/std/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
@@ -24,6 +20,7 @@ import {
   DIST_DIR_ABS,
   DIST_STATIC_ABS,
   TEMPLATES_DIST_BASE,
+  STATIC_DIR_ABS,
 } from "./constants.ts";
 import {
   INode,
@@ -48,6 +45,7 @@ import {
   checkComponentNameUnicity,
   checkBuildPageOptions,
   isFileInDir,
+  getRel,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -71,17 +69,17 @@ function cacheBuildPageCall(
   creatorAbs: string,
   { template: templateRel, data, options }: IBuildPageParams
 ) {
-  if (!existsSync(`${TEMPLATES_DIST_ABS}/${templateRel}`))
+  const templateAbs = normalize(`${TEMPLATES_DIST_ABS}/${templateRel}`);
+  if (!existsSync(templateAbs))
     throw new Error(
-      `When running ${relative(
-        Deno.cwd(),
+      `When running ${getRel(
         creatorAbs
       )}: Can't find given template: ${templateRel} inside of ${TEMPLATES_DIST_BASE}/ directory.`
     );
 
   const pageBuildCall: IBuildPageCall = {
     template: {
-      name: templateRel,
+      path: templateAbs,
       customComponents: [],
       staticFiles: [],
     },
@@ -89,14 +87,14 @@ function cacheBuildPageCall(
     options,
   };
   const creatorEntry: ICreator = {
-    name: creatorAbs,
-    pageBuildCalls: [pageBuildCall],
+    path: creatorAbs,
+    buildPageCalls: [pageBuildCall],
   };
 
   const existingEntry: ICreator | undefined = projectMap.find(
-    ({ name }) => name === creatorAbs
+    ({ path: name }) => name === creatorAbs
   );
-  if (!!existingEntry) existingEntry.pageBuildCalls.push(pageBuildCall);
+  if (!!existingEntry) existingEntry.buildPageCalls.push(pageBuildCall);
   else projectMap.push(creatorEntry);
 }
 
@@ -108,11 +106,11 @@ function bindTemplateToCustomComponent(
   event: ICustomComponent
 ) {
   const existingEntries: ITemplate[] = projectMap.reduce(
-    (acc: ITemplate[], { pageBuildCalls }: ICreator) => {
+    (acc: ITemplate[], { buildPageCalls }: ICreator) => {
       return [
         ...acc,
-        ...pageBuildCalls
-          .filter((c) => c.template.name === templateAbs)
+        ...buildPageCalls
+          .filter((c) => c.template.path === templateAbs)
           .map((c) => c.template),
       ];
     },
@@ -131,11 +129,11 @@ function bindTemplateToCustomComponent(
  */
 function bindTemplateToStatic(templateAbs: string, event: IStaticFile) {
   const existingEntries: ITemplate[] = projectMap.reduce(
-    (acc: ITemplate[], { pageBuildCalls }: ICreator) => {
+    (acc: ITemplate[], { buildPageCalls: pageBuildCalls }: ICreator) => {
       return [
         ...acc,
         ...pageBuildCalls
-          .filter((c) => c.template.name === templateAbs)
+          .filter((c) => c.template.path === templateAbs)
           .map((c) => c.template),
       ];
     },
@@ -172,10 +170,7 @@ function addStaticToBundle(staticFile: IStaticFile, destRel: string) {
           });
         } else {
           log.error(
-            `Error when calling Deno.bundle on ${relative(
-              Deno.cwd(),
-              staticFile.path
-            )}:`
+            `Error when calling Deno.bundle on ${getRel(staticFile.path)}:`
           );
           throw new Error(JSON.stringify(diag, null, 1));
         }
@@ -221,6 +216,8 @@ async function buildPage(
   options: IBuildPageOptions,
   availableComponents: ICustomComponent[]
 ) {
+  log.info(`Building ${getRel(getTargetDistFile(options))}...`);
+
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
   const parsed = parse(read).filter((n) =>
     "value" in n ? n.value !== "\n" : true
@@ -252,15 +249,23 @@ async function buildPage(
 export async function runCreator(creator: WalkEntry) {
   const module = await import(creator.path);
   // as every valid creator should export a default function
-  if (!module.default || typeof module.default !== "function") return;
+  if (!module.default || typeof module.default !== "function") {
+    log.warning(
+      `When running ${getRel(
+        creator.path
+      )}: A creator must export a default function.`
+    );
+    return;
+  }
 
-  log.info(`Running ${relative(Deno.cwd(), creator.path)}...`);
+  log.info(`Running ${getRel(creator.path)}...`);
   return module.default(async function (
     template: string,
     data: IContextData,
     options: IBuildPageOptions
   ) {
     // caching the call to buildPage on the fly
+    const templateAbs = normalize(`${TEMPLATES_DIST_ABS}/${template}`);
     cacheBuildPageCall(creator.path, {
       template: template,
       data,
@@ -269,8 +274,6 @@ export async function runCreator(creator: WalkEntry) {
 
     checkBuildPageOptions(template, options);
 
-    log.info(`Building ${relative(Deno.cwd(), getTargetDistFile(options))}...`);
-    const templateAbs = `${TEMPLATES_DIST_ABS}/${template}`;
     await buildPage(templateAbs, data, options, components);
   });
 }
@@ -281,21 +284,23 @@ export async function runCreator(creator: WalkEntry) {
 export async function build() {
   checkComponentNameUnicity(components);
 
-  log.info(
-    `Creating or emptying ${relative(Deno.cwd(), DIST_DIR_ABS)} directory...`
-  );
+  log.info(`Creating or emptying ${getRel(DIST_DIR_ABS)} directory...`);
   ensureDirSync(DIST_DIR_ABS);
   emptyDirSync(DIST_DIR_ABS);
 
-  const builds = [];
+  const builds: Promise<any>[] = [];
   for (let creator of creators) {
     builds.push(runCreator(creator));
   }
 
-  Promise.all(builds).then(async () => {
+  return new Promise(async (resolve) => {
+    // wait for buildPage calls to end
+    await Promise.all(builds);
     // wait for Deno.bundle calls to end
     await Promise.all(compilations);
+
     log.success("Project built.");
+    resolve();
   });
 }
 
@@ -307,15 +312,61 @@ export async function watch() {
   let timeout: number | null = null;
 
   function handleFsEvent(event: Deno.FsEvent) {
-    console.log(event.kind, " --> ", event.paths);
     if (["create", "modify", "remove"].includes(event.kind)) {
       for (const path of event.paths) {
-        console.log(isFileInDir(path, CREATORS_DIR_ABS));
+        //console.log(event.kind, " --> ", getRel(path));
+
+        if (isFileInDir(path, CREATORS_DIR_ABS)) {
+          console.log("");
+          log.info(`${getRel(path)} changed.`);
+
+          const creator = projectMap.find((c) => c.path === path);
+          if (typeof creator !== "undefined") creator.buildPageCalls = [];
+
+          runCreator({ path } as WalkEntry);
+        } else if (isFileInDir(path, TEMPLATES_DIST_ABS)) {
+          console.log("");
+          log.info(`${getRel(path)} changed.`);
+
+          // buildPage calls that use the changed template
+          const calls = projectMap.reduce(
+            (acc, curr) => [
+              ...acc,
+              ...curr.buildPageCalls.filter((c) => c.template.path === path),
+            ],
+            [] as IBuildPageCall[]
+          );
+
+          for (const call of calls)
+            buildPage(call.template.path, call.data, call.options, components);
+        } else if (isFileInDir(path, COMPONENTS_DIR_ABS)) {
+          console.log("");
+          log.info(`${getRel(path)} changed.`);
+
+          // buildPage calls that use a template that use the changed component
+          const calls = projectMap.reduce(
+            (acc, curr) => [
+              ...acc,
+              ...curr.buildPageCalls.filter((call) =>
+                call.template.customComponents.some(
+                  (comp) => comp.path === path
+                )
+              ),
+            ],
+            [] as IBuildPageCall[]
+          );
+
+          for (const call of calls)
+            buildPage(call.template.path, call.data, call.options, components);
+        } else if (isFileInDir(path, STATIC_DIR_ABS)) {
+        }
       }
     }
   }
 
   const watcher = Deno.watchFs(".");
+  log.info("Watching files for changes...");
+
   for await (const event of watcher) {
     if (event.kind !== "access") {
       if (timeout) clearTimeout(timeout);

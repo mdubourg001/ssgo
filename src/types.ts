@@ -26,7 +26,7 @@ export interface ICustomComponent {
 }
 
 export interface ITemplate {
-  name: string;
+  path: string;
   customComponents: ICustomComponent[];
   staticFiles: IStaticFile[];
 }
@@ -37,8 +37,8 @@ export interface IBuildPageCall
 }
 
 export interface ICreator {
-  name: string;
-  pageBuildCalls: IBuildPageCall[];
+  path: string;
+  buildPageCalls: IBuildPageCall[];
 }
 
 // ----- public ----- //

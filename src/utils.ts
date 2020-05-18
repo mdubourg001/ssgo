@@ -199,6 +199,13 @@ export function isFileInDir(fileAbs: string, dirAbs: string): boolean {
   return common([fileAbs, dirAbs]) === dirAbs;
 }
 
+/**
+ * Get path relative to cwd
+ */
+export function getRel(abs: string): string {
+  return relative(Deno.cwd(), abs);
+}
+
 // ----- errors ----- //
 
 /**
@@ -208,13 +215,13 @@ export function checkTopLevelNodesCount(
   parsedTemplate: INode[],
   templateAbs: string
 ) {
-  if (parsedTemplate.length > 1) {
-    const templateRel = relative(Deno.cwd(), templateAbs);
+  if (parsedTemplate.length > 1)
     log.error(
-      `When parsing '${templateRel}': A template/component file can't have more than one top-level node.`,
+      `When parsing '${getRel(
+        templateAbs
+      )}': A template/component file can't have more than one top-level node.`,
       true
     );
-  }
 }
 
 /**
@@ -224,12 +231,12 @@ export function checkEmptyTemplate(
   parsedTemplate: INode[],
   templateAbs: string
 ) {
-  if (parsedTemplate.length === 0) {
-    const templateRel = relative(Deno.cwd(), templateAbs);
+  if (parsedTemplate.length === 0)
     log.warning(
-      `When parsing '${templateRel}': This template/component file is empty.`
+      `When parsing '${getRel(
+        templateAbs
+      )}': This template/component file is empty.`
     );
-  }
 }
 
 /**
