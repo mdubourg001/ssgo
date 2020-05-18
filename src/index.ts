@@ -14,6 +14,7 @@ import { normalize, dirname } from "https://deno.land/std/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
+  SERVE_PORT,
   CREATORS_DIR_ABS,
   TEMPLATES_DIST_ABS,
   COMPONENTS_DIR_ABS,
@@ -162,7 +163,7 @@ function addStaticToBundle(staticFile: IStaticFile, destRel: string) {
           lib: ["dom", "esnext", "deno.ns"],
         });
 
-        if (diag === null) {
+        if (!diag) {
           writeFileStrSync(destAbs, emit);
           resolve({
             destRel,
@@ -378,4 +379,7 @@ export async function watch() {
 /**
  * Serve the bundle locally
  */
-export function serve() {}
+export async function serve() {
+  log.warning(`Serving is not implemented yet.`);
+  //log.info(`Serving on port ${SERVE_PORT}...`);
+}

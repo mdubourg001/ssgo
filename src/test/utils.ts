@@ -1,7 +1,7 @@
 import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
 
 import { buildHtml } from "../build.ts";
-import { serialize } from "../ssgo.ts";
+import { serialize } from "../index.ts";
 import { INode, IContextData } from "../types.ts";
 
 export async function buildHtmlAndSerialize(
