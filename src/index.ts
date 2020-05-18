@@ -10,7 +10,11 @@ import {
   copySync,
   WalkEntry,
 } from "https://deno.land/std/fs/mod.ts";
-import { normalize, dirname } from "https://deno.land/std/path/mod.ts";
+import {
+  normalize,
+  dirname,
+  relative,
+} from "https://deno.land/std/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
@@ -248,18 +252,17 @@ async function buildPage(
 }
 
 export async function runCreator(creator: WalkEntry) {
-  const module = await import(creator.path);
+  const creatorRel = getRel(creator.path);
+  const module = await import(`file://${creator.path}`);
   // as every valid creator should export a default function
   if (!module.default || typeof module.default !== "function") {
     log.warning(
-      `When running ${getRel(
-        creator.path
-      )}: A creator must export a default function.`
+      `When running ${creatorRel}: A creator must export a default function.`
     );
     return;
   }
 
-  log.info(`Running ${getRel(creator.path)}...`);
+  log.info(`Running ${creatorRel}...`);
   return module.default(async function (
     template: string,
     data: IContextData,
