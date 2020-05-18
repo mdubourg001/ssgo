@@ -1,5 +1,5 @@
 export default async (buildPage: Function) => {
-  buildPage("creators/templates/about.html", {}, { filename: "about" });
+  buildPage("about.html", {}, { filename: "about" });
 
   const data = await new Promise((r) =>
     setTimeout(
@@ -11,5 +11,5 @@ export default async (buildPage: Function) => {
     )
   );
 
-  buildPage("creators/templates/index.html", data, { filename: "index" });
+  buildPage("index.html", data, { filename: "index" });
 };

@@ -19,9 +19,11 @@ import {
 import {
   WATCHER_THROTTLE,
   CREATORS_DIR_ABS,
+  TEMPLATES_DIST_ABS,
   COMPONENTS_DIR_ABS,
   DIST_DIR_ABS,
   DIST_STATIC_ABS,
+  TEMPLATES_DIST_BASE,
 } from "./constants.ts";
 import {
   INode,
@@ -67,14 +69,19 @@ let compilations: Promise<any>[] = [];
  */
 function cacheBuildPageCall(
   creatorAbs: string,
-  { template: templateAbs, data, options }: IBuildPageParams
+  { template: templateRel, data, options }: IBuildPageParams
 ) {
-  if (!existsSync(templateAbs))
-    throw new Error(`Can't find given template: ${templateAbs}`);
+  if (!existsSync(`${TEMPLATES_DIST_ABS}/${templateRel}`))
+    throw new Error(
+      `When running ${relative(
+        Deno.cwd(),
+        creatorAbs
+      )}: Can't find given template: ${templateRel} inside of ${TEMPLATES_DIST_BASE}/ directory.`
+    );
 
   const pageBuildCall: IBuildPageCall = {
     template: {
-      name: templateAbs,
+      name: templateRel,
       customComponents: [],
       staticFiles: [],
     },
@@ -253,17 +260,17 @@ export async function runCreator(creator: WalkEntry) {
     data: IContextData,
     options: IBuildPageOptions
   ) {
-    const templateAbs = `${Deno.cwd()}/${template}`;
     // caching the call to buildPage on the fly
     cacheBuildPageCall(creator.path, {
-      template: templateAbs,
+      template: template,
       data,
       options,
     });
 
-    checkBuildPageOptions(templateAbs, options);
+    checkBuildPageOptions(template, options);
 
     log.info(`Building ${relative(Deno.cwd(), getTargetDistFile(options))}...`);
+    const templateAbs = `${TEMPLATES_DIST_ABS}/${template}`;
     await buildPage(templateAbs, data, options, components);
   });
 }

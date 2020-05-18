@@ -275,11 +275,10 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
  * Check that buildPage options are valid
  */
 export function checkBuildPageOptions(
-  templateAbs: string,
+  templateRel: string,
   options: IBuildPageOptions
 ) {
   if (typeof options.filename === "undefined") {
-    const templateRel = relative(Deno.cwd(), templateAbs);
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
       true
