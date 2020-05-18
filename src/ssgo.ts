@@ -8,6 +8,7 @@ import {
   readFileStrSync,
   ensureDirSync,
   copySync,
+  WalkEntry,
 } from "https://deno.land/std/fs/mod.ts";
 import {
   relative,
@@ -16,6 +17,7 @@ import {
 } from "https://deno.land/std/path/mod.ts";
 
 import {
+  WATCHER_THROTTLE,
   CREATORS_DIR_ABS,
   COMPONENTS_DIR_ABS,
   DIST_DIR_ABS,
@@ -43,11 +45,18 @@ import {
   checkEmptyTemplate,
   checkComponentNameUnicity,
   checkBuildPageOptions,
+  isFileInDir,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
 
+const creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file) =>
+  isScript(file.name)
+);
+const components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
+  isTemplate(file.name)
+);
 let projectMap: ICreator[] = [];
 let compilations: Promise<any>[] = [];
 
@@ -233,17 +242,36 @@ async function buildPage(
   writeFileStrSync(targetFile, serialized);
 }
 
+export async function runCreator(creator: WalkEntry) {
+  const module = await import(creator.path);
+  // as every valid creator should export a default function
+  if (!module.default || typeof module.default !== "function") return;
+
+  log.info(`Running ${relative(Deno.cwd(), creator.path)}...`);
+  return module.default(async function (
+    template: string,
+    data: IContextData,
+    options: IBuildPageOptions
+  ) {
+    const templateAbs = `${Deno.cwd()}/${template}`;
+    // caching the call to buildPage on the fly
+    cacheBuildPageCall(creator.path, {
+      template: templateAbs,
+      data,
+      options,
+    });
+
+    checkBuildPageOptions(templateAbs, options);
+
+    log.info(`Building ${relative(Deno.cwd(), getTargetDistFile(options))}...`);
+    await buildPage(templateAbs, data, options, components);
+  });
+}
+
 /**
  * Build the project
  */
 export async function build() {
-  const creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file) =>
-    isScript(file.name)
-  );
-  const components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
-    isTemplate(file.name)
-  );
-
   checkComponentNameUnicity(components);
 
   log.info(
@@ -254,33 +282,7 @@ export async function build() {
 
   const builds = [];
   for (let creator of creators) {
-    const module = await import(creator.path);
-    // as every valid creator should export a default function
-    if (!module.default || typeof module.default !== "function") continue;
-
-    log.info(`Running ${relative(Deno.cwd(), creator.path)}...`);
-    const build = module.default(async function (
-      template: string,
-      data: IContextData,
-      options: IBuildPageOptions
-    ) {
-      const templateAbs = `${Deno.cwd()}/${template}`;
-      // caching the call to buildPage on the fly
-      cacheBuildPageCall(creator.path, {
-        template: templateAbs,
-        data,
-        options,
-      });
-
-      checkBuildPageOptions(templateAbs, options);
-
-      log.info(
-        `Building ${relative(Deno.cwd(), getTargetDistFile(options))}...`
-      );
-      await buildPage(templateAbs, data, options, components);
-    });
-
-    builds.push(build);
+    builds.push(runCreator(creator));
   }
 
   Promise.all(builds).then(async () => {
@@ -293,7 +295,27 @@ export async function build() {
 /**
  * Watch project files for change
  */
-export function watch() {}
+export async function watch() {
+  // https://github.com/Caesar2011/rhinoder/blob/master/mod.ts
+  let timeout: number | null = null;
+
+  function handleFsEvent(event: Deno.FsEvent) {
+    console.log(event.kind, " --> ", event.paths);
+    if (["create", "modify", "remove"].includes(event.kind)) {
+      for (const path of event.paths) {
+        console.log(isFileInDir(path, CREATORS_DIR_ABS));
+      }
+    }
+  }
+
+  const watcher = Deno.watchFs(".");
+  for await (const event of watcher) {
+    if (event.kind !== "access") {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => handleFsEvent(event), WATCHER_THROTTLE);
+    }
+  }
+}
 
 /**
  * Serve the bundle locally

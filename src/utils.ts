@@ -192,6 +192,13 @@ export function getStaticFileBundlePath(staticRel: string): string {
   return normalize(`/${filename}${ext}`);
 }
 
+/**
+ * Check if a file is inside of a directory
+ */
+export function isFileInDir(fileAbs: string, dirAbs: string): boolean {
+  return common([fileAbs, dirAbs]) === dirAbs;
+}
+
 // ----- errors ----- //
 
 /**

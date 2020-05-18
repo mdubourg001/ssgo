@@ -1,5 +1,7 @@
 // ----- config ----- //
 
+export const WATCHER_THROTTLE = 300;
+
 export const CREATORS_DIR_BASE = "creators";
 export const CREATORS_DIR_ABS = `${Deno.cwd()}/${CREATORS_DIR_BASE}/`;
 
