@@ -17,7 +17,7 @@ import {
   removeExt,
   isComment,
   removeFromParent,
-  pushNextTo,
+  pushBefore,
   checkRecursiveComponent,
   checkStaticFileExists,
   getUnprefixedAttributeName,
@@ -101,7 +101,7 @@ function computeForOf(
     for (const item of evaluatedOf.reverse()) {
       const clone: INode = cloneDeep(node);
       clone.parent = node.parent;
-      pushNextTo(parent as INode[], node, clone);
+      pushBefore(parent as INode[], node, clone);
 
       buildHtml(
         clone,

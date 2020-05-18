@@ -21,7 +21,6 @@ import {
 import {
   STATIC_DIR_ABS,
   DIST_DIR_ABS,
-  DIST_STATIC_BASE,
   BUILDABLE_STATIC_EXT,
 } from "./constants.ts";
 
@@ -85,16 +84,16 @@ export function contextEval(
 /**
  * Get attributes as a name="value" string
  */
-export function formatAttributes(attributes: IAttribute[]) {
+export function formatAttributes(attributes: IAttribute[]): string {
   let result = "";
 
   for (let attribute of attributes) {
-    result += `${attribute.name.value}`;
+    result += ` ${attribute.name.value}`;
     if (typeof attribute.value?.value !== "undefined")
-      result += `="${attribute.value.value}" `;
+      result += `="${attribute.value.value}"`;
   }
 
-  return result;
+  return result.trim();
 }
 
 /**
@@ -136,8 +135,8 @@ export function removeFromParent(node: INode) {
 /**
  * Add a item next to another inside of parent
  */
-export function pushNextTo<T>(array: T[], nextTo: T, ...items: T[]) {
-  const index = array.findIndex((i) => i === nextTo);
+export function pushBefore<T>(array: T[], before: T, ...items: T[]) {
+  const index = array.findIndex((i) => i === before);
   array.splice(index, 0, ...items);
 }
 

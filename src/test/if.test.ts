@@ -1,56 +1,66 @@
 import {
   assertEquals,
-  assertThrows,
+  assertThrowsAsync,
 } from "https://deno.land/std/testing/asserts.ts";
 
 import { buildHtmlAndSerialize } from "./utils.ts";
 
-Deno.test("if attribute should be properly computed", () => {
+Deno.test("if attribute should be properly computed", async () => {
   // no value given to attribute
-  assertThrows(() => buildHtmlAndSerialize("<p if />", {}));
+  await assertThrowsAsync(async () => {
+    await buildHtmlAndSerialize("<p if />", {});
+  });
   // unknown context value
-  assertThrows(() => buildHtmlAndSerialize('<p if="unknownVal" />', {}));
+  await assertThrowsAsync(async () => {
+    await buildHtmlAndSerialize('<p if="unknownVal" />', {});
+  });
 
   // simple
-  assertEquals(buildHtmlAndSerialize('<p if="true" />', {}), "<p />");
-  assertEquals(buildHtmlAndSerialize('<p if="false" />', {}), "");
+  assertEquals(await buildHtmlAndSerialize('<p if="true" />', {}), "<p />");
+  assertEquals(await buildHtmlAndSerialize('<p if="false" />', {}), "");
 
   // with value computed from context
   assertEquals(
-    buildHtmlAndSerialize('<p if="show" />', { show: true }),
+    await buildHtmlAndSerialize('<p if="show" />', { show: true }),
     "<p />"
   );
-  assertEquals(buildHtmlAndSerialize('<p if="!show" />', { show: true }), "");
+  assertEquals(
+    await buildHtmlAndSerialize('<p if="!show" />', { show: true }),
+    ""
+  );
 
   // nested
   assertEquals(
-    buildHtmlAndSerialize('<div><p if="true" /></div>', {}),
+    await buildHtmlAndSerialize('<div><p if="true" /></div>', {}),
     "<div ><p /></div>"
   );
   assertEquals(
-    buildHtmlAndSerialize('<div><p if="false" /></div>', {}),
+    await buildHtmlAndSerialize('<div><p if="false" /></div>', {}),
     "<div ></div>"
   );
 
   // nested with value computed from context
   assertEquals(
-    buildHtmlAndSerialize('<div><p if="show" /></div>', { show: true }),
+    await buildHtmlAndSerialize('<div><p if="show" /></div>', { show: true }),
     "<div ><p /></div>"
   );
   assertEquals(
-    buildHtmlAndSerialize('<div><p if="!show" /></div>', { show: true }),
+    await buildHtmlAndSerialize('<div><p if="!show" /></div>', { show: true }),
     "<div ></div>"
   );
 
   // based on context value given by a for/of
   assertEquals(
-    buildHtmlAndSerialize('<p if="show" for="show" of="[true, false]" />', {}),
+    await buildHtmlAndSerialize(
+      '<p if="show" for="show" of="[true, false]" />',
+      {}
+    ),
     "<p />"
   );
 
   // nested and based on context value given by a for/of
   assertEquals(
-    buildHtmlAndSerialize(
+    await buildHtmlAndSerialize(
       '<div><p if="show" for="show" of="[true, false]" /></div>',
       {}
     ),
