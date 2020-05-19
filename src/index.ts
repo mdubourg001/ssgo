@@ -10,11 +10,7 @@ import {
   copySync,
   WalkEntry,
 } from "https://deno.land/std/fs/mod.ts";
-import {
-  normalize,
-  dirname,
-  relative,
-} from "https://deno.land/std/path/mod.ts";
+import { normalize, dirname } from "https://deno.land/std/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
@@ -49,12 +45,15 @@ import {
   checkEmptyTemplate,
   checkComponentNameUnicity,
   checkBuildPageOptions,
+  checkProjectDirectoriesExist,
   isFileInDir,
   getRel,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
+
+checkProjectDirectoriesExist();
 
 const creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file) =>
   isScript(file.name)
@@ -65,7 +64,7 @@ const components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
 let projectMap: ICreator[] = [];
 let compilations: Promise<any>[] = [];
 
-// ----- build misc. ----- //
+// ----- business ----- //
 
 /**
  * Cache a call to buildPage
@@ -208,8 +207,6 @@ export function serialize(node: INode) {
 
   return result;
 }
-
-// ----- internals ----- //
 
 /**
  * Build a given template with given data and write the file to fs

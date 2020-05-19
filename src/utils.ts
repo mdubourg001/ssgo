@@ -19,6 +19,10 @@ import {
   IStaticFile,
 } from "./types.ts";
 import {
+  CREATORS_DIR_BASE,
+  CREATORS_DIR_ABS,
+  TEMPLATES_DIST_BASE,
+  TEMPLATES_DIST_ABS,
   STATIC_DIR_ABS,
   DIST_DIR_ABS,
   BUILDABLE_STATIC_EXT,
@@ -323,4 +327,20 @@ export function checkStaticFileIsInsideStaticDir(
     return false;
   }
   return true;
+}
+
+/**
+ * Check that mandatory directories exist
+ */
+export function checkProjectDirectoriesExist() {
+  if (!existsSync(CREATORS_DIR_ABS))
+    log.error(
+      `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
+      true
+    );
+  if (!existsSync(TEMPLATES_DIST_ABS))
+    log.error(
+      `Could not find mandatory '${TEMPLATES_DIST_BASE}/' directory.`,
+      true
+    );
 }
