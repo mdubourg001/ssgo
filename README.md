@@ -56,4 +56,6 @@ ssgo serve
 - [ ] Complete the documentation
 - [ ] Format the built pages
 - [ ] Add --minify a flag to allow minification
-- [ ] Add an 'init' argument to initialize project directories
+- [x] Add an 'init' argument to initialize project directories
+- [ ] Serialize the cache on FS to allow faster cold builds
+- [ ] Allow nodes inside of custom-components

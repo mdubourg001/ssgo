@@ -4,6 +4,7 @@ export const DEV_FLAG = "dev";
 export const SERVE_FLAG = "serve";
 export const BUILD_FLAG = "build";
 export const HELP_FLAG = "help";
+export const INIT_FLAG = "init";
 
 // ----- config ----- //
 

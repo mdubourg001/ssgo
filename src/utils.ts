@@ -23,6 +23,9 @@ import {
   CREATORS_DIR_ABS,
   TEMPLATES_DIST_BASE,
   TEMPLATES_DIST_ABS,
+  COMPONENTS_DIR_BASE,
+  COMPONENTS_DIR_ABS,
+  STATIC_DIR_BASE,
   STATIC_DIR_ABS,
   DIST_DIR_ABS,
   BUILDABLE_STATIC_EXT,
@@ -332,15 +335,25 @@ export function checkStaticFileIsInsideStaticDir(
 /**
  * Check that mandatory directories exist
  */
-export function checkProjectDirectoriesExist() {
-  if (!existsSync(CREATORS_DIR_ABS))
+export function checkProjectDirectoriesExist(throwErr: boolean = false) {
+  const creatorsExists = existsSync(CREATORS_DIR_ABS);
+  if (!creatorsExists && throwErr)
     log.error(
       `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
-      true
+      throwErr
     );
-  if (!existsSync(TEMPLATES_DIST_ABS))
+
+  const templatesExists = existsSync(TEMPLATES_DIST_ABS);
+  if (!templatesExists && throwErr)
     log.error(
       `Could not find mandatory '${TEMPLATES_DIST_BASE}/' directory.`,
-      true
+      throwErr
     );
+
+  return {
+    [CREATORS_DIR_ABS]: creatorsExists,
+    [TEMPLATES_DIST_ABS]: templatesExists,
+    [STATIC_DIR_ABS]: existsSync(STATIC_DIR_ABS),
+    [COMPONENTS_DIR_ABS]: existsSync(COMPONENTS_DIR_ABS),
+  };
 }

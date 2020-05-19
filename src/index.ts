@@ -53,18 +53,25 @@ import { buildHtml } from "./build.ts";
 
 // ----- globals ----- //
 
-checkProjectDirectoriesExist();
+let creators: WalkEntry[] = [];
+let components: WalkEntry[] = [];
 
-const creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file) =>
-  isScript(file.name)
-);
-const components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
-  isTemplate(file.name)
-);
 let projectMap: ICreator[] = [];
 let compilations: Promise<any>[] = [];
 
 // ----- business ----- //
+
+/**
+ * Walk through creators/ and components/ to init global vars
+ */
+function walkCreatorsAndComponents() {
+  creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file) =>
+    isScript(file.name)
+  );
+  components = Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file) =>
+    isTemplate(file.name)
+  );
+}
 
 /**
  * Cache a call to buildPage
@@ -283,6 +290,9 @@ export async function runCreator(creator: WalkEntry) {
  * Build the project
  */
 export async function build() {
+  checkProjectDirectoriesExist(true);
+  walkCreatorsAndComponents();
+
   checkComponentNameUnicity(components);
 
   log.info(`Creating or emptying ${getRel(DIST_DIR_ABS)} directory...`);
@@ -382,4 +392,20 @@ export async function watch() {
 export async function serve() {
   log.warning(`Serving is not implemented yet.`);
   //log.info(`Serving on port ${SERVE_PORT}...`);
+}
+
+/**
+ * Create missing project directories
+ */
+export async function init() {
+  const directories = checkProjectDirectoriesExist();
+
+  for (const dir of Object.keys(directories)) {
+    if (!directories[dir]) {
+      log.info(`Creating ${getRel(dir)}/ directory...`);
+      ensureDirSync(dir);
+    }
+  }
+
+  log.success(`Project initialized.`);
 }
