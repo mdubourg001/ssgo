@@ -42,7 +42,7 @@ Your site will be built inside of the `dist/` directory.
 ssgo dev
 ```
 
-~~**To serve the build** on port 8000~~ (**soon !**):
+~~**To serve the build** on port 8000~~ (**soon !** You can use [Denoliver](https://github.com/joakimunge/denoliver) in the meantime):
 
 ```bash
 ssgo serve
