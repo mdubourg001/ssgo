@@ -16,17 +16,17 @@ if (Deno.args.includes(HELP_FLAG)) {
     - dev: build project to ${DIST_DIR_BASE}, watch for file changes and serve on port ${SERVE_PORT}
     - serve: serve ${DIST_DIR_BASE} directory on port ${SERVE_PORT}
     - build (default): build project only to ${DIST_DIR_BASE}
+    - init: initialize project directories (does NOT override if these already exist)
     - help: display help menu
-  `
+  `,
   );
-}
-// dev: build, watch files and serve
-else if (Deno.args.includes(DEV_FLAG))
+} // dev: build, watch files and serve
+else if (Deno.args.includes(DEV_FLAG)) {
   build().then(() => {
     watch();
     serve();
   });
-// serve: serve files only
+} // serve: serve files only
 else if (Deno.args.includes(SERVE_FLAG)) serve();
 // init: create missing project directories
 else if (Deno.args.includes(INIT_FLAG)) init();

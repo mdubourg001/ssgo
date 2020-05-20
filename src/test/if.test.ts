@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertThrowsAsync,
-} from "https://deno.land/std/testing/asserts.ts";
+} from "std/testing/asserts.ts";
 
 import { buildHtmlAndSerialize } from "./utils.ts";
 
@@ -22,48 +22,48 @@ Deno.test("if attribute should be properly computed", async () => {
   // with value computed from context
   assertEquals(
     await buildHtmlAndSerialize('<p if="show" />', { show: true }),
-    "<p />"
+    "<p />",
   );
   assertEquals(
     await buildHtmlAndSerialize('<p if="!show" />', { show: true }),
-    ""
+    "",
   );
 
   // nested
   assertEquals(
     await buildHtmlAndSerialize('<div><p if="true" /></div>', {}),
-    "<div ><p /></div>"
+    "<div ><p /></div>",
   );
   assertEquals(
     await buildHtmlAndSerialize('<div><p if="false" /></div>', {}),
-    "<div ></div>"
+    "<div ></div>",
   );
 
   // nested with value computed from context
   assertEquals(
     await buildHtmlAndSerialize('<div><p if="show" /></div>', { show: true }),
-    "<div ><p /></div>"
+    "<div ><p /></div>",
   );
   assertEquals(
     await buildHtmlAndSerialize('<div><p if="!show" /></div>', { show: true }),
-    "<div ></div>"
+    "<div ></div>",
   );
 
   // based on context value given by a for/of
   assertEquals(
     await buildHtmlAndSerialize(
       '<p if="show" for="show" of="[true, false]" />',
-      {}
+      {},
     ),
-    "<p />"
+    "<p />",
   );
 
   // nested and based on context value given by a for/of
   assertEquals(
     await buildHtmlAndSerialize(
       '<div><p if="show" for="show" of="[true, false]" /></div>',
-      {}
+      {},
     ),
-    "<div ><p /></div>"
+    "<div ><p /></div>",
   );
 });

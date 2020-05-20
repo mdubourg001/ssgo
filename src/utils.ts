@@ -1,5 +1,5 @@
 import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
-import { red, blue, yellow, green } from "https://deno.land/std/fmt/colors.ts";
+import { red, blue, yellow, green } from "std/fmt/colors.ts";
 import {
   relative,
   resolve,
@@ -8,8 +8,8 @@ import {
   normalize,
   extname,
   common,
-} from "https://deno.land/std/path/mod.ts";
-import { existsSync } from "https://deno.land/std/fs/mod.ts";
+} from "std/path/mod.ts";
+import { existsSync, readFileStrSync } from "std/fs/mod.ts";
 
 import {
   INode,
@@ -72,7 +72,7 @@ export function isTemplate(filename: string): boolean {
 export function contextEval(
   expression: string,
   context: IContextData,
-  errorContext?: string
+  errorContext?: string,
 ) {
   try {
     // @ts-ignore
@@ -82,8 +82,9 @@ export function contextEval(
     for (const key of Object.keys(context)) delete window[key];
     return evaluation;
   } catch (e) {
-    if (typeof errorContext !== "undefined")
+    if (typeof errorContext !== "undefined") {
       log.error(`When trying to evaluate '${errorContext.trim()}'`, true);
+    }
     throw e;
   }
 }
@@ -96,8 +97,9 @@ export function formatAttributes(attributes: IAttribute[]): string {
 
   for (let attribute of attributes) {
     result += ` ${attribute.name.value}`;
-    if (typeof attribute.value?.value !== "undefined")
+    if (typeof attribute.value?.value !== "undefined") {
       result += `="${attribute.value.value}"`;
+    }
   }
 
   return result.trim();
@@ -164,7 +166,7 @@ export function getTargetDistFile(options: IBuildPageOptions) {
     options.dir ?? "",
     options.filename.endsWith(".html")
       ? options.filename
-      : options.filename + ".html"
+      : options.filename + ".html",
   );
 }
 
@@ -182,7 +184,7 @@ export function getStaticFileFromRel(staticRel: string): IStaticFile {
   return {
     path: staticFileAbs,
     isCompiled: BUILDABLE_STATIC_EXT.includes(
-      posix.extname(staticFileBasename)
+      posix.extname(staticFileBasename),
     ),
   };
 }
@@ -220,15 +222,18 @@ export function getRel(abs: string): string {
  */
 export function checkTopLevelNodesCount(
   parsedTemplate: INode[],
-  templateAbs: string
+  templateAbs: string,
 ) {
-  if (parsedTemplate.length > 1)
+  if (parsedTemplate.length > 1) {
     log.error(
-      `When parsing '${getRel(
-        templateAbs
-      )}': A template/component file can't have more than one top-level node.`,
-      true
+      `When parsing '${
+        getRel(
+          templateAbs,
+        )
+      }': A template/component file can't have more than one top-level node.`,
+      true,
     );
+  }
 }
 
 /**
@@ -236,14 +241,17 @@ export function checkTopLevelNodesCount(
  */
 export function checkEmptyTemplate(
   parsedTemplate: INode[],
-  templateAbs: string
+  templateAbs: string,
 ) {
-  if (parsedTemplate.length === 0)
+  if (parsedTemplate.length === 0) {
     log.warning(
-      `When parsing '${getRel(
-        templateAbs
-      )}': This template/component file is empty.`
+      `When parsing '${
+        getRel(
+          templateAbs,
+        )
+      }': This template/component file is empty.`,
     );
+  }
 }
 
 /**
@@ -255,15 +263,18 @@ export function checkComponentNameUnicity(components: ICustomComponent[]) {
       components.some(
         (c) =>
           removeExt(c.name) === removeExt(component.name) &&
-          c.path !== component.path
+          c.path !== component.path,
       )
-    )
+    ) {
       log.error(
-        `When listing custom components: Two components with the same name '${removeExt(
-          component.name
-        )}' found.`,
-        true
+        `When listing custom components: Two components with the same name '${
+          removeExt(
+            component.name,
+          )
+        }' found.`,
+        true,
       );
+    }
   }
 }
 
@@ -274,7 +285,7 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
   if ("name" in node && node.name === removeExt(componentName)) {
     log.error(
       `When parsing '${componentName}': Recursive call of component found.`,
-      true
+      true,
     );
   }
 
@@ -290,12 +301,12 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
  */
 export function checkBuildPageOptions(
   templateRel: string,
-  options: IBuildPageOptions
+  options: IBuildPageOptions,
 ) {
   if (typeof options.filename === "undefined") {
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
-      true
+      true,
     );
   }
 }
@@ -305,11 +316,11 @@ export function checkBuildPageOptions(
  */
 export function checkStaticFileExists(
   staticFileAbs: string,
-  staticAttrValue: string
+  staticAttrValue: string,
 ): boolean {
   if (!existsSync(staticFileAbs)) {
     log.warning(
-      `Could not resolve ${staticAttrValue}: won't be included in output build.`
+      `Could not resolve ${staticAttrValue}: won't be included in output build.`,
     );
     return false;
   }
@@ -321,11 +332,11 @@ export function checkStaticFileExists(
  */
 export function checkStaticFileIsInsideStaticDir(
   staticFileAbs: string,
-  staticAttrValue: string
+  staticAttrValue: string,
 ) {
   if (common([staticFileAbs, STATIC_DIR_ABS]) !== STATIC_DIR_ABS) {
     log.warning(
-      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`
+      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`,
     );
     return false;
   }
@@ -337,18 +348,20 @@ export function checkStaticFileIsInsideStaticDir(
  */
 export function checkProjectDirectoriesExist(throwErr: boolean = false) {
   const creatorsExists = existsSync(CREATORS_DIR_ABS);
-  if (!creatorsExists && throwErr)
+  if (!creatorsExists && throwErr) {
     log.error(
       `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
-      throwErr
+      throwErr,
     );
+  }
 
   const templatesExists = existsSync(TEMPLATES_DIST_ABS);
-  if (!templatesExists && throwErr)
+  if (!templatesExists && throwErr) {
     log.error(
       `Could not find mandatory '${TEMPLATES_DIST_BASE}/' directory.`,
-      throwErr
+      throwErr,
     );
+  }
 
   return {
     [CREATORS_DIR_ABS]: creatorsExists,

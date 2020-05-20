@@ -59,3 +59,5 @@ ssgo serve
 - [x] Add an 'init' argument to initialize project directories
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Allow nodes inside of custom-components
+- [ ] Display version number on launch
+- [ ] Add a taskfile for development tasks
