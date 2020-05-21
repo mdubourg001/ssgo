@@ -1,3 +1,31 @@
+/* ----- header ----- */
+
+header {
+  width: 100%;
+  padding: 15px 45px;
+  background-color: #f9fafb;
+}
+
+@media (max-width: 767px) {
+  header {
+    padding: 15px 15px;
+  }
+}
+
+#header__content {
+  margin: 0 auto;
+  width: 980px;
+  display: flex;
+}
+
+#header__logo {
+  max-height: 40px;
+}
+
+/* ----- sidebar ----- */
+
+/* ----- docs ----- */
+
 .markdown-body {
   box-sizing: border-box;
   min-width: 200px;
