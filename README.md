@@ -23,7 +23,7 @@ Here's what a `ssgo` project looks like:
 
 ```plaintext
 ├── creators/    <- here go the scripts creating your pages
-├── templates/   <- here go the the templates your pages
+├── templates/   <- here go the templates of your pages
 ├── components/  <- here go your custom components
 └── static/      <- here go your static files
 ```
@@ -60,4 +60,4 @@ ssgo serve
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Allow nodes inside of custom-components
 - [ ] Display version number on launch
-- [ ] Add a taskfile for development tasks
+- [x] Add a velociraptor file for development tasks
