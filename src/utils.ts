@@ -9,7 +9,7 @@ import {
   extname,
   common,
 } from "std/path/mod.ts";
-import { existsSync, readFileStrSync } from "std/fs/mod.ts";
+import { existsSync } from "std/fs/mod.ts";
 
 import {
   INode,
@@ -23,12 +23,11 @@ import {
   CREATORS_DIR_ABS,
   TEMPLATES_DIST_BASE,
   TEMPLATES_DIST_ABS,
-  COMPONENTS_DIR_BASE,
   COMPONENTS_DIR_ABS,
-  STATIC_DIR_BASE,
   STATIC_DIR_ABS,
   DIST_DIR_ABS,
   BUILDABLE_STATIC_EXT,
+  DIST_STATIC_BASE,
 } from "./constants.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
@@ -198,7 +197,7 @@ export function getStaticFileBundlePath(staticRel: string): string {
     : extname(staticRel);
   const filename = removeExt(staticRel);
 
-  return normalize(`/${filename}${ext}`);
+  return normalize(`/${DIST_STATIC_BASE}/${filename}${ext}`);
 }
 
 /**
@@ -303,7 +302,7 @@ export function checkBuildPageOptions(
   templateRel: string,
   options: IBuildPageOptions,
 ) {
-  if (options.filename) {
+  if (!options.filename) {
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
       true,
