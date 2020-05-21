@@ -26,13 +26,14 @@ import {
 import {
   CREATORS_DIR_BASE,
   CREATORS_DIR_ABS,
-  TEMPLATES_DIST_BASE,
-  TEMPLATES_DIST_ABS,
+  TEMPLATES_DIR_BASE,
+  TEMPLATES_DIR_ABS,
   COMPONENTS_DIR_ABS,
   STATIC_DIR_ABS,
   DIST_DIR_ABS,
   BUILDABLE_STATIC_EXT,
   DIST_STATIC_BASE,
+  ACCEPTED_TOP_LEVEL_TAGS,
 } from "./constants.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
@@ -228,7 +229,13 @@ export function checkTopLevelNodesCount(
   parsedTemplate: INode[],
   templateAbs: string,
 ) {
-  if (parsedTemplate.length > 1) {
+  const filteredTemplate = parsedTemplate.filter((node) =>
+    (node.type === "Text" && node.value.trim().length > 0) ||
+    (("name" in node) &&
+      !ACCEPTED_TOP_LEVEL_TAGS.includes(node.name))
+  );
+
+  if (filteredTemplate.length > 1) {
     log.error(
       `When parsing '${
         getRel(
@@ -359,30 +366,18 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
     );
   }
 
-  const templatesExists = existsSync(TEMPLATES_DIST_ABS);
+  const templatesExists = existsSync(TEMPLATES_DIR_ABS);
   if (!templatesExists && throwErr) {
     log.error(
-      `Could not find mandatory '${TEMPLATES_DIST_BASE}/' directory.`,
+      `Could not find mandatory '${TEMPLATES_DIR_BASE}/' directory.`,
       throwErr,
     );
   }
 
   return {
     [CREATORS_DIR_ABS]: creatorsExists,
-    [TEMPLATES_DIST_ABS]: templatesExists,
+    [TEMPLATES_DIR_ABS]: templatesExists,
     [STATIC_DIR_ABS]: existsSync(STATIC_DIR_ABS),
     [COMPONENTS_DIR_ABS]: existsSync(COMPONENTS_DIR_ABS),
   };
-}
-
-/**
- * Prevent overriding previously built pages with the same name
- */
-export function checkOutputPageAlreadyExists(outputPageAbs: string) {
-  if (existsSync(outputPageAbs)) {
-    log.error(
-      `When writing ${getRel(outputPageAbs)}: Page already exists.`,
-      true,
-    );
-  }
 }

@@ -16,11 +16,11 @@ import {
   WATCHER_THROTTLE,
   SERVE_PORT,
   CREATORS_DIR_ABS,
-  TEMPLATES_DIST_ABS,
+  TEMPLATES_DIR_ABS,
   COMPONENTS_DIR_ABS,
   DIST_DIR_ABS,
   DIST_STATIC_ABS,
-  TEMPLATES_DIST_BASE,
+  TEMPLATES_DIR_BASE,
   STATIC_DIR_ABS,
 } from "./constants.ts";
 import {
@@ -46,7 +46,6 @@ import {
   checkComponentNameUnicity,
   checkBuildPageOptions,
   checkProjectDirectoriesExist,
-  checkOutputPageAlreadyExists,
   isFileInDir,
   getRel,
 } from "./utils.ts";
@@ -81,14 +80,14 @@ function cacheBuildPageCall(
   creatorAbs: string,
   { template: templateRel, data, options }: IBuildPageParams,
 ) {
-  const templateAbs = normalize(`${TEMPLATES_DIST_ABS}/${templateRel}`);
+  const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${templateRel}`);
   if (!existsSync(templateAbs)) {
     throw new Error(
       `When running ${
         getRel(
           creatorAbs,
         )
-      }: Can't find given template: ${templateRel} inside of ${TEMPLATES_DIST_BASE}/ directory.`,
+      }: Can't find given template: ${templateRel} inside of ${TEMPLATES_DIR_BASE}/ directory.`,
     );
   }
 
@@ -256,7 +255,6 @@ async function buildPage(
   const serialized = parsed.map((node: INode) => serialize(node)).join("");
 
   const outputPageAbs = getOutputPagePath(options);
-  checkOutputPageAlreadyExists(outputPageAbs);
   ensureDirSync(dirname(outputPageAbs));
   writeFileStrSync(outputPageAbs, serialized);
 }
@@ -279,7 +277,7 @@ export async function runCreator(creator: WalkEntry) {
     options: IBuildPageOptions,
   ) {
     // caching the call to buildPage on the fly
-    const templateAbs = normalize(`${TEMPLATES_DIST_ABS}/${template}`);
+    const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
     cacheBuildPageCall(creator.path, {
       template: template,
       data,
@@ -328,7 +326,7 @@ export async function watch() {
   // https://github.com/Caesar2011/rhinoder/blob/master/mod.ts
   let timeout: number | null = null;
 
-  function handleFsEvent(event: Deno.FsEvent) {
+  async function handleFsEvent(event: Deno.FsEvent) {
     if (["create", "modify", "remove"].includes(event.kind)) {
       for (const path of event.paths) {
         //console.log(event.kind, " --> ", getRel(path));
@@ -340,8 +338,8 @@ export async function watch() {
           const creator = projectMap.find((c) => c.path === path);
           if (typeof creator !== "undefined") creator.buildPageCalls = [];
 
-          runCreator({ path } as WalkEntry);
-        } else if (isFileInDir(path, TEMPLATES_DIST_ABS)) {
+          runCreator({ path } as WalkEntry).then(() => log.success("Done."));
+        } else if (isFileInDir(path, TEMPLATES_DIR_ABS)) {
           console.log("");
           log.info(`${getRel(path)} changed.`);
 
@@ -354,9 +352,18 @@ export async function watch() {
             [] as IBuildPageCall[],
           );
 
+          const rebuilds = [];
           for (const call of calls) {
-            buildPage(call.template.path, call.data, call.options, components);
+            rebuilds.push(
+              buildPage(
+                call.template.path,
+                call.data,
+                call.options,
+                components,
+              ),
+            );
           }
+          Promise.all(rebuilds).then(() => log.success("Done."));
         } else if (isFileInDir(path, COMPONENTS_DIR_ABS)) {
           console.log("");
           log.info(`${getRel(path)} changed.`);
@@ -374,16 +381,25 @@ export async function watch() {
             [] as IBuildPageCall[],
           );
 
+          const rebuilds = [];
           for (const call of calls) {
-            buildPage(call.template.path, call.data, call.options, components);
+            rebuilds.push(
+              buildPage(
+                call.template.path,
+                call.data,
+                call.options,
+                components,
+              ),
+            );
           }
+          Promise.all(rebuilds).then(() => log.success("Done."));
         } else if (isFileInDir(path, STATIC_DIR_ABS)) {
         }
       }
     }
   }
 
-  const watcher = Deno.watchFs(".");
+  const watcher = Deno.watchFs(Deno.cwd());
   log.info("Watching files for changes...");
 
   for await (const event of watcher) {

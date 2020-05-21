@@ -15,8 +15,8 @@ export const SERVE_PORT = 8080;
 export const CREATORS_DIR_BASE = "creators";
 export const CREATORS_DIR_ABS = `${Deno.cwd()}/${CREATORS_DIR_BASE}/`;
 
-export const TEMPLATES_DIST_BASE = "templates";
-export const TEMPLATES_DIST_ABS = `${Deno.cwd()}/${TEMPLATES_DIST_BASE}/`;
+export const TEMPLATES_DIR_BASE = "templates";
+export const TEMPLATES_DIR_ABS = `${Deno.cwd()}/${TEMPLATES_DIR_BASE}/`;
 
 export const COMPONENTS_DIR_BASE = "components";
 export const COMPONENTS_DIR_ABS = `${Deno.cwd()}/${COMPONENTS_DIR_BASE}/`;
@@ -31,6 +31,8 @@ export const DIST_STATIC_BASE = "static";
 export const DIST_STATIC_ABS = `${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`;
 
 // ----- business ----- //
+
+export const ACCEPTED_TOP_LEVEL_TAGS = ["!doctype"];
 
 export const POTENTIAL_STATIC_ATTR = [
   "src",

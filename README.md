@@ -51,8 +51,7 @@ ssgo serve
 ## Roadmap
 
 - [ ] Serve built site using Denoliver
-- [ ] Accept multiple top-level nodes in templates
-- [x] Prevent multiple output pages with same names / paths
+- [x] Add exceptions for top-level nodes count
 - [ ] Complete the documentation
 - [ ] Format the built pages
 - [ ] Add --minify a flag to allow minification
