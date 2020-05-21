@@ -281,6 +281,7 @@ function computeStaticFiles(
   if ("attributes" in node) {
     for (const attr of node.attributes) {
       if (POTENTIAL_STATIC_ATTR.includes(attr.name.value)) {
+        if (node.name === "a" && attr.name.value === "href") continue;
         if (typeof attr.value?.value === "undefined") continue;
         if (isExternalURL(attr.value.value)) continue;
 
