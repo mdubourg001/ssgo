@@ -8,7 +8,7 @@ export const INIT_FLAG = "init";
 
 // ----- config ----- //
 
-export const CACHE_DIR = ".ssgo";
+export const TEMP_FILES_PREFIX = "__ssgo";
 
 export const WATCHER_THROTTLE = 300;
 

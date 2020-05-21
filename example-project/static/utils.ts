@@ -1,3 +1,1 @@
-export default function logDate() {
-  console.log(new Date());
-}
+console.log("bobz");

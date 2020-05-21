@@ -105,19 +105,7 @@ let System, __instantiateAsync, __instantiate;
   };
 })();
 
-System.register("utils", [], function (exports_1, context_1) {
-    "use strict";
-    var __moduleName = context_1 && context_1.id;
-    function logDate() {
-        console.log(new Date());
-    }
-    exports_1("default", logDate);
-    return {
-        setters: [],
-        execute: function () {
-        }
-    };
-});
+"use strict";
+console.log("bobz");
 
-const __exp = __instantiate("utils");
-export default __exp["default"];
+__instantiate("__ssgo2679b81b");

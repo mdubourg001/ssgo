@@ -10,7 +10,13 @@ import {
   copySync,
   WalkEntry,
 } from "https://deno.land/std@0.51.0/fs/mod.ts";
-import { normalize, dirname } from "https://deno.land/std@0.51.0/path/mod.ts";
+import {
+  normalize,
+  dirname,
+  posix,
+  basename,
+  extname,
+} from "https://deno.land/std@0.51.0/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
@@ -22,6 +28,8 @@ import {
   DIST_STATIC_ABS,
   TEMPLATES_DIR_BASE,
   STATIC_DIR_ABS,
+  BUILDABLE_STATIC_EXT,
+  TEMP_FILES_PREFIX,
 } from "./constants.ts";
 import {
   INode,
@@ -46,8 +54,10 @@ import {
   checkComponentNameUnicity,
   checkBuildPageOptions,
   checkProjectDirectoriesExist,
+  getStaticFileBundlePath,
   isFileInDir,
   getRel,
+  writeTempFileWithContentOf,
   importModule,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
@@ -163,19 +173,30 @@ function bindTemplateToStatic(templateAbs: string, event: IStaticFile) {
 /**
  * Compile if needed, and add file to bundle
  */
-function addStaticToBundle(staticFile: IStaticFile, destRel: string) {
+function addStaticToBundle(
+  staticFile: IStaticFile,
+  destRel: string,
+  override: boolean = false,
+) {
   const destAbs = normalize(`${DIST_DIR_ABS}/${destRel}`);
-  if (existsSync(destAbs)) return;
+  if (!override && existsSync(destAbs)) return;
 
   ensureDirSync(dirname(destAbs));
 
   if (staticFile.isCompiled) {
     compilations.push(
       new Promise(async (resolve) => {
+        const tempAbs = writeTempFileWithContentOf(
+          staticFile.path,
+          extname(staticFile.path),
+        );
+
         // @ts-ignore
-        const [diag, emit] = await Deno.bundle(staticFile.path, undefined, {
+        const [diag, emit] = await Deno.bundle(tempAbs, undefined, {
           lib: ["dom", "esnext", "deno.ns"],
+          allowJs: true,
         });
+        Deno.remove(tempAbs);
 
         if (!diag) {
           writeFileStrSync(destAbs, emit);
@@ -331,7 +352,7 @@ export async function watch() {
   async function handleFsEvent(event: Deno.FsEvent) {
     if (["create", "modify", "remove"].includes(event.kind)) {
       for (const path of event.paths) {
-        //console.log(event.kind, " --> ", getRel(path));
+        if (basename(path).startsWith(TEMP_FILES_PREFIX)) continue;
 
         if (isFileInDir(path, CREATORS_DIR_ABS)) {
           console.log("");
@@ -396,6 +417,36 @@ export async function watch() {
           }
           Promise.all(rebuilds).then(() => log.success("Done."));
         } else if (isFileInDir(path, STATIC_DIR_ABS)) {
+          const isUsed = projectMap.some((creator) =>
+            creator.buildPageCalls.some((call) =>
+              call.template.staticFiles.some((sf) => sf.path === path)
+            )
+          );
+
+          if (isUsed) {
+            console.log("");
+            log.info(`${getRel(path)} changed.`);
+
+            const bundlePath = getStaticFileBundlePath(
+              path.replace(STATIC_DIR_ABS, ""),
+            );
+            log.info(
+              `Updating ${getRel(normalize(DIST_DIR_ABS + bundlePath))}...`,
+            );
+
+            addStaticToBundle(
+              {
+                path,
+                isCompiled: BUILDABLE_STATIC_EXT.includes(
+                  posix.extname(basename(path)),
+                ),
+              },
+              bundlePath,
+              true,
+            );
+
+            Promise.all(compilations).then(() => log.success("Done."));
+          }
         }
       }
     }

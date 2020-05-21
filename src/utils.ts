@@ -17,7 +17,6 @@ import {
 import {
   existsSync,
   readFileStrSync,
-  ensureDirSync,
   writeFileStrSync,
 } from "https://deno.land/std@0.51.0/fs/mod.ts";
 
@@ -39,9 +38,9 @@ import {
   BUILDABLE_STATIC_EXT,
   DIST_STATIC_BASE,
   ACCEPTED_TOP_LEVEL_TAGS,
-  CACHE_DIR,
+  TEMP_FILES_PREFIX,
 } from "./constants.ts";
-
+import { dirname } from "https://deno.land/std@0.51.0/path/win32.ts";
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
   return args;
@@ -227,17 +226,28 @@ export function getRel(abs: string): string {
 }
 
 /**
+ * Copy the content of a file to a temp file and returns the temp path
+ */
+export function writeTempFileWithContentOf(
+  contentAbs: string,
+  extension: string,
+): string {
+  const contentStr = readFileStrSync(contentAbs);
+
+  const tempAbs = Deno.makeTempFileSync(
+    { dir: dirname(contentAbs), prefix: TEMP_FILES_PREFIX, suffix: extension },
+  );
+  writeFileStrSync(tempAbs, contentStr);
+
+  return tempAbs;
+}
+
+/**
  * Dynamically import module from abs path
  * Using a temp file to hack import cache
  */
 export async function importModule(moduleAbs: string) {
-  const moduleStr = readFileStrSync(moduleAbs);
-
-  ensureDirSync(CACHE_DIR);
-  const tempModuleAbs = Deno.makeTempFileSync(
-    { dir: CACHE_DIR, suffix: ".ts" },
-  );
-  writeFileStrSync(tempModuleAbs, moduleStr);
+  const tempModuleAbs = writeTempFileWithContentOf(moduleAbs, ".ts");
 
   const module = await import(`file://${tempModuleAbs}`);
   Deno.remove(tempModuleAbs);
