@@ -1,3 +1,4 @@
 scripts:
   ssgo: cd example-project && deno run --unstable --allow-net --allow-read --allow-write --importmap=../import_map.json ../ssgo.ts
   test: deno test --unstable --allow-net --allow-read --allow-write --importmap=import_map.json
+  bump-version: deno run --unstable --allow-read --allow-write --importmap=import_map.json version.ts

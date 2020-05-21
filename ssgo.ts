@@ -9,6 +9,9 @@ import {
   DIST_DIR_BASE,
 } from "./src/constants.ts";
 import { log } from "./src/utils.ts";
+import getVersion from "./version.ts";
+
+log.info(`ssgo ${getVersion()}`);
 
 if (Deno.args.includes(HELP_FLAG)) {
   log.info(
@@ -18,7 +21,7 @@ if (Deno.args.includes(HELP_FLAG)) {
     - build (default): build project only to ${DIST_DIR_BASE}
     - init: initialize project directories (does NOT override if these already exist)
     - help: display help menu
-  `,
+  `
   );
 } // dev: build, watch files and serve
 else if (Deno.args.includes(DEV_FLAG)) {
