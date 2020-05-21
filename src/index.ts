@@ -48,6 +48,7 @@ import {
   checkProjectDirectoriesExist,
   isFileInDir,
   getRel,
+  importModule,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -261,7 +262,8 @@ async function buildPage(
 
 export async function runCreator(creator: WalkEntry) {
   const creatorRel = getRel(creator.path);
-  const module = await import(`file://${creator.path}`);
+  const module = await importModule(creator.path);
+
   // as every valid creator should export a default function
   if (!module.default || typeof module.default !== "function") {
     log.warning(

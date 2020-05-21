@@ -8,6 +8,8 @@ export const INIT_FLAG = "init";
 
 // ----- config ----- //
 
+export const CACHE_DIR = ".ssgo";
+
 export const WATCHER_THROTTLE = 300;
 
 export const SERVE_PORT = 8080;

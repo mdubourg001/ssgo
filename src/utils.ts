@@ -14,7 +14,12 @@ import {
   extname,
   common,
 } from "https://deno.land/std@0.51.0/path/mod.ts";
-import { existsSync } from "https://deno.land/std@0.51.0/fs/mod.ts";
+import {
+  existsSync,
+  readFileStrSync,
+  ensureDirSync,
+  writeFileStrSync,
+} from "https://deno.land/std@0.51.0/fs/mod.ts";
 
 import {
   INode,
@@ -34,6 +39,7 @@ import {
   BUILDABLE_STATIC_EXT,
   DIST_STATIC_BASE,
   ACCEPTED_TOP_LEVEL_TAGS,
+  CACHE_DIR,
 } from "./constants.ts";
 
 export function tapLog<T extends Array<any>>(...args: T): T {
@@ -218,6 +224,24 @@ export function isFileInDir(fileAbs: string, dirAbs: string): boolean {
  */
 export function getRel(abs: string): string {
   return relative(Deno.cwd(), abs);
+}
+
+/**
+ * Dynamically import module from abs path
+ * Using a temp file to hack import cache
+ */
+export async function importModule(moduleAbs: string) {
+  const moduleStr = readFileStrSync(moduleAbs);
+
+  ensureDirSync(CACHE_DIR);
+  const tempModuleAbs = Deno.makeTempFileSync(
+    { dir: CACHE_DIR, suffix: ".ts" },
+  );
+  writeFileStrSync(tempModuleAbs, moduleStr);
+
+  const module = await import(`file://${tempModuleAbs}`);
+  Deno.remove(tempModuleAbs);
+  return module;
 }
 
 // ----- errors ----- //

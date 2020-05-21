@@ -1,4 +1,5 @@
 scripts:
+  install: deno install -f --unstable --allow-read --allow-write --allow-net https://denopkg.com/mdubourg001/ssgo/ssgo.ts
   ssgo: cd example-project && deno run --unstable --allow-net --allow-read --allow-write ../ssgo.ts
   test: deno test --unstable --allow-net --allow-read --allow-write
   bump-version: deno run --unstable --allow-read --allow-write version.ts

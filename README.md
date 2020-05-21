@@ -60,3 +60,4 @@ ssgo serve
 - [ ] Allow nodes inside of custom-components
 - [x] Display version number on launch
 - [x] Add a velociraptor file for development tasks
+- [ ] Make init create a .gitignore and add .ssgo to it
