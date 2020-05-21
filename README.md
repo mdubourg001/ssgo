@@ -61,3 +61,4 @@ ssgo serve
 - [x] Display version number on launch
 - [x] Add a velociraptor file for development tasks
 - [ ] Make init create a .gitignore and add .ssgo to it
+- [ ] Make init create a README.md with basic ssgo commands

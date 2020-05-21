@@ -164,7 +164,7 @@ function bindTemplateToStatic(templateAbs: string, event: IStaticFile) {
  * Compile if needed, and add file to bundle
  */
 function addStaticToBundle(staticFile: IStaticFile, destRel: string) {
-  const destAbs = normalize(`${DIST_STATIC_ABS}/${destRel}`);
+  const destAbs = normalize(`${DIST_DIR_ABS}/${destRel}`);
   if (existsSync(destAbs)) return;
 
   ensureDirSync(dirname(destAbs));

@@ -94,7 +94,7 @@ export function contextEval(
     return evaluation;
   } catch (e) {
     if (typeof errorContext !== "undefined") {
-      log.error(`When trying to evaluate '${errorContext.trim()}'`, true);
+      log.error(`When trying to evaluate '${errorContext.trim()}'`, false);
     }
     throw e;
   }
