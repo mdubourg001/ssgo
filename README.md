@@ -16,7 +16,7 @@ A minimalist, unconfigurable static site generator.
 To install `ssgo` using Deno:
 
 ```bash
-deno install --unstable --allow-read --allow-write --allow-net https://raw.githubusercontent.com/mdubourg001/ssgo/master/ssgo.ts
+deno install --unstable --allow-read --allow-write --allow-net https://denopkg.com/mdubourg001/ssgo/ssgo.ts
 ```
 
 Here's what a `ssgo` project looks like:

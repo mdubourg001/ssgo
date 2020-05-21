@@ -1,7 +1,7 @@
 import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
 import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
 
-import { readFileStrSync } from "std/fs/mod.ts";
+import { readFileStrSync } from "https://deno.land/std@0.51.0/fs/mod.ts";
 
 import {
   INode,

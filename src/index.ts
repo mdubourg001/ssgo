@@ -9,8 +9,8 @@ import {
   ensureDirSync,
   copySync,
   WalkEntry,
-} from "std/fs/mod.ts";
-import { normalize, dirname } from "std/path/mod.ts";
+} from "https://deno.land/std@0.51.0/fs/mod.ts";
+import { normalize, dirname } from "https://deno.land/std@0.51.0/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,

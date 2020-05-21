@@ -1,5 +1,10 @@
 import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
-import { red, blue, yellow, green } from "std/fmt/colors.ts";
+import {
+  red,
+  blue,
+  yellow,
+  green,
+} from "https://deno.land/std@0.51.0/fmt/colors.ts";
 import {
   relative,
   resolve,
@@ -8,8 +13,8 @@ import {
   normalize,
   extname,
   common,
-} from "std/path/mod.ts";
-import { existsSync } from "std/fs/mod.ts";
+} from "https://deno.land/std@0.51.0/path/mod.ts";
+import { existsSync } from "https://deno.land/std@0.51.0/fs/mod.ts";
 
 import {
   INode,
