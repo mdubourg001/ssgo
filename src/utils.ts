@@ -159,7 +159,7 @@ export function getUnprefixedAttributeName(attribute: IAttribute) {
 /**
  * Get path of dist built page
  */
-export function getTargetDistFile(options: IBuildPageOptions) {
+export function getOutputPagePath(options: IBuildPageOptions): string {
   return resolve(
     Deno.cwd(),
     DIST_DIR_ABS,
@@ -303,7 +303,7 @@ export function checkBuildPageOptions(
   templateRel: string,
   options: IBuildPageOptions,
 ) {
-  if (typeof options.filename === "undefined") {
+  if (options.filename) {
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
       true,
@@ -369,4 +369,16 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
     [STATIC_DIR_ABS]: existsSync(STATIC_DIR_ABS),
     [COMPONENTS_DIR_ABS]: existsSync(COMPONENTS_DIR_ABS),
   };
+}
+
+/**
+ * Prevent overriding previously built pages with the same name
+ */
+export function checkOutputPageAlreadyExists(outputPageAbs: string) {
+  if (existsSync(outputPageAbs)) {
+    log.error(
+      `When writing ${getRel(outputPageAbs)}: Page already exists.`,
+      true,
+    );
+  }
 }

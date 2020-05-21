@@ -1,5 +1,5 @@
 export default async (buildPage: Function) => {
-  buildPage("others/about.html", {}, { filename: "about" });
+  buildPage("others/about.html", {}, { filename: "" });
 
   const data = await new Promise((r) =>
     setTimeout(
@@ -7,7 +7,7 @@ export default async (buildPage: Function) => {
         r({
           title: "How I built a static site generator for Deno",
         }),
-      1000
+      1000,
     )
   );
 

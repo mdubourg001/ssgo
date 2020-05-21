@@ -52,7 +52,7 @@ ssgo serve
 
 - [ ] Serve built site using Denoliver
 - [ ] Accept multiple top-level nodes in templates
-- [ ] Prevent multiple output pages with same names / paths
+- [x] Prevent multiple output pages with same names / paths
 - [ ] Complete the documentation
 - [ ] Format the built pages
 - [ ] Add --minify a flag to allow minification

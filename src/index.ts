@@ -40,12 +40,13 @@ import {
   isTemplate,
   formatAttributes,
   isComment,
-  getTargetDistFile,
+  getOutputPagePath,
   checkTopLevelNodesCount,
   checkEmptyTemplate,
   checkComponentNameUnicity,
   checkBuildPageOptions,
   checkProjectDirectoriesExist,
+  checkOutputPageAlreadyExists,
   isFileInDir,
   getRel,
 } from "./utils.ts";
@@ -228,7 +229,7 @@ async function buildPage(
   options: IBuildPageOptions,
   availableComponents: ICustomComponent[],
 ) {
-  log.info(`Building ${getRel(getTargetDistFile(options))}...`);
+  log.info(`Building ${getRel(getOutputPagePath(options))}...`);
 
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
   const parsed = parse(read).filter((n) =>
@@ -254,8 +255,10 @@ async function buildPage(
 
   const serialized = parsed.map((node: INode) => serialize(node)).join("");
 
-  const targetFile = getTargetDistFile(options);
-  writeFileStrSync(targetFile, serialized);
+  const outputPageAbs = getOutputPagePath(options);
+  checkOutputPageAlreadyExists(outputPageAbs);
+  ensureDirSync(dirname(outputPageAbs));
+  writeFileStrSync(outputPageAbs, serialized);
 }
 
 export async function runCreator(creator: WalkEntry) {
