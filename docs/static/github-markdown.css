@@ -803,7 +803,7 @@
 .markdown-body pre > code {
   padding: 0;
   margin: 0;
-  font-size: 100%;
+  font-size: 120%;
   word-break: normal;
   white-space: pre;
   background: transparent;
@@ -984,4 +984,8 @@
 .markdown-body .task-list-item input {
   margin: 0 0.2em 0.25em -1.6em;
   vertical-align: middle;
+}
+
+.markdown-body ul li {
+  list-style: disc;
 }

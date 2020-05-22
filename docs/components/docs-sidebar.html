@@ -1,4 +1,7 @@
-<sidebar class="flex flex-col w-full px-6 pt-16 pb-6 border-r">
+<sidebar
+  class="sticky flex flex-col w-full px-6 pt-16 pb-6 overflow-y-scroll border-r"
+  style="top: 73px;"
+>
   <div for="category" of="Object.keys(entries)" class="flex flex-col mb-4">
     <strong if="category !== 'None'" class="mb-1 text-sm text-gray-500"
       >{{ category }}</strong
