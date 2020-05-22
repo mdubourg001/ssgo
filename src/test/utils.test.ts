@@ -3,7 +3,7 @@ import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.51.0/testing/asserts.ts";
+} from "https://deno.land/std@0.52.0/testing/asserts.ts";
 
 import {
   log,

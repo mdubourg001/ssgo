@@ -9,14 +9,14 @@ import {
   ensureDirSync,
   copySync,
   WalkEntry,
-} from "https://deno.land/std@0.51.0/fs/mod.ts";
+} from "https://deno.land/std@0.52.0/fs/mod.ts";
 import {
   normalize,
   dirname,
   posix,
   basename,
   extname,
-} from "https://deno.land/std@0.51.0/path/mod.ts";
+} from "https://deno.land/std@0.52.0/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
@@ -253,7 +253,7 @@ async function buildPage(
   log.info(`Building ${getRel(getOutputPagePath(options))}...`);
 
   const read = readFileStrSync(templateAbs, { encoding: "utf8" });
-  const parsed = parse(read).filter((n) =>
+  const parsed = parse(read).filter((n: INode) =>
     "value" in n ? n.value !== "\n" : true
   );
 

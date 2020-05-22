@@ -1,7 +1,10 @@
 import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
-import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
+import {
+  parse,
+  IAttribute as IHTMLAttr,
+} from "https://cdn.pika.dev/html5parser@^1.1.0";
 
-import { readFileStrSync } from "https://deno.land/std@0.51.0/fs/mod.ts";
+import { readFileStrSync } from "https://deno.land/std@0.52.0/fs/mod.ts";
 
 import {
   INode,
@@ -42,10 +45,10 @@ function computeForOf(
 
   if ("attributes" in node) {
     const forAttr = node.attributes.find(
-      (attr) => attr.name.value === IAttribute.FOR,
+      (attr: IHTMLAttr) => attr.name.value === IAttribute.FOR,
     );
     const ofAttr = node.attributes.find(
-      (attr) => attr.name.value === IAttribute.OF,
+      (attr: IHTMLAttr) => attr.name.value === IAttribute.OF,
     );
 
     if (!forAttr && !ofAttr) return;
@@ -94,7 +97,7 @@ function computeForOf(
 
     // remove the for/of attributes from node attributes
     node.attributes = node.attributes.filter(
-      (attr) =>
+      (attr: IHTMLAttr) =>
         ![IAttribute.FOR.toString(), IAttribute.OF.toString()].includes(
           attr.name.value,
         ),
@@ -134,7 +137,7 @@ function computeIf(node: INode, data: IContextData): boolean {
 
   if ("attributes" in node) {
     const ifAttr = node.attributes.find(
-      (attr) => attr.name.value === IAttribute.IF,
+      (attr: IHTMLAttr) => attr.name.value === IAttribute.IF,
     );
 
     if (!ifAttr) return true;
@@ -168,7 +171,7 @@ function computeIf(node: INode, data: IContextData): boolean {
 
     // remove the if attribute from node attributes
     node.attributes = node.attributes.filter(
-      (attr) => attr.name.value !== IAttribute.IF.toString(),
+      (attr: IHTMLAttr) => attr.name.value !== IAttribute.IF.toString(),
     );
   }
 

@@ -4,7 +4,7 @@ import {
   blue,
   yellow,
   green,
-} from "https://deno.land/std@0.51.0/fmt/colors.ts";
+} from "https://deno.land/std@0.52.0/fmt/colors.ts";
 import {
   relative,
   resolve,
@@ -13,12 +13,12 @@ import {
   normalize,
   extname,
   common,
-} from "https://deno.land/std@0.51.0/path/mod.ts";
+} from "https://deno.land/std@0.52.0/path/mod.ts";
 import {
   existsSync,
   readFileStrSync,
   writeFileStrSync,
-} from "https://deno.land/std@0.51.0/fs/mod.ts";
+} from "https://deno.land/std@0.52.0/fs/mod.ts";
 
 import {
   INode,
@@ -40,7 +40,7 @@ import {
   ACCEPTED_TOP_LEVEL_TAGS,
   TEMP_FILES_PREFIX,
 } from "./constants.ts";
-import { dirname } from "https://deno.land/std@0.51.0/path/win32.ts";
+import { dirname } from "https://deno.land/std@0.52.0/path/win32.ts";
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
   return args;
