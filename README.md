@@ -60,8 +60,9 @@ ssgo serve
 - [ ] Allow nodes inside of custom-components
 - [x] Display version number on launch
 - [x] Add a velociraptor file for development tasks
-- [ ] Make init create a .gitignore and add .ssgo to it
+- [ ] Make init create a .gitignore and add \*_/_/\_\_ssgo\* and dist/ to it
 - [ ] Make init create a README.md with basic ssgo commands
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
 - [ ] Clean \_\_ssgo prefixed temp files on launch
+- [ ] Add a flag allowing adding directories to watcher
