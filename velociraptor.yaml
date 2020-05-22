@@ -1,5 +1,23 @@
 scripts:
-  install: deno install -f --unstable --allow-read --allow-write --allow-net https://denopkg.com/mdubourg001/ssgo/ssgo.ts
-  ssgo: cd example-project && deno run --quiet --unstable --allow-net --allow-read --allow-write ../ssgo.ts
-  test: deno test --unstable --allow-net --allow-read --allow-write
-  bump-version: deno run --unstable --allow-read --allow-write version.ts
+  install:
+    cmd: deno install -f --unstable https://denopkg.com/mdubourg001/ssgo/ssgo.ts
+    allow:
+      - read
+      - write
+      - net
+  ssgo: cd example-project && deno run --unstable --allow-read --allow-write --allow-net ../ssgo.ts
+  test:
+    cmd: deno test --unstable
+    allow:
+      - read
+      - write
+      - net
+  bump-version:
+    cmd: deno run --unstable version.ts
+    allow:
+      - read
+      - write
+  netlify-build-docs:
+    - vr install
+    - cd docs
+    - ssgo

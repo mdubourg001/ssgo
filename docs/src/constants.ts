@@ -4,6 +4,7 @@ const CATEGORIES = {
   Templates: "Templates",
   "Custom components": "Custom components",
   "Static files": "Static files",
+  "Guides": "Guides",
 };
 
 export const DOCS: Record<string, any> = {
