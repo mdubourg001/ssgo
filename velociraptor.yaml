@@ -17,7 +17,3 @@ scripts:
     allow:
       - read
       - write
-  netlify-build-docs:
-    - vr install
-    - cd docs
-    - ssgo

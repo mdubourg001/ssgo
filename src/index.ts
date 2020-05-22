@@ -282,7 +282,7 @@ async function buildPage(
 }
 
 export async function runCreator(creator: WalkEntry) {
-  if (basename(creator.name).startsWith(TEMP_FILES_PREFIX)) return;
+  if (basename(creator.path).startsWith(TEMP_FILES_PREFIX)) return;
 
   const creatorRel = getRel(creator.path);
   const module = await importModule(creator.path);
