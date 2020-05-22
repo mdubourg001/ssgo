@@ -50,19 +50,17 @@ ssgo serve
 
 ## Roadmap
 
+- [x] Allow comments as top-level nodes
 - [ ] Serve built site using Denoliver
-- [x] Add exceptions for top-level nodes count
 - [ ] Complete the documentation
 - [ ] Format the built pages
 - [ ] Add --minify a flag to allow minification
-- [x] Add an 'init' argument to initialize project directories
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Allow nodes inside of custom-components
-- [x] Display version number on launch
-- [x] Add a velociraptor file for development tasks
 - [ ] Make init create a .gitignore and add \*_/_/\_\_ssgo\* and dist/ to it
 - [ ] Make init create a README.md with basic ssgo commands
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
 - [ ] Clean \_\_ssgo prefixed temp files on launch
 - [ ] Add a flag allowing adding directories to watcher
+- [ ] Export types useful to creators from a 'mod.ts' module

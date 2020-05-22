@@ -266,6 +266,7 @@ export function checkTopLevelNodesCount(
   const filteredTemplate = parsedTemplate.filter((node) =>
     (node.type === "Text" && node.value.trim().length > 0) ||
     (("name" in node) &&
+      !isComment(node) &&
       !ACCEPTED_TOP_LEVEL_TAGS.includes(node.name))
   );
 
