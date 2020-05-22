@@ -7,15 +7,31 @@
 
     <title>{{ title }} - ssgo</title>
 
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="github-markdown.css" />
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <docs-header></docs-header>
-    <docs-sidebar entries="sidebarEntries"></docs-sidebar>
+    <docs-header isDocs="isDocs"></docs-header>
 
-    <section class="markdown-body">
-      {{ content }}
+    <section class="container flex mx-auto">
+      <div class="lg:w-1/5">
+        <docs-sidebar
+          entries="sidebarEntries"
+          currentDoc="title"
+        ></docs-sidebar>
+      </div>
+
+      <article class="box-border p-4 mx-auto lg:w-3/4 markdown-body md:p-12">
+        {{ content }}
+      </article>
     </section>
 
     <docs-footer></docs-footer>

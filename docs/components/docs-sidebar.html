@@ -1,5 +1,20 @@
-<sidebar>
-  <a for="entry" of="entries" eval:href="entry.href">
-    {{ entry.title }}
-  </a>
+<sidebar class="flex flex-col w-full px-6 pt-16 pb-6 border-r">
+  <div for="category" of="Object.keys(entries)" class="flex flex-col mb-4">
+    <strong if="category !== 'None'" class="mb-1 text-sm text-gray-500"
+      >{{ category }}</strong
+    >
+
+    <a
+      for="entry"
+      of="entries[category].sort((a, b) => a.weight < b.weight ? -1 : 1)"
+      eval:href="entry.path"
+      eval:class="({ 
+        'pb-1 mb-2 border-b border-transparent': true, 
+        'text-orange-500 font-bold border-b border-orange-200': currentDoc === entry.title ,
+        'hover:underline': currentDoc !== entry.title
+      })"
+    >
+      {{ entry.title }}
+    </a>
+  </div>
 </sidebar>

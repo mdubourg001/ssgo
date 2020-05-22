@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="title"
+      content="ssgo - A minimalist, unconfigurable static site generator."
+    />
+
+    <title>ssgo - A minimalist, unconfigurable static site generator.</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <docs-header isDocs="false"></docs-header>
+
+    <article class="container flex flex-col items-center px-4 py-12 mx-auto">
+      <img class="h-10 mb-4" src="images/logo.png" alt="SSGO Logo" />
+      <strong class="mb-10"
+        >A minimalist, unconfigurable static site generator built with Deno, for
+        Deno.</strong
+      >
+
+      <hr class="w-1/2 mb-4 border-b border-orange-600" />
+
+      <div class="flex flex-col items-center my-6">
+        <strong>→ Start fast...</strong>
+        <div class="w-auto px-4 py-2 mt-2 bg-gray-200 border rounded">
+          ssgo init && ssgo dev
+        </div>
+      </div>
+
+      <div class="flex flex-col items-center my-6">
+        <strong>→ With a simple project structure...</strong>
+        <div class="w-auto px-4 py-2 mt-2 bg-gray-200 border rounded">
+          ├── creators/
+          <span class="text-gray-600"><- the scripts creating your pages</span
+          ><br />
+          ├── templates/
+          <span class="text-gray-600"><- the templates of your pages</span
+          ><br />
+          ├── components/
+          <span class="text-gray-600"><- your custom components</span><br />
+          └── static/
+          <span class="text-gray-600"><- your static files</span><br />
+        </div>
+      </div>
+
+      <div class="my-6">
+        <strong>→ With TS support out of the box...</strong>
+      </div>
+
+      <a
+        href="/docs"
+        class="px-8 py-2 font-bold text-white bg-orange-600 rounded-md hover:shadow-md"
+      >
+        Read the docs</a
+      >
+    </article>
+
+    <docs-footer></docs-footer>
+  </body>
+</html>
