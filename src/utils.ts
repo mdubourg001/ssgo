@@ -13,11 +13,14 @@ import {
   normalize,
   extname,
   common,
+  dirname,
 } from "https://deno.land/std@0.52.0/path/mod.ts";
 import {
   existsSync,
   readFileStrSync,
   writeFileStrSync,
+  walkSync,
+  WalkEntry,
 } from "https://deno.land/std@0.52.0/fs/mod.ts";
 
 import {
@@ -40,7 +43,7 @@ import {
   ACCEPTED_TOP_LEVEL_TAGS,
   TEMP_FILES_PREFIX,
 } from "./constants.ts";
-import { dirname } from "https://deno.land/std@0.52.0/path/win32.ts";
+
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
   return args;
@@ -243,7 +246,7 @@ export function writeTempFileWithContentOf(
 }
 
 /**
- * Dynamically import module from abs path
+ * Dynamically import module from abs path 
  * Using a temp file to hack import cache
  */
 export async function importModule(moduleAbs: string) {
@@ -252,6 +255,19 @@ export async function importModule(moduleAbs: string) {
   const module = await import(`file://${tempModuleAbs}`);
   Deno.remove(tempModuleAbs);
   return module;
+}
+
+/**
+ * Clean the temp files left in project
+ */
+export function cleanTempFiles() {
+  const tempFiles: WalkEntry[] = Array.from(walkSync(Deno.cwd())).filter((
+    file: WalkEntry,
+  ) => file.name.startsWith(TEMP_FILES_PREFIX));
+
+  for (const file of tempFiles) {
+    Deno.removeSync(file.path);
+  }
 }
 
 // ----- errors ----- //

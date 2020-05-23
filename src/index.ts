@@ -59,6 +59,7 @@ import {
   getRel,
   writeTempFileWithContentOf,
   importModule,
+  cleanTempFiles,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -320,6 +321,7 @@ export async function runCreator(creator: WalkEntry) {
  */
 export async function build() {
   checkProjectDirectoriesExist(true);
+  cleanTempFiles();
   walkCreatorsAndComponents();
 
   checkComponentNameUnicity(components);

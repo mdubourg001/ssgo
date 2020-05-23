@@ -21,7 +21,7 @@ if (Deno.args.includes(HELP_FLAG)) {
     - build (default): build project only to ${DIST_DIR_BASE}
     - init: initialize project directories (does NOT override if these already exist)
     - help: display help menu
-  `,
+  `
   );
 } // dev: build, watch files and serve
 else if (Deno.args.includes(DEV_FLAG)) {

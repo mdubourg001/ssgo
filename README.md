@@ -62,6 +62,6 @@ ssgo serve
 - [ ] Make init create a README.md with basic ssgo commands
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
-- [ ] Clean \_\_ssgo prefixed temp files on launch
+- [x] Clean \_\_ssgo prefixed temp files on launch
 - [ ] Add a flag allowing adding directories to watcher
 - [ ] Export types useful to creators from a 'mod.ts' module
