@@ -24,11 +24,14 @@
       integrity="sha384-0DvoZ9kNcB36fWcQApIMIGQoTzoBDYTQ85e8nmsfFOGz4RHAdUhADqJt4k3K2uLS"
     ></script>
   </head>
-  <body class="overflow-y-scroll">
+  <body class="relative overflow-y-scroll">
     <docs-header isDocs="isDocs"></docs-header>
 
-    <section class="container flex mx-auto">
-      <div class="lg:w-1/5">
+    <section
+      id="swup"
+      class="container relative flex flex-col mx-auto md:flex-row"
+    >
+      <div class="md:w-1/4 lg:w-1/5">
         <docs-sidebar
           entries="sidebarEntries"
           currentDoc="title"
@@ -36,8 +39,7 @@
       </div>
 
       <article
-        id="swup"
-        class="transition-fade fade-in box-border p-4 mx-auto lg:w-3/4 markdown-body md:p-12"
+        class="box-border w-screen p-4 mx-auto mb-10 transition-fade fade-in md:mb-0 md:w-3/4 lg:w-4/5 markdown-body md:p-12"
       >
         {{ content }}
       </article>
