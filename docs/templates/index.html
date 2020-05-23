@@ -29,45 +29,57 @@
   <body>
     <docs-header isDocs="false"></docs-header>
 
-    <article class="container flex flex-col items-center px-4 py-12 mx-auto">
-      <img class="h-10 mb-4" src="images/logo.png" alt="SSGO Logo" />
-      <strong class="mb-10"
+    <article
+      id="swup"
+      class="transition-fade fade-in container flex flex-col items-center px-4 py-12 mx-auto"
+    >
+      <img class="h-10 mb-6" src="images/logo.png" alt="SSGO Logo" />
+      <strong class="mb-10 text-xl text-center"
         >A minimalist, unconfigurable static site generator built with Deno, for
         Deno.</strong
       >
 
-      <hr class="w-1/2 mb-4 border-b border-orange-600" />
+      <hr class="w-3/4 mb-4 border-orange-600" />
 
-      <div class="flex flex-col items-center my-6">
+      <div class="flex flex-col items-center my-4 md:my-6">
         <strong>→ Start fast...</strong>
         <div class="w-auto px-4 py-2 mt-2 bg-gray-200 border rounded">
           ssgo init && ssgo dev
         </div>
       </div>
 
-      <div class="flex flex-col items-center my-6">
+      <div class="flex flex-col items-center my-4 md:my-6">
         <strong>→ With a simple project structure...</strong>
         <div class="w-auto px-4 py-2 mt-2 bg-gray-200 border rounded">
           ├── creators/
-          <span class="text-gray-600"><- the scripts creating your pages</span
+          <span class="text-gray-600 hidden sm:inline"
+            ><- the scripts creating your pages</span
           ><br />
           ├── templates/
-          <span class="text-gray-600"><- the templates of your pages</span
+          <span class="text-gray-600 hidden sm:inline"
+            ><- the templates of your pages</span
           ><br />
           ├── components/
-          <span class="text-gray-600"><- your components</span><br />
+          <span class="text-gray-600 hidden sm:inline"><- your components</span
+          ><br />
           └── static/
-          <span class="text-gray-600"><- your static files</span><br />
+          <span class="text-gray-600 hidden sm:inline"
+            ><- your static files</span
+          ><br />
         </div>
       </div>
 
-      <div class="my-6">
-        <strong>→ With TS support out of the box...</strong>
+      <div class="my-4 md:my-6 text-center">
+        <strong
+          >→ With TS support out of the box,<br />
+          → Simple components system,<br />
+          → File watching...<br />
+        </strong>
       </div>
 
       <a
         href="/docs"
-        class="px-8 py-2 font-bold text-white bg-orange-600 rounded-md hover:shadow-md"
+        class="px-8 py-2 mt-4 font-bold text-white bg-orange-600 rounded-md hover:shadow-md"
       >
         Read the docs</a
       >
@@ -75,4 +87,9 @@
 
     <docs-footer></docs-footer>
   </body>
+
+  <script defer src="https://unpkg.com/swup@latest/dist/swup.min.js"></script>
+  <script>
+    window.onload = () => new Swup();
+  </script>
 </html>

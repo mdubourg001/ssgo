@@ -24,7 +24,7 @@
       integrity="sha384-0DvoZ9kNcB36fWcQApIMIGQoTzoBDYTQ85e8nmsfFOGz4RHAdUhADqJt4k3K2uLS"
     ></script>
   </head>
-  <body>
+  <body class="overflow-y-scroll">
     <docs-header isDocs="isDocs"></docs-header>
 
     <section class="container flex mx-auto">
@@ -35,11 +35,19 @@
         ></docs-sidebar>
       </div>
 
-      <article class="box-border p-4 mx-auto lg:w-3/4 markdown-body md:p-12">
+      <article
+        id="swup"
+        class="transition-fade fade-in box-border p-4 mx-auto lg:w-3/4 markdown-body md:p-12"
+      >
         {{ content }}
       </article>
     </section>
 
     <docs-footer></docs-footer>
   </body>
+
+  <script defer src="https://unpkg.com/swup@latest/dist/swup.min.js"></script>
+  <script>
+    window.onload = () => new Swup();
+  </script>
 </html>

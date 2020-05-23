@@ -10,7 +10,7 @@
     <a
       for="entry"
       of="entries[category].sort((a, b) => a.weight < b.weight ? -1 : 1)"
-      eval:href="entry.path"
+      eval:href="`/docs/${entry.path}`"
       eval:class="({ 
         'pb-1 mb-2 border-b border-transparent': true, 
         'text-orange-500 font-bold border-b border-orange-200': currentDoc === entry.title ,
