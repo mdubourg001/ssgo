@@ -23,6 +23,7 @@ export default async (buildPage: Function) => {
       "doc.html",
       {
         title: doc.title,
+        md: doc.md,
         content: parsed,
         sidebarEntries: sidebarEntries,
         isDocs: true,

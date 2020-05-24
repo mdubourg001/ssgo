@@ -26,7 +26,7 @@ the four main directories used by `ssgo`:
 
 ## Create a template
 
-> You can learn more about them by reading [What are templates ?](/docs/what-are-templates.html)
+> You can learn more about them by reading [About templates](/docs/about-templates.html).
 
 Template files are the HTML files used as skeletons to build your pages.
 These template file are located in the `templates` directory.
@@ -57,7 +57,7 @@ Here's what a basic template would look like:
 
 ## Add a creator
 
-> You can learn more about them by reading [What are creators ?](/docs/what-are-creators.html)
+> You can learn more about them by reading [About creators](/docs/about-creators.html).
 
 Creators are the scripts evaluated by `ssgo` to build your static pages.
 They are basically `.ts` or `.js` modules living inside of the `creators` directory.
@@ -105,4 +105,4 @@ Now that you are up and running, you can learn about the other cool things comin
 
 - [Using your own components](/docs/components.html)
 - [Using static files](/docs/static-files.html)
-- [Having a reactive runtime using AlpineJS](/docs/what-about-runtime.html)
+- [Having a dynamic runtime using AlpineJS](/docs/having-a-dynamic-runtime.html)
