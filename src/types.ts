@@ -39,6 +39,8 @@ export interface IBuildPageCall
 export interface ICreator {
   path: string;
   buildPageCalls: IBuildPageCall[];
+  otherWatchedFiles: string[];
+  otherWatchedDirs: string[];
 }
 
 // ----- public ----- //
@@ -54,4 +56,9 @@ export interface IBuildPageParams {
   template: string;
   data: IContextData;
   options: IBuildPageOptions;
+}
+
+export interface ISsgoBag {
+  watchFile: (path: string) => void;
+  watchDir: (path: string) => void;
 }
