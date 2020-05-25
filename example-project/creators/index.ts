@@ -2,6 +2,7 @@ export default async (buildPage: Function, ssgoBag: any) => {
   buildPage("others/about.html", {}, { filename: "about" });
 
   ssgoBag.watchFile("test.txt");
+  ssgoBag.watchDir("src");
 
   const data = await new Promise((r) =>
     setTimeout(

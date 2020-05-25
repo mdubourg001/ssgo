@@ -227,7 +227,8 @@ function addFileToWatcher(creatorAbs: string, fileAbs: string) {
     ({ path }) => path === creatorAbs
   );
   const normalized = normalize(fileAbs);
-  if (!existsSync(normalized)) log.warning(`Can't find ${getRel(fileAbs)}, can't watch for changes.`)
+  if (!existsSync(normalized))
+    log.warning(`Can't find '${getRel(fileAbs)}', won't watch for changes.`);
 
   if (!!existingEntry) {
     if (!existingEntry.otherWatchedFiles.includes(normalized))
@@ -245,7 +246,28 @@ function addFileToWatcher(creatorAbs: string, fileAbs: string) {
 /**
  * Bind a directory to a creator's watcher
  */
-function addDirToWatcher(creatorAbs: string, dirAbs: string) {}
+function addDirToWatcher(creatorAbs: string, dirAbs: string) {
+  const existingEntry: ICreator | undefined = projectMap.find(
+    ({ path }) => path === creatorAbs
+  );
+  const normalized = normalize(dirAbs);
+  if (!existsSync(normalized))
+    log.warning(
+      `Can't find '${getRel(dirAbs)}' directory, won't watch for changes.`
+    );
+
+  if (!!existingEntry) {
+    if (!existingEntry.otherWatchedDirs.includes(normalized))
+      existingEntry?.otherWatchedDirs.push(normalized);
+  } else {
+    projectMap.push({
+      path: creatorAbs,
+      buildPageCalls: [],
+      otherWatchedFiles: [],
+      otherWatchedDirs: [normalized],
+    });
+  }
+}
 
 /**
  * Serialize back to HTML files
