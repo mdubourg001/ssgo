@@ -16,6 +16,7 @@ import {
   posix,
   basename,
   extname,
+  resolve,
 } from "https://deno.land/std@0.52.0/path/mod.ts";
 
 import {
@@ -109,18 +110,19 @@ function cacheBuildPageCall(
     data,
     options,
   };
-  const creatorEntry: ICreator = {
-    path: creatorAbs,
-    buildPageCalls: [pageBuildCall],
-    otherWatchedFiles: [],
-    otherWatchedDirs: [],
-  };
 
   const existingEntry: ICreator | undefined = projectMap.find(
     ({ path }) => path === creatorAbs
   );
+
   if (!!existingEntry) existingEntry.buildPageCalls.push(pageBuildCall);
-  else projectMap.push(creatorEntry);
+  else
+    projectMap.push({
+      path: creatorAbs,
+      buildPageCalls: [pageBuildCall],
+      otherWatchedFiles: [],
+      otherWatchedDirs: [],
+    });
 }
 
 /**
@@ -220,7 +222,25 @@ function addStaticToBundle(
 /**
  * Bind a file to a creator's watcher
  */
-function addFileToWatcher(creatorAbs: string, fileAbs: string) {}
+function addFileToWatcher(creatorAbs: string, fileAbs: string) {
+  const existingEntry: ICreator | undefined = projectMap.find(
+    ({ path }) => path === creatorAbs
+  );
+  const normalized = normalize(fileAbs);
+  if (!existsSync(normalized)) log.warning(`Can't find ${getRel(fileAbs)}, can't watch for changes.`)
+
+  if (!!existingEntry) {
+    if (!existingEntry.otherWatchedFiles.includes(normalized))
+      existingEntry?.otherWatchedFiles.push(normalized);
+  } else {
+    projectMap.push({
+      path: creatorAbs,
+      buildPageCalls: [],
+      otherWatchedFiles: [normalized],
+      otherWatchedDirs: [],
+    });
+  }
+}
 
 /**
  * Bind a directory to a creator's watcher
@@ -325,8 +345,10 @@ export async function runCreator(creator: WalkEntry) {
       await buildPage(templateAbs, data, options, components);
     },
     {
-      watchFile: (path: string) => addFileToWatcher(creator.path, path),
-      watchDir: (path: string) => addDirToWatcher(creator.path, path),
+      watchFile: (path: string) =>
+        addFileToWatcher(creator.path, resolve(Deno.cwd(), path)),
+      watchDir: (path: string) =>
+        addDirToWatcher(creator.path, resolve(Deno.cwd(), path)),
     } as ISsgoBag
   );
 }
@@ -455,6 +477,23 @@ export async function watch() {
             );
 
             Promise.all(compilations).then(() => log.success("Done."));
+          }
+        } else {
+          const creatorsToRun: ICreator[] = projectMap.filter(
+            (creator) =>
+              creator.otherWatchedFiles.includes(path) ||
+              creator.otherWatchedDirs.some((dirAbs) =>
+                isFileInDir(path, dirAbs)
+              )
+          );
+
+          if (creatorsToRun.length > 0) {
+            console.log("");
+            log.info(`${getRel(path)} changed.`);
+
+            Promise.all(
+              creatorsToRun.map(({ path }) => runCreator({ path } as WalkEntry))
+            ).then(() => log.success("Done."));
           }
         }
       }
