@@ -1,2 +1,2 @@
 scripts:
-  serve: denoliver ./dist
+  serve: python3 -m http.server --dir=./dist 8080

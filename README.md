@@ -63,4 +63,5 @@ ssgo serve
 - [ ] Find a way to clear import / compiler cache programmatically
 - [x] Clean \_\_ssgo prefixed temp files on launch
 - [x] Add a flag allowing adding directories to watcher
-- [ ] Export types useful to creators from a 'mod.ts' module
+- [x] Export types useful to creators from a 'mod.ts' module
+- [ ] Add an addStaticToBundle function to ssgoBag

@@ -1,17 +1,19 @@
+import { ISsgoBag } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
 import markdownit from "https://cdn.pika.dev/@gerhobbelt/markdown-it@^10.0.0-30";
-import {
-  readFileStrSync,
-} from "https://deno.land/std@0.52.0/fs/mod.ts";
+import { readFileStrSync } from "https://deno.land/std@0.52.0/fs/mod.ts";
 
 import { DOCS } from "../src/constants.ts";
 
-export default async (buildPage: Function) => {
+export default async (buildPage: Function, { watchDir }: ISsgoBag) => {
+  watchDir("./md");
+  watchDir("./src");
+
   const parser = markdownit("commonmark", {});
 
   const sidebarEntries: Record<string, any> = {};
   for (const category of Object.keys(DOCS.categories)) {
-    sidebarEntries[category] = DOCS.docs.filter((doc: any) =>
-      doc.category === category
+    sidebarEntries[category] = DOCS.docs.filter(
+      (doc: any) => doc.category === category
     );
   }
 
@@ -28,7 +30,7 @@ export default async (buildPage: Function) => {
         sidebarEntries: sidebarEntries,
         isDocs: true,
       },
-      { filename: doc.path, dir: "docs" },
+      { filename: doc.path, dir: "docs" }
     );
   }
 };

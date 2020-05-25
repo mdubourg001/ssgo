@@ -2,9 +2,9 @@ const CATEGORIES = {
   None: "None",
   Templates: "Templates",
   Creators: "Creators",
-  "Components": "Components",
+  Components: "Components",
   "Static files": "Static files",
-  "Guides": "Guides",
+  Guides: "Guides",
 };
 
 export const DOCS: Record<string, any> = {
@@ -53,9 +53,9 @@ export const DOCS: Record<string, any> = {
       category: CATEGORIES.Templates,
     },
     {
-      title: "Contionnally display elements",
-      md: "cond-display.md",
-      path: "conditionnally-display-elements.html",
+      title: "Contionnally render elements",
+      md: "cond-render.md",
+      path: "conditionnally-render-elements.html",
       weight: 4,
       category: CATEGORIES.Templates,
     },
@@ -81,7 +81,7 @@ export const DOCS: Record<string, any> = {
       category: CATEGORIES.Components,
     },
     {
-      title: "How are static files handled ?",
+      title: "How are static files handled\u00A0?",
       md: "how-sf-handled.md",
       path: "how-are-static-files-handled.html",
       weight: 1,

@@ -1,6 +1,8 @@
 # Quickstart
 
-`ssgo` aims to be simple and easy to start working with.
+`ssgo` is a minimalist static site generator.
+
+It aims to be simple and easy to start working with.
 [After installing it](/docs/installation.html), here's what you would want to do:
 
 ## Initialize a `ssgo` project
@@ -103,6 +105,6 @@ ssgo dev
 
 Now that you are up and running, you can learn about the other cool things coming with `ssgo` like:
 
-- [Using your own components](/docs/components.html)
-- [Using static files](/docs/static-files.html)
+- [Using your own components](/docs/using-components.html)
+- [Using static files](/docs/how-are-static-files-handled.html)
 - [Having a dynamic runtime using AlpineJS](/docs/having-a-dynamic-runtime.html)
