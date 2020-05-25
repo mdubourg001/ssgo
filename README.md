@@ -58,10 +58,9 @@ ssgo serve
 - [ ] Add --minify a flag to allow minification
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Allow nodes inside of custom-components
-- [ ] Make init create a .gitignore and add \*_/_/\_\_ssgo\* and dist/ to it
-- [ ] Make init create a README.md with basic ssgo commands
+- [x] Make init create a .gitignore and add \*_/_/\_\_ssgo\* and dist/ to it
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
 - [x] Clean \_\_ssgo prefixed temp files on launch
-- [ ] Add a flag allowing adding directories to watcher
+- [x] Add a flag allowing adding directories to watcher
 - [ ] Export types useful to creators from a 'mod.ts' module

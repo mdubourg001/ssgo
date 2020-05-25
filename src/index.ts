@@ -547,12 +547,17 @@ export async function serve() {
 export async function init() {
   const directories = checkProjectDirectoriesExist();
 
+  // creating ssgo directories...
   for (const dir of Object.keys(directories)) {
     if (!directories[dir]) {
       log.info(`Creating ${getRel(dir)}/ directory...`);
       ensureDirSync(dir);
     }
   }
+
+  // creating the .gitignore
+  if (!existsSync(".gitignore"))
+    writeFileStrSync(".gitignore", `**/*/__ssgo*\ndist`);
 
   log.success(`Project initialized.`);
 }
