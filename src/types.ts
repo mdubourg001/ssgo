@@ -59,6 +59,14 @@ export interface IBuildPageParams {
 }
 
 export interface ISsgoBag {
+  /**
+   * Add a file to watcher. Whenever this file changes, the creator this
+   * function is called from will be re-ran.
+   */
   watchFile: (path: string) => void;
+  /**
+   * Add a directory to watcher. Whenever a file inside of this directory
+   * changes, the creator this function is called from will be re-ran.
+   */
   watchDir: (path: string) => void;
 }
