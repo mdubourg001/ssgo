@@ -209,7 +209,8 @@ export function getStaticFileBundlePath(staticRel: string): string {
   const ext = [".jsx", ".tsx", ".ts"].includes(extname(staticRel))
     ? ".js"
     : extname(staticRel);
-  const filename = removeExt(staticRel);
+  const base = basename(staticRel);
+  const filename = base.startsWith(".") ? staticRel : removeExt(staticRel);
 
   return normalize(`/${DIST_STATIC_BASE}/${filename}${ext}`);
 }

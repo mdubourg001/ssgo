@@ -1,4 +1,6 @@
-export default async (buildPage: Function, ssgoBag: any) => {
+import { ISsgoBag } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
+
+export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
   buildPage("others/about.html", {}, { filename: "about" });
 
   ssgoBag.watchFile("test.txt");
@@ -15,4 +17,7 @@ export default async (buildPage: Function, ssgoBag: any) => {
   );
 
   buildPage("index.html", data, { filename: "index" });
+
+  // @ts-ignore
+  ssgoBag.addStaticToBundle(".gitignore", "", false, true);
 };

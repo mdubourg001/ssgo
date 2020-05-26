@@ -62,11 +62,26 @@ export interface ISsgoBag {
   /**
    * Add a file to watcher. Whenever this file changes, the creator this
    * function is called from will be re-ran.
+   * @param path - The path of the file to add to watcher, relative to the root of project
    */
   watchFile: (path: string) => void;
   /**
    * Add a directory to watcher. Whenever a file inside of this directory
    * changes, the creator this function is called from will be re-ran.
+   * @param path - The path of the dir to add to watcher, relative to the root of project
    */
   watchDir: (path: string) => void;
+  /**
+   * Add a file to bundle's static files
+   * @param path - The path of the file to add to bundle, relative to the root of project
+   * @param bundleDest - The directories path to add the file to, relative to the bundle's static root (dist/static/)
+   * @param compile - Wether or not the file should be compiled first (works for .jsx, .ts, .tsx)
+   * @param override - Wether or not the file should override if already exists in bundle
+   */
+  addStaticToBundle: (
+    path: string,
+    bundleDest: string,
+    compile: boolean,
+    override: boolean
+  ) => void;
 }

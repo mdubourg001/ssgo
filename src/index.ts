@@ -181,7 +181,10 @@ function addStaticToBundle(
   override: boolean = false
 ) {
   const destAbs = normalize(`${DIST_DIR_ABS}/${destRel}`);
-  if (!override && existsSync(destAbs)) return;
+  if (!override && existsSync(destAbs))
+    log.warning(
+      `When trying to add ${getRel(destAbs)} to bundle: file already exists.`
+    );
 
   ensureDirSync(dirname(destAbs));
 
@@ -371,6 +374,17 @@ export async function runCreator(creator: WalkEntry) {
         addFileToWatcher(creator.path, resolve(Deno.cwd(), path)),
       watchDir: (path: string) =>
         addDirToWatcher(creator.path, resolve(Deno.cwd(), path)),
+      addStaticToBundle: (
+        path: string,
+        bundleDest: string = "",
+        compile: boolean = false,
+        override: boolean = false
+      ) =>
+        addStaticToBundle(
+          { path: resolve(Deno.cwd(), path), isCompiled: compile },
+          getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
+          override
+        ),
     } as ISsgoBag
   );
 }

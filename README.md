@@ -52,7 +52,7 @@ ssgo serve
 ## Roadmap
 
 - [x] Allow comments as top-level nodes
-- [ ] Serve built site using Denoliver
+- [ ] Serve built site
 - [ ] Complete the documentation
 - [ ] Format the built pages
 - [ ] Add --minify a flag to allow minification
@@ -64,4 +64,4 @@ ssgo serve
 - [x] Clean \_\_ssgo prefixed temp files on launch
 - [x] Add a flag allowing adding directories to watcher
 - [x] Export types useful to creators from a 'mod.ts' module
-- [ ] Add an addStaticToBundle function to ssgoBag
+- [x] Add an addStaticToBundle function to ssgoBag

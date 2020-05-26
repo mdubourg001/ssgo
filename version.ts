@@ -5,7 +5,7 @@ import {
 import { log } from "./src/utils.ts";
 
 // this line is rewritten when this script is ran
-const VERSION = "0.3.0";
+const VERSION = "0.4.0";
 
 function hasBumpFlag() {
   return (
