@@ -101,6 +101,12 @@ Your site will be built inside of the `dist` directory.
 ssgo dev
 ```
 
+## How does it work ?
+
+Here's a little schema to help you figure out about how `ssgo` works:
+
+![How ssgo works schema](/static/images/schema.png)
+
 ## What now ?
 
 Now that you are up and running, you can learn about the other cool things coming with `ssgo` like:

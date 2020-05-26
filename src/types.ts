@@ -81,7 +81,7 @@ export interface ISsgoBag {
   addStaticToBundle: (
     path: string,
     bundleDest: string,
-    compile: boolean,
-    override: boolean
+    compile?: boolean,
+    override?: boolean
   ) => void;
 }

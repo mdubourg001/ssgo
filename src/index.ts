@@ -181,10 +181,7 @@ function addStaticToBundle(
   override: boolean = false
 ) {
   const destAbs = normalize(`${DIST_DIR_ABS}/${destRel}`);
-  if (!override && existsSync(destAbs))
-    log.warning(
-      `When trying to add ${getRel(destAbs)} to bundle: file already exists.`
-    );
+  if (!override && existsSync(destAbs)) return;
 
   ensureDirSync(dirname(destAbs));
 

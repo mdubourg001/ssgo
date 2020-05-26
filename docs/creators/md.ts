@@ -4,9 +4,14 @@ import { readFileStrSync } from "https://deno.land/std@0.52.0/fs/mod.ts";
 
 import { DOCS } from "../src/constants.ts";
 
-export default async (buildPage: Function, { watchDir }: ISsgoBag) => {
+export default async (
+  buildPage: Function,
+  { watchDir, addStaticToBundle }: ISsgoBag
+) => {
   watchDir("./md");
   watchDir("./src");
+
+  addStaticToBundle("static/images/schema.png", "images", false, false);
 
   const parser = markdownit("commonmark", {});
 
