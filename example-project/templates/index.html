@@ -16,7 +16,22 @@
 
     <script src="/utils.ts"></script>
 
-    <rounded-button fruit="'apple'" />
+    <rounded-button fruit="'apple'">
+      <p>Hey, I'm button content !</p>
+
+      <div>
+        <span class="foobar">plop</span>
+      </div>
+
+      <p if="true">true</p>
+      <p if="false">false</p>
+
+      <p for="fruit" of="['banana', 'apple']">{{ index }} = {{ fruit }}</p>
+
+      <img src="assets/images/image.png" alt="plop" />
+
+      <rounded-button fruit="'kiwi'"></rounded-button>
+    </rounded-button>
 
     <p for="plop" of="[1, 2, 3]">foobard</p>
   </body>

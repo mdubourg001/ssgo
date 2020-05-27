@@ -48,13 +48,28 @@ export interface ICreator {
 export interface IContextData extends Record<string, any> {}
 
 export interface IBuildPageOptions {
+  /**
+   * The name of the page to create (with or without .html extension)
+   */
   filename: string;
+  /**
+   * The directory to put the created page in (relative to dist/ dir.)
+   */
   dir?: string;
 }
 
 export interface IBuildPageParams {
+  /**
+   * The path of the template to use as page skeleton (relative to templates/ dir.)
+   */
   template: string;
+  /**
+   * The contextual data used to build the page
+   */
   data: IContextData;
+  /**
+   * Page build options
+   */
   options: IBuildPageOptions;
 }
 

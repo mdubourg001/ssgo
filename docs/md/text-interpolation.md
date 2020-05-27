@@ -26,7 +26,7 @@ export default (buildPage) => {
 Our template could look something like that:
 
 ```html
-// my-template.html
+<!-- my-template.html -->
 
 <div>
   <p>{{ foo }}</p>

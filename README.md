@@ -43,11 +43,8 @@ Your site will be built inside of the `dist/` directory.
 ssgo dev
 ```
 
-~~**To serve the build** on port 8000~~ (**soon !** You can use [Denoliver](https://github.com/joakimunge/denoliver) in the meantime):
-
-```bash
-ssgo serve
-```
+**For the moment**, `ssgo` doesn't provide a web server out of the box.
+It is on the roadmap.
 
 ## Roadmap
 
@@ -55,9 +52,9 @@ ssgo serve
 - [ ] Serve built site
 - [ ] Complete the documentation
 - [ ] Format the built pages
-- [ ] Add --minify a flag to allow minification
+- [ ] Add a --minify flag to allow minification
 - [ ] Serialize the cache on FS to allow faster cold builds
-- [ ] Allow nodes inside of custom-components
+- [x] Allow nodes inside of custom-components
 - [x] Make init create a .gitignore and add \*_/_/\_\_ssgo\* and dist/ to it
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically

@@ -45,3 +45,5 @@ export const POTENTIAL_STATIC_ATTR = [
 ];
 
 export const BUILDABLE_STATIC_EXT = [".ts", ".jsx", ".tsx"];
+
+export const CHILDREN_COMPONENT_PROP = "children";
