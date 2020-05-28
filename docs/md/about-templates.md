@@ -23,6 +23,6 @@ export default (buildPage) => {
 `ssgo` templates allow you to do the following things:
 
 - [Text interpolation](/docs/text-interpolation.html)
-- [Evaluate tag's attributes value at built time](/docs/attributes-evaluation.html)
-- [Render elements conditionnally](/docs/conditionnally-render-elements.html)
+- [Evaluate tag's attributes at built time](/docs/attributes-evaluation.html)
+- [Show elements conditionnally](/docs/conditionnally-show-elements.html)
 - [Iterate over data](/docs/templates-loops.html)

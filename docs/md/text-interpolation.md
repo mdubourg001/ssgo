@@ -5,29 +5,19 @@ It allows you to render text from contextual data.
 
 Every text of the format **`{{ foo }}` will be evaluated as text interpolation.**
 
-For example, let's say we have a [Creator](/docs/about-creators.html) making a call to `buildPage` with a template and some data as follows:
+For example, let's say that we have a [Creator](/docs/about-creators.html) making a call to `buildPage` with the following context data:
 
 ```typescript
-// my-creator.ts
-
-export default (buildPage) => {
-  buildPage(
-    "my-template.html",
-    {
-        foo: 'foo':
-        bar: 'bar',
-        joinWords: (...words: string[]) => words.join('-')
-    },
-    { filename: 'index'}
-  );
-};
+{
+  foo: 'foo',
+  bar: 'bar',
+  joinWords: (...words: string[]) => words.join('-')
+}
 ```
 
-Then if our template looks something like that:
+And that our template looks something like that:
 
 ```html
-<!-- my-template.html -->
-
 <div>
   <p>{{ foo }}</p>
   <p>{{ bar }}</p>
@@ -37,11 +27,11 @@ Then if our template looks something like that:
 </div>
 ```
 
-Once built, it will look something like that:
+Once built, our page will look like that:
 
 ```html
 <div>
-  <p>foor</p>
+  <p>foo</p>
   <p>bar</p>
   <p>3</p>
   <p>foo-bar</p>

@@ -53,9 +53,9 @@ export const DOCS: Record<string, any> = {
       category: CATEGORIES.Templates,
     },
     {
-      title: "Contionnally render elements",
-      md: "cond-render.md",
-      path: "conditionnally-render-elements.html",
+      title: "Contionnally show elements",
+      md: "cond-show.md",
+      path: "conditionnally-show-elements.html",
       weight: 4,
       category: CATEGORIES.Templates,
     },
