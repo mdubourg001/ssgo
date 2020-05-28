@@ -1,2 +1,4 @@
 scripts:
-  serve: python3 -m http.server --dir=./dist 8080
+  # yarn global add simple-hot-reload-server
+  serve: hrs -p 8080 dist
+  #serve: python3 -m http.server --dir=./dist 8080

@@ -6,13 +6,6 @@ or you can also choose to reuse a template to build multiple pages of your site.
 
 For example, this documentation site is built with `ssgo` and uses a single template for all the pages under `/docs`.
 
-`ssgo` templates allow you to do the following things:
-
-- [Text interpolation](/docs/text-interpolation.html)
-- [Evaluate tag's attributes value at built time](/docs/attributes-evaluation.html)
-- [Render elements conditionnally](/docs/conditionnally-render-elements.html)
-- [Iterate over data](/docs/templates-loops.html)
-
 Templates are used through the first argument of the `buildPage` method, that is given to every creator has first parameter.
 
 ```typescript
@@ -26,3 +19,10 @@ export default (buildPage) => {
   );
 };
 ```
+
+`ssgo` templates allow you to do the following things:
+
+- [Text interpolation](/docs/text-interpolation.html)
+- [Evaluate tag's attributes value at built time](/docs/attributes-evaluation.html)
+- [Render elements conditionnally](/docs/conditionnally-render-elements.html)
+- [Iterate over data](/docs/templates-loops.html)
