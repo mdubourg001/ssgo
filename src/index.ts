@@ -85,6 +85,15 @@ function walkCreatorsAndComponents() {
   ).filter((file: WalkEntry) => isTemplate(file.name));
 }
 
+function clearCreatorBuildPageCalls(creatorAbs: string) {
+  const existingEntry: ICreator | undefined = projectMap.find(
+    ({ path }) => path === creatorAbs
+  );
+  if (!existingEntry) return;
+
+  existingEntry.buildPageCalls = [];
+}
+
 /**
  * Cache a call to buildPage
  */
@@ -346,6 +355,9 @@ export async function runCreator(creator: WalkEntry) {
     );
     return;
   }
+
+  // clearing creators buildPage cache if exists
+  clearCreatorBuildPageCalls(creator.path);
 
   log.info(`Running ${creatorRel}...`);
   return module.default(

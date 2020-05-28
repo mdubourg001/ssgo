@@ -16,12 +16,11 @@ log.info(`ssgo ${getVersion()}`);
 if (Deno.args.includes(HELP_FLAG)) {
   log.info(
     `ssgo accepted arguments:
-    - dev: build project to ${DIST_DIR_BASE}, watch for file changes and serve on port ${SERVE_PORT}
-    - serve: serve ${DIST_DIR_BASE} directory on port ${SERVE_PORT}
+    - dev: build project to ${DIST_DIR_BASE} and watch for file changes
     - build (default): build project only to ${DIST_DIR_BASE}
     - init: initialize project directories (does NOT override if these already exist)
     - help: display help menu
-  `,
+  `
   );
 } // dev: build, watch files and serve
 else if (Deno.args.includes(DEV_FLAG)) {
