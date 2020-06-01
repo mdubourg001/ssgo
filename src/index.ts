@@ -17,6 +17,7 @@ import {
   basename,
   extname,
   resolve,
+  relative,
 } from "https://deno.land/std@0.52.0/path/mod.ts";
 
 import {
@@ -54,6 +55,7 @@ import {
   checkComponentNameUnicity,
   checkBuildPageOptions,
   checkProjectDirectoriesExist,
+  checkIsValidHttpUrl,
   getStaticFileBundlePath,
   isFileInDir,
   getRel,
@@ -81,13 +83,13 @@ function walkCreatorsAndComponents() {
     isScript(file.name)
   );
   components = Array.from(
-    walkSync(COMPONENTS_DIR_ABS)
+    walkSync(COMPONENTS_DIR_ABS),
   ).filter((file: WalkEntry) => isTemplate(file.name));
 }
 
 function clearCreatorBuildPageCalls(creatorAbs: string) {
   const existingEntry: ICreator | undefined = projectMap.find(
-    ({ path }) => path === creatorAbs
+    ({ path }) => path === creatorAbs,
   );
   if (!existingEntry) return;
 
@@ -99,14 +101,16 @@ function clearCreatorBuildPageCalls(creatorAbs: string) {
  */
 function cacheBuildPageCall(
   creatorAbs: string,
-  { template: templateRel, data, options }: IBuildPageParams
+  { template: templateRel, data, options }: IBuildPageParams,
 ) {
   const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${templateRel}`);
   if (!existsSync(templateAbs)) {
     throw new Error(
-      `When running ${getRel(
-        creatorAbs
-      )}: Can't find given template: ${templateRel} inside of ${TEMPLATES_DIR_BASE}/ directory.`
+      `When running ${
+        getRel(
+          creatorAbs,
+        )
+      }: Can't find given template: ${templateRel} inside of ${TEMPLATES_DIR_BASE}/ directory.`,
     );
   }
 
@@ -121,17 +125,18 @@ function cacheBuildPageCall(
   };
 
   const existingEntry: ICreator | undefined = projectMap.find(
-    ({ path }) => path === creatorAbs
+    ({ path }) => path === creatorAbs,
   );
 
   if (!!existingEntry) existingEntry.buildPageCalls.push(pageBuildCall);
-  else
+  else {
     projectMap.push({
       path: creatorAbs,
       buildPageCalls: [pageBuildCall],
       otherWatchedFiles: [],
       otherWatchedDirs: [],
     });
+  }
 }
 
 /**
@@ -139,7 +144,7 @@ function cacheBuildPageCall(
  */
 function bindTemplateToCustomComponent(
   templateAbs: string,
-  event: ICustomComponent
+  event: ICustomComponent,
 ) {
   const existingEntries: ITemplate[] = projectMap.reduce(
     (acc: ITemplate[], { buildPageCalls }: ICreator) => {
@@ -150,12 +155,12 @@ function bindTemplateToCustomComponent(
           .map((c) => c.template),
       ];
     },
-    []
+    [],
   );
 
   existingEntries.forEach((entry) => {
     entry.customComponents = Array.from(
-      new Set([...entry.customComponents, event])
+      new Set([...entry.customComponents, event]),
     );
   });
 }
@@ -173,7 +178,7 @@ function bindTemplateToStatic(templateAbs: string, event: IStaticFile) {
           .map((c) => c.template),
       ];
     },
-    []
+    [],
   );
 
   existingEntries.forEach((entry) => {
@@ -187,7 +192,7 @@ function bindTemplateToStatic(templateAbs: string, event: IStaticFile) {
 function addStaticToBundle(
   staticFile: IStaticFile,
   destRel: string,
-  override: boolean = false
+  override: boolean = false,
 ) {
   const destAbs = normalize(`${DIST_DIR_ABS}/${destRel}`);
   if (!override && existsSync(destAbs)) return;
@@ -199,7 +204,7 @@ function addStaticToBundle(
       new Promise(async (resolve) => {
         const tempAbs = writeTempFileWithContentOf(
           staticFile.path,
-          extname(staticFile.path)
+          extname(staticFile.path),
         );
 
         // @ts-ignore
@@ -217,11 +222,11 @@ function addStaticToBundle(
           });
         } else {
           log.error(
-            `Error when calling Deno.bundle on ${getRel(staticFile.path)}:`
+            `Error when calling Deno.bundle on ${getRel(staticFile.path)}:`,
           );
           throw new Error(JSON.stringify(diag, null, 1));
         }
-      })
+      }),
     );
   } else {
     copySync(staticFile.path, destAbs, { overwrite: true });
@@ -233,15 +238,17 @@ function addStaticToBundle(
  */
 function addFileToWatcher(creatorAbs: string, fileAbs: string) {
   const existingEntry: ICreator | undefined = projectMap.find(
-    ({ path }) => path === creatorAbs
+    ({ path }) => path === creatorAbs,
   );
   const normalized = normalize(fileAbs);
-  if (!existsSync(normalized))
+  if (!existsSync(normalized)) {
     log.warning(`Can't find '${getRel(fileAbs)}', won't watch for changes.`);
+  }
 
   if (!!existingEntry) {
-    if (!existingEntry.otherWatchedFiles.includes(normalized))
+    if (!existingEntry.otherWatchedFiles.includes(normalized)) {
       existingEntry?.otherWatchedFiles.push(normalized);
+    }
   } else {
     projectMap.push({
       path: creatorAbs,
@@ -257,17 +264,19 @@ function addFileToWatcher(creatorAbs: string, fileAbs: string) {
  */
 function addDirToWatcher(creatorAbs: string, dirAbs: string) {
   const existingEntry: ICreator | undefined = projectMap.find(
-    ({ path }) => path === creatorAbs
+    ({ path }) => path === creatorAbs,
   );
   const normalized = normalize(dirAbs);
-  if (!existsSync(normalized))
+  if (!existsSync(normalized)) {
     log.warning(
-      `Can't find '${getRel(dirAbs)}' directory, won't watch for changes.`
+      `Can't find '${getRel(dirAbs)}' directory, won't watch for changes.`,
     );
+  }
 
   if (!!existingEntry) {
-    if (!existingEntry.otherWatchedDirs.includes(normalized))
+    if (!existingEntry.otherWatchedDirs.includes(normalized)) {
       existingEntry?.otherWatchedDirs.push(normalized);
+    }
   } else {
     projectMap.push({
       path: creatorAbs,
@@ -309,7 +318,7 @@ async function buildPage(
   templateAbs: string,
   data: IContextData,
   options: IBuildPageOptions,
-  availableComponents: ICustomComponent[]
+  availableComponents: ICustomComponent[],
 ) {
   log.info(`Building ${getRel(getOutputPagePath(options))}...`);
 
@@ -331,7 +340,7 @@ async function buildPage(
       (e: IStaticFile, destRel: string) => {
         bindTemplateToStatic(templateAbs, e);
         addStaticToBundle(e, destRel);
-      }
+      },
     );
   });
 
@@ -351,7 +360,7 @@ export async function runCreator(creator: WalkEntry) {
   // as every valid creator should export a default function
   if (!module.default || typeof module.default !== "function") {
     log.warning(
-      `When running ${creatorRel}: A creator must export a default function.`
+      `When running ${creatorRel}: A creator must export a default function.`,
     );
     return;
   }
@@ -364,7 +373,7 @@ export async function runCreator(creator: WalkEntry) {
     async function (
       template: string,
       data: IContextData,
-      options: IBuildPageOptions
+      options: IBuildPageOptions,
     ) {
       // caching the call to buildPage on the fly
       const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
@@ -387,14 +396,14 @@ export async function runCreator(creator: WalkEntry) {
         path: string,
         bundleDest: string = "",
         compile: boolean = false,
-        override: boolean = false
+        override: boolean = false,
       ) =>
         addStaticToBundle(
           { path: resolve(Deno.cwd(), path), isCompiled: compile },
           getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
-          override
+          override,
         ),
-    } as ISsgoBag
+    } as ISsgoBag,
   );
 }
 
@@ -458,13 +467,18 @@ export async function watch() {
               ...acc,
               ...curr.buildPageCalls.filter((c) => c.template.path === path),
             ],
-            [] as IBuildPageCall[]
+            [] as IBuildPageCall[],
           );
 
           const rebuilds = [];
           for (const call of calls) {
             rebuilds.push(
-              buildPage(call.template.path, call.data, call.options, components)
+              buildPage(
+                call.template.path,
+                call.data,
+                call.options,
+                components,
+              ),
             );
           }
           Promise.all(rebuilds).then(() => log.success("Done."));
@@ -478,17 +492,22 @@ export async function watch() {
               ...acc,
               ...curr.buildPageCalls.filter((call) =>
                 call.template.customComponents.some(
-                  (comp) => comp.path === path
+                  (comp) => comp.path === path,
                 )
               ),
             ],
-            [] as IBuildPageCall[]
+            [] as IBuildPageCall[],
           );
 
           const rebuilds = [];
           for (const call of calls) {
             rebuilds.push(
-              buildPage(call.template.path, call.data, call.options, components)
+              buildPage(
+                call.template.path,
+                call.data,
+                call.options,
+                components,
+              ),
             );
           }
           Promise.all(rebuilds).then(() => log.success("Done."));
@@ -504,21 +523,21 @@ export async function watch() {
             log.info(`${getRel(path)} changed.`);
 
             const bundlePath = getStaticFileBundlePath(
-              path.replace(STATIC_DIR_ABS, "")
+              path.replace(STATIC_DIR_ABS, ""),
             );
             log.info(
-              `Updating ${getRel(normalize(DIST_DIR_ABS + bundlePath))}...`
+              `Updating ${getRel(normalize(DIST_DIR_ABS + bundlePath))}...`,
             );
 
             addStaticToBundle(
               {
                 path,
                 isCompiled: BUILDABLE_STATIC_EXT.includes(
-                  posix.extname(basename(path))
+                  posix.extname(basename(path)),
                 ),
               },
               bundlePath,
-              true
+              true,
             );
 
             Promise.all(compilations).then(() => log.success("Done."));
@@ -529,7 +548,7 @@ export async function watch() {
               creator.otherWatchedFiles.includes(path) ||
               creator.otherWatchedDirs.some((dirAbs) =>
                 isFileInDir(path, dirAbs)
-              )
+              ),
           );
 
           if (creatorsToRun.length > 0) {
@@ -537,7 +556,9 @@ export async function watch() {
             log.info(`${getRel(path)} changed.`);
 
             Promise.all(
-              creatorsToRun.map(({ path }) => runCreator({ path } as WalkEntry))
+              creatorsToRun.map(({ path }) =>
+                runCreator({ path } as WalkEntry)
+              ),
             ).then(() => log.success("Done."));
           }
         }
@@ -579,8 +600,40 @@ export async function init() {
   }
 
   // creating the .gitignore
-  if (!existsSync(".gitignore"))
+  if (!existsSync(".gitignore")) {
     writeFileStrSync(".gitignore", `**/*/__ssgo*\ndist`);
+  }
 
   log.success(`Project initialized.`);
+}
+
+/**
+ * Create the sitemap.xml file
+ */
+export function sitemap(host: string) {
+  if (typeof host === "undefined") return;
+  checkIsValidHttpUrl(host);
+
+  log.info("Generating sitemap.xml...");
+
+  const now = new Date().toISOString();
+  let urlEntries: string = projectMap.reduce(
+    (acc: string, curr: ICreator): string => {
+      for (let call of curr.buildPageCalls) {
+        const loc = `${host}/${
+          relative(DIST_DIR_ABS, getOutputPagePath(call.options))
+        }`;
+        acc +=
+          `\t<url>\n\t\t<loc>${loc}</loc>\n\t\t<lastmod>${now}</lastmod>\n\t</url>\n`;
+      }
+
+      return acc;
+    },
+    "",
+  );
+
+  writeFileStrSync(
+    resolve(DIST_DIR_ABS, "sitemap.xml"),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}</urlset>`,
+  );
 }

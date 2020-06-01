@@ -5,6 +5,9 @@ export const SERVE_FLAG = "serve";
 export const BUILD_FLAG = "build";
 export const HELP_FLAG = "help";
 export const INIT_FLAG = "init";
+export const VERSION_FLAG = "version";
+
+export const SITEMAP_OPTION = "sitemap";
 
 // ----- config ----- //
 

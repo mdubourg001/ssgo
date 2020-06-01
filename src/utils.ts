@@ -85,7 +85,7 @@ export function isTemplate(filename: string): boolean {
 export function contextEval(
   expression: string,
   context: IContextData,
-  errorContext?: string
+  errorContext?: string,
 ) {
   try {
     // @ts-ignore
@@ -179,7 +179,7 @@ export function getOutputPagePath(options: IBuildPageOptions): string {
     options.dir ?? "",
     options.filename.endsWith(".html")
       ? options.filename
-      : options.filename + ".html"
+      : options.filename + ".html",
   );
 }
 
@@ -197,7 +197,7 @@ export function getStaticFileFromRel(staticRel: string): IStaticFile {
   return {
     path: staticFileAbs,
     isCompiled: BUILDABLE_STATIC_EXT.includes(
-      posix.extname(staticFileBasename)
+      posix.extname(staticFileBasename),
     ),
   };
 }
@@ -237,7 +237,7 @@ export function getRel(abs: string): string {
  */
 export function writeTempFileWithContentOf(
   contentAbs: string,
-  extension: string
+  extension: string,
 ): string {
   const contentStr = readFileStrSync(contentAbs);
 
@@ -268,7 +268,7 @@ export async function importModule(moduleAbs: string) {
  */
 export function cleanTempFiles() {
   const tempFiles: WalkEntry[] = Array.from(
-    walkSync(Deno.cwd())
+    walkSync(Deno.cwd()),
   ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX));
 
   for (const file of tempFiles) {
@@ -283,22 +283,24 @@ export function cleanTempFiles() {
  */
 export function checkTopLevelNodesCount(
   parsedTemplate: INode[],
-  templateAbs: string
+  templateAbs: string,
 ) {
   const filteredTemplate = parsedTemplate.filter(
     (node) =>
       (node.type === "Text" && node.value.trim().length > 0) ||
       ("name" in node &&
         !isComment(node) &&
-        !ACCEPTED_TOP_LEVEL_TAGS.includes(node.name))
+        !ACCEPTED_TOP_LEVEL_TAGS.includes(node.name)),
   );
 
   if (filteredTemplate.length > 1) {
     log.error(
-      `When parsing '${getRel(
-        templateAbs
-      )}': A template/component file can't have more than one top-level node.`,
-      true
+      `When parsing '${
+        getRel(
+          templateAbs,
+        )
+      }': A template/component file can't have more than one top-level node.`,
+      true,
     );
   }
 }
@@ -308,13 +310,15 @@ export function checkTopLevelNodesCount(
  */
 export function checkEmptyTemplate(
   parsedTemplate: INode[],
-  templateAbs: string
+  templateAbs: string,
 ) {
   if (parsedTemplate.length === 0) {
     log.warning(
-      `When parsing '${getRel(
-        templateAbs
-      )}': This template/component file is empty.`
+      `When parsing '${
+        getRel(
+          templateAbs,
+        )
+      }': This template/component file is empty.`,
     );
   }
 }
@@ -328,14 +332,16 @@ export function checkComponentNameUnicity(components: ICustomComponent[]) {
       components.some(
         (c) =>
           removeExt(c.name) === removeExt(component.name) &&
-          c.path !== component.path
+          c.path !== component.path,
       )
     ) {
       log.error(
-        `When listing custom components: Two components with the same name '${removeExt(
-          component.name
-        )}' found.`,
-        true
+        `When listing custom components: Two components with the same name '${
+          removeExt(
+            component.name,
+          )
+        }' found.`,
+        true,
       );
     }
   }
@@ -348,7 +354,7 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
   if ("name" in node && node.name === removeExt(componentName)) {
     log.error(
       `When parsing '${componentName}': Recursive call of component found.`,
-      true
+      true,
     );
   }
 
@@ -364,12 +370,12 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
  */
 export function checkBuildPageOptions(
   templateRel: string,
-  options: IBuildPageOptions
+  options: IBuildPageOptions,
 ) {
   if (!options.filename) {
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
-      true
+      true,
     );
   }
 }
@@ -379,11 +385,11 @@ export function checkBuildPageOptions(
  */
 export function checkStaticFileExists(
   staticFileAbs: string,
-  staticAttrValue: string
+  staticAttrValue: string,
 ): boolean {
   if (!existsSync(staticFileAbs)) {
     log.warning(
-      `Could not resolve ${staticAttrValue}: won't be included in output build.`
+      `Could not resolve ${staticAttrValue}: won't be included in output build.`,
     );
     return false;
   }
@@ -395,11 +401,11 @@ export function checkStaticFileExists(
  */
 export function checkStaticFileIsInsideStaticDir(
   staticFileAbs: string,
-  staticAttrValue: string
+  staticAttrValue: string,
 ) {
   if (common([staticFileAbs, STATIC_DIR_ABS]) !== STATIC_DIR_ABS) {
     log.warning(
-      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`
+      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`,
     );
     return false;
   }
@@ -414,7 +420,7 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
   if (!creatorsExists && throwErr) {
     log.error(
       `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
-      throwErr
+      throwErr,
     );
   }
 
@@ -422,7 +428,7 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
   if (!templatesExists && throwErr) {
     log.error(
       `Could not find mandatory '${TEMPLATES_DIR_BASE}/' directory.`,
-      throwErr
+      throwErr,
     );
   }
 
@@ -432,4 +438,24 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
     [STATIC_DIR_ABS]: existsSync(STATIC_DIR_ABS),
     [COMPONENTS_DIR_ABS]: existsSync(COMPONENTS_DIR_ABS),
   };
+}
+
+/**
+ * Check if a string is a valid URL starting with http or https
+ */
+export function checkIsValidHttpUrl(str: string) {
+  let url;
+
+  try {
+    url = new URL(str);
+
+    if (url.protocol !== "http:" && url.protocol !== "https:") {
+      throw "";
+    }
+  } catch (_) {
+    log.error(
+      `When trying to build sitemap.xml: '${str}' is not a valid URL strarting with 'http://' or 'https://'.`,
+      true,
+    );
+  }
 }

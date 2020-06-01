@@ -1,7 +1,11 @@
 import { ISsgoBag } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
 
 export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
-  buildPage("others/about.html", {}, { filename: "about" });
+  buildPage(
+    "others/about.html",
+    {},
+    { filename: "about", dir: "others/pouet" },
+  );
 
   ssgoBag.watchFile("test.txt");
   ssgoBag.watchDir("src");
@@ -12,7 +16,7 @@ export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
         r({
           title: "How I built a static site generator for Deno",
         }),
-      1000
+      100,
     )
   );
 
