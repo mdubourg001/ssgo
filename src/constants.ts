@@ -37,8 +37,6 @@ export const DIST_STATIC_ABS = `${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`;
 
 // ----- business ----- //
 
-export const ACCEPTED_TOP_LEVEL_TAGS = ["!doctype"];
-
 export const POTENTIAL_STATIC_ATTR = [
   "src",
   "href",

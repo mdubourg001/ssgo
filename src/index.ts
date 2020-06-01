@@ -50,7 +50,6 @@ import {
   formatAttributes,
   isComment,
   getOutputPagePath,
-  checkTopLevelNodesCount,
   checkEmptyTemplate,
   checkComponentNameUnicity,
   checkBuildPageOptions,
@@ -327,10 +326,9 @@ async function buildPage(
     "value" in n ? n.value !== "\n" : true
   );
 
-  checkTopLevelNodesCount(parsed, templateAbs);
   checkEmptyTemplate(parsed, templateAbs);
 
-  parsed.forEach(async (node: INode) => {
+  for (let node of parsed) {
     node.parent = parsed;
     await buildHtml(
       node,
@@ -342,7 +340,7 @@ async function buildPage(
         addStaticToBundle(e, destRel);
       },
     );
-  });
+  }
 
   const serialized = parsed.map((node: INode) => serialize(node)).join("");
 
@@ -432,7 +430,6 @@ export async function build() {
     // wait for Deno.bundle calls to end
     await Promise.all(compilations);
 
-    log.success("Project built.");
     resolve();
   });
 }

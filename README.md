@@ -48,17 +48,10 @@ It is on the roadmap.
 
 ## Roadmap
 
-- [x] Allow comments as top-level nodes
 - [ ] Serve built site
 - [ ] Complete the documentation
 - [ ] Format the built pages
 - [ ] Add a --minify flag to allow minification
 - [ ] Serialize the cache on FS to allow faster cold builds
-- [x] Allow nodes inside of custom-components
-- [x] Make init create a .gitignore and add \*_/_/\_\_ssgo\* and dist/ to it
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
-- [x] Clean \_\_ssgo prefixed temp files on launch
-- [x] Add a flag allowing adding directories to watcher
-- [x] Export types useful to creators from a 'mod.ts' module
-- [x] Add an addStaticToBundle function to ssgoBag

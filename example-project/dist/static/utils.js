@@ -2,6 +2,8 @@
 
 // This is a specialised implementation of a System module loader.
 
+"use strict";
+
 // @ts-nocheck
 /* eslint-disable */
 let System, __instantiateAsync, __instantiate;
@@ -108,4 +110,4 @@ let System, __instantiateAsync, __instantiate;
 "use strict";
 console.log("bobz");
 
-__instantiate("__ssgo073de106");
+__instantiate("__ssgo260e1736");

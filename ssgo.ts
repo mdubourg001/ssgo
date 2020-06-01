@@ -29,6 +29,8 @@ else if (FLAGS["_"].includes(HELP_FLAG)) {
 } // dev: build, watch files and serve
 else if (FLAGS["_"].includes(DEV_FLAG)) {
   build().then(() => {
+    log.success("Project built.");
+
     watch();
   });
 } // init: create missing project directories
@@ -37,6 +39,7 @@ else if (FLAGS["_"].includes(INIT_FLAG)) init();
 else if (FLAGS["_"].includes(BUILD_FLAG) || FLAGS["_"].length === 0) {
   build().then(() => {
     sitemap(FLAGS[SITEMAP_OPTION]);
+    log.success("Project built.");
   });
 } // unknow arguments
 else log.error(`Unknow arguments: '${FLAGS["_"].join(" ")}'`);

@@ -40,7 +40,6 @@ import {
   DIST_DIR_ABS,
   BUILDABLE_STATIC_EXT,
   DIST_STATIC_BASE,
-  ACCEPTED_TOP_LEVEL_TAGS,
   TEMP_FILES_PREFIX,
 } from "./constants.ts";
 
@@ -277,33 +276,6 @@ export function cleanTempFiles() {
 }
 
 // ----- errors ----- //
-
-/**
- * Check unicity of top-level node
- */
-export function checkTopLevelNodesCount(
-  parsedTemplate: INode[],
-  templateAbs: string,
-) {
-  const filteredTemplate = parsedTemplate.filter(
-    (node) =>
-      (node.type === "Text" && node.value.trim().length > 0) ||
-      ("name" in node &&
-        !isComment(node) &&
-        !ACCEPTED_TOP_LEVEL_TAGS.includes(node.name)),
-  );
-
-  if (filteredTemplate.length > 1) {
-    log.error(
-      `When parsing '${
-        getRel(
-          templateAbs,
-        )
-      }': A template/component file can't have more than one top-level node.`,
-      true,
-    );
-  }
-}
 
 /**
  * Check that a template has at least one node
