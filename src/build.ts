@@ -332,10 +332,13 @@ function computeStaticFiles(
 /**
  * Handle interpolation of given text node
  */
-function computeText(node: INode, data: IContextData) {
+function computeText(node: INode, data: IContextData): boolean {
   if (node.type === "Text") {
     node.value = interpolate(node.value, data);
+    return true;
   }
+
+  return false;
 }
 
 /**
@@ -352,6 +355,10 @@ export async function buildHtml(
   if (node.built) return;
   if (isComment(node)) return;
 
+  if (computeText(node, data)) {
+    node.built = true;
+    return;
+  }
   if (
     computeForOf(
       node,
@@ -382,7 +389,6 @@ export async function buildHtml(
   }
   computeEval(node, data);
   computeStaticFiles(node, onStaticFileFound);
-  computeText(node, data);
 
   if ("body" in node && !!node.body) {
     for (const childNode of node.body.reverse() as INode[]) {

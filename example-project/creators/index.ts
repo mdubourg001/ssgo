@@ -15,6 +15,8 @@ export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
       () =>
         r({
           title: "How I built a static site generator for Deno",
+          content:
+            `<h1 if="true">{{ title }}</h1><h1 for="a" of="[1, 2]">{{ index }} - {{ a }}</h1>`,
         }),
       100,
     )
