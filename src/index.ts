@@ -297,7 +297,10 @@ export function serialize(node: INode) {
   } else if (node.type === "Text") {
     result += node.value;
   } else if (node.type === "Tag") {
-    result += `<${node.rawName} ${formatAttributes(node.attributes)}`;
+    const attributes = formatAttributes(node.attributes);
+    result += `<${node.rawName}${
+      attributes.length > 0 ? " " + attributes : ""
+    }`;
     if (node.close === null) return result + "/>";
     else result += ">";
 
