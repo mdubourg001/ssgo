@@ -55,3 +55,4 @@ It is on the roadmap.
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
+- [ ] Do not throw when errors occur in dev mode
