@@ -199,10 +199,7 @@ function addStaticToBundle(
   if (staticFile.isCompiled) {
     compilations.push(
       new Promise(async (resolve) => {
-        const tempAbs = writeTempFileWithContentOf(
-          staticFile.path,
-          extname(staticFile.path)
-        );
+        const tempAbs = writeTempFileWithContentOf(staticFile.path);
 
         // @ts-ignore
         const [diag, emit] = await Deno.bundle(tempAbs, undefined, {

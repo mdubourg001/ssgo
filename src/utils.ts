@@ -234,16 +234,13 @@ export function getRel(abs: string): string {
 /**
  * Copy the content of a file to a temp file and returns the temp path
  */
-export function writeTempFileWithContentOf(
-  contentAbs: string,
-  extension: string
-): string {
+export function writeTempFileWithContentOf(contentAbs: string): string {
   const contentStr = readFileStrSync(contentAbs);
 
   const tempAbs = Deno.makeTempFileSync({
     dir: dirname(contentAbs),
     prefix: TEMP_FILES_PREFIX,
-    suffix: extension,
+    suffix: extname(contentAbs),
   });
   writeFileStrSync(tempAbs, contentStr);
 
@@ -255,7 +252,7 @@ export function writeTempFileWithContentOf(
  * Using a temp file to hack import cache
  */
 export async function importModule(moduleAbs: string) {
-  const tempModuleAbs = writeTempFileWithContentOf(moduleAbs, ".ts");
+  const tempModuleAbs = writeTempFileWithContentOf(moduleAbs);
 
   const module = await import(`file://${tempModuleAbs}`);
   Deno.remove(tempModuleAbs);
