@@ -110,4 +110,4 @@ let System, __instantiateAsync, __instantiate;
 "use strict";
 console.log("bobz");
 
-__instantiate("__ssgofc34d124");
+__instantiate("__ssgod8be8b1c");

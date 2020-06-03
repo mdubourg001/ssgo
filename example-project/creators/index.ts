@@ -4,7 +4,7 @@ export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
   buildPage(
     "others/about.html",
     {},
-    { filename: "about", dir: "others/pouet" },
+    { filename: "about", dir: "others/pouet" }
   );
 
   ssgoBag.watchFile("test.txt");
@@ -15,10 +15,9 @@ export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
       () =>
         r({
           title: "How I built a static site generator for Deno",
-          content:
-            `<h1 if="true">{{ title }}</h1><h1 for="a" of="[1, 2]">{{ index }} - {{ a }}</h1>`,
+          content: `<h1 if="true">{{ title }}</h1><h1 for="a" of="[1, 2]">{{ index }} - {{ a }}</h1>`,
         }),
-      100,
+      100
     )
   );
 
