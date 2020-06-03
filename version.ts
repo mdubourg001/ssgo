@@ -1,7 +1,7 @@
 import {
   readFileStrSync,
   writeFileStrSync,
-} from "https://deno.land/std@0.52.0/fs/mod.ts";
+} from "https://deno.land/std@0.54.0/fs/mod.ts";
 import { log } from "./src/utils.ts";
 
 // this line is rewritten when this script is ran

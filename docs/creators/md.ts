@@ -1,6 +1,6 @@
 import { ISsgoBag } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
 import markdownit from "https://cdn.pika.dev/@gerhobbelt/markdown-it@^10.0.0-30";
-import { readFileStrSync } from "https://deno.land/std@0.52.0/fs/mod.ts";
+import { readFileStrSync } from "https://deno.land/std@0.54.0/fs/mod.ts";
 
 import { DOCS } from "../src/constants.ts";
 
