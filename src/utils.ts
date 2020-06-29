@@ -4,7 +4,7 @@ import {
   blue,
   yellow,
   green,
-} from "https://deno.land/std@0.56.0/fmt/colors.ts";
+} from "https://deno.land/std@0.59.0/fmt/colors.ts";
 import {
   relative,
   resolve,
@@ -14,14 +14,14 @@ import {
   extname,
   common,
   dirname,
-} from "https://deno.land/std@0.56.0/path/mod.ts";
+} from "https://deno.land/std@0.59.0/path/mod.ts";
 import {
   existsSync,
   readFileStrSync,
   writeFileStrSync,
   walkSync,
   WalkEntry,
-} from "https://deno.land/std@0.56.0/fs/mod.ts";
+} from "https://deno.land/std@0.59.0/fs/mod.ts";
 
 import {
   INode,
