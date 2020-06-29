@@ -17,18 +17,17 @@
     <link rel="stylesheet" href="index.css" />
 
     <script
-      src="https://instant.page/5.0.1"
-      type="module"
-      integrity="sha384-0DvoZ9kNcB36fWcQApIMIGQoTzoBDYTQ85e8nmsfFOGz4RHAdUhADqJt4k3K2uLS"
+      type="application/javascript"
+      src="https://unpkg.com/turbolinks@5.0.0/dist/turbolinks.js"
     ></script>
+    <script>
+      Turbolinks.start();
+    </script>
   </head>
   <body>
     <docs-header isDocs="false"></docs-header>
 
-    <article
-      id="swup"
-      class="container flex flex-col items-center px-4 py-12 mx-auto transition-fade fade-in"
-    >
+    <article class="container flex flex-col items-center px-4 py-12 mx-auto">
       <img class="h-10 mb-6" src="images/logo.png" alt="SSGO Logo" />
       <strong class="mb-10 text-xl text-center"
         >A minimalist, unconfigurable static site generator built with Deno, for
@@ -38,7 +37,7 @@
       <hr class="w-1/2 mb-4 border-orange-600" />
 
       <img
-        class="lg:h-64 my-6"
+        class="my-6 lg:h-64"
         src="images/quickstart.png"
         alt="Quickstart ssgo example"
       />
@@ -53,9 +52,4 @@
 
     <docs-footer></docs-footer>
   </body>
-
-  <script defer src="https://unpkg.com/swup@2.0.9/dist/swup.min.js"></script>
-  <script>
-    window.onload = () => new Swup();
-  </script>
 </html>

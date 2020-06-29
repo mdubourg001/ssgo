@@ -16,18 +16,25 @@
     <link rel="stylesheet" href="index.css" />
 
     <script
-      src="//instant.page/5.0.1"
-      type="module"
-      integrity="sha384-0DvoZ9kNcB36fWcQApIMIGQoTzoBDYTQ85e8nmsfFOGz4RHAdUhADqJt4k3K2uLS"
+      type="application/javascript"
+      src="https://unpkg.com/turbolinks@5.0.0/dist/turbolinks.js"
     ></script>
+    <script type="application/javascript" src="hljs/highlight.pack.js"></script>
+
+    <script>
+      Turbolinks.start();
+
+      document.addEventListener("turbolinks:load", function () {
+        document.querySelectorAll("pre code").forEach((block) => {
+          hljs.highlightBlock(block);
+        });
+      });
+    </script>
   </head>
   <body class="relative overflow-y-scroll">
     <docs-header isDocs="isDocs"></docs-header>
 
-    <section
-      id="swup"
-      class="container relative flex flex-col mx-auto md:flex-row"
-    >
+    <section class="container relative flex flex-col mx-auto md:flex-row">
       <div class="md:w-1/4 lg:w-1/5">
         <docs-sidebar
           entries="sidebarEntries"
@@ -36,31 +43,24 @@
       </div>
 
       <article
-        class="box-border w-screen p-4 mx-auto mb-10 transition-fade fade-in md:mb-0 md:w-3/4 lg:w-4/5 markdown-body md:p-12"
+        class="box-border w-screen p-4 mx-auto mb-10 md:mb-0 md:w-3/4 lg:w-4/5 markdown-body md:p-12"
       >
         {{ content }}
 
         <hr class="my-3" />
 
-        <i class="text-gray-600"
+        <em class="text-gray-600"
           >Something about this page is wrong ?
           <a
             target="_blank"
             rel="noopener noreferrer"
             eval:href="`https://github.com/mdubourg001/ssgo/blob/master/docs/md/${md}`"
             >Edit it on GitHub</a
-          >.</i
+          >.</em
         >
       </article>
     </section>
 
     <docs-footer></docs-footer>
   </body>
-
-  <script src="hljs/highlight.pack.js"></script>
-  <script defer src="https://unpkg.com/swup@2.0.9/dist/swup.min.js"></script>
-  <script>
-    hljs.initHighlightingOnLoad();
-    window.onload = () => new Swup();
-  </script>
 </html>

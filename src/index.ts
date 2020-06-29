@@ -15,7 +15,6 @@ import {
   dirname,
   posix,
   basename,
-  extname,
   resolve,
   relative,
 } from "https://deno.land/std@0.59.0/path/mod.ts";
@@ -327,7 +326,7 @@ async function buildPage(
   checkEmptyTemplate(parsed, templateAbs);
 
   for (let node of parsed) {
-    node.parent = parsed;
+    (node as INode).parent = parsed;
     await buildHtml(
       node,
       data,
