@@ -16,20 +16,12 @@
     <link rel="stylesheet" href="index.css" />
 
     <script
-      type="application/javascript"
-      src="https://unpkg.com/turbolinks@5.0.0/dist/turbolinks.js"
+      src="//instant.page/5.0.1"
+      type="module"
+      integrity="sha384-0DvoZ9kNcB36fWcQApIMIGQoTzoBDYTQ85e8nmsfFOGz4RHAdUhADqJt4k3K2uLS"
     ></script>
+
     <script type="application/javascript" src="hljs/highlight.pack.js"></script>
-
-    <script>
-      Turbolinks.start();
-
-      document.addEventListener("turbolinks:load", function () {
-        document.querySelectorAll("pre code").forEach((block) => {
-          hljs.highlightBlock(block);
-        });
-      });
-    </script>
   </head>
   <body class="relative overflow-y-scroll">
     <docs-header isDocs="isDocs"></docs-header>
