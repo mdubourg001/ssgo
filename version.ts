@@ -1,11 +1,11 @@
 import {
   readFileStrSync,
   writeFileStrSync,
-} from "https://deno.land/std@0.59.0/fs/mod.ts";
+} from "https://deno.land/std@0.61.0/fs/mod.ts";
 import { log } from "./src/utils.ts";
 
 // this line is rewritten when this script is ran
-const VERSION = "0.6.4";
+const VERSION = "0.7.0";
 
 function hasBumpFlag() {
   return (
