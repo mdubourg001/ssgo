@@ -1,12 +1,11 @@
 # About templates
 
 Templates are the skeletons of your pages, and are used by [Creators](/docs/about-creators.html) to build pages.
-You can choose to use a template for a single page,
-or you can also choose to reuse a template to build multiple pages of your site.
+A template can be used as much time as needed to build pages.
 
-For example, this documentation site is built with `ssgo` and uses a single template for all the pages under `/docs`.
+For example, this documentation site is built with `ssgo` and uses a single template for all the documentations pages (pages under `/docs`).
 
-Templates are used through the first argument of the `buildPage` method, that is given to every creator has first parameter.
+Templates are used through the first argument of the `buildPage` method, that is given to every creator default exported function has first parameter.
 
 ```typescript
 // my-creator.ts

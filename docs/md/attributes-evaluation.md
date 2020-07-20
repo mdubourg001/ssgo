@@ -4,7 +4,7 @@ Attributes evaluation allow you to dynamically compute the value of your attribu
 
 To dinamically compute the value of an attribute, just prefix it with `eval:`. `ssgo` will simply evaluate the expression given as value of the attribute, and will replace it into the built page.
 
-For example, let's say that we have a [Creator](/docs/about-creators.html) making a call to `buildPage` with the following context data:
+For example, let's say that one of your [creators](/docs/about-creators.html) is triggering a build page with the following data:
 
 ```typescript
 {
@@ -16,7 +16,7 @@ For example, let's say that we have a [Creator](/docs/about-creators.html) makin
 }
 ```
 
-And that our template looks something like that:
+Then you can evaluate the value of attributes as follows:
 
 ```html
 <html>
