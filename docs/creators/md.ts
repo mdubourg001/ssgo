@@ -1,12 +1,15 @@
-import { ISsgoBag } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
+import {
+  SsgoBag,
+  BuildPage,
+} from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
 import markdownit from "https://cdn.pika.dev/@gerhobbelt/markdown-it@^10.0.0-30";
 import { readFileStrSync } from "https://deno.land/std@0.61.0/fs/mod.ts";
 
 import { DOCS } from "../src/constants.ts";
 
 export default async (
-  buildPage: Function,
-  { watchDir, addStaticToBundle }: ISsgoBag
+  buildPage: BuildPage,
+  { watchDir, addStaticToBundle }: SsgoBag
 ) => {
   watchDir("./md");
   watchDir("./src");

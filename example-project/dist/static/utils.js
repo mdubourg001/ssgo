@@ -101,4 +101,4 @@ let System, __instantiate;
 "use strict";
 console.log("bobz");
 
-__instantiate("__ssgo8d8dbe72", false);
+__instantiate("__ssgod6ee0db0", false);
