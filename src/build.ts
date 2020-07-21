@@ -28,6 +28,7 @@ import {
   getStaticFileFromRel,
   getStaticFileBundlePath,
   checkStaticFileIsInsideStaticDir,
+  isDev,
 } from "./utils.ts";
 import { POTENTIAL_STATIC_ATTR, CHILDREN_COMPONENT_PROP } from "./constants.ts";
 import { serialize } from "./index.ts";
@@ -54,12 +55,12 @@ function computeForOf(
 
     if (!forAttr && !ofAttr) return;
 
-    if (forAttr && typeof forAttr.value === "undefined") {
+    if (forAttr && !forAttr.value?.value) {
       log.error(
         `When parsing "${node.open.value}" : The ${IAttribute.FOR} attribute must be given a value.`,
         true
       );
-    } else if (ofAttr && typeof ofAttr.value === "undefined") {
+    } else if (ofAttr && !ofAttr.value?.value) {
       log.error(
         `When parsing "${node.open.value}" : The ${IAttribute.OF} attribute must be given a value.`,
         true
