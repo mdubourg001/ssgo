@@ -5,14 +5,14 @@ A template can be used as much time as needed to build pages.
 
 For example, this documentation site is built with `ssgo` and uses a single template for all the documentations pages (pages under `/docs`).
 
-Templates are used through the first argument of the `buildPage` method, that is given to every creator default exported function has first parameter.
+Templates are used through the first argument of the `buildPage` method, that is given to every creator default exported function as first parameter.
 
 ```typescript
 // my-creator.ts
 
 export default (buildPage) => {
   buildPage(
-    "my-template.html", // <-- the path of the template to use (relative to the root of project)
+    "my-template.html", // <-- the path of the template to use (relative to the root of the templates/ directory)
     contextData,
     { filename: "my-page.html" }
   );

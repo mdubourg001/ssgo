@@ -1,5 +1,7 @@
 # Quickstart
 
+> **This documentation website** is actually built using `ssgo` and is a good example of what it is capable of. You can <a href="https://github.com/mdubourg001/ssgo/tree/master/docs" target="_blank" rel="noreferrer nofollow noopener">check the sources here</a>.
+
 `ssgo` is a minimalist static site generator.
 
 It aims to be simple and easy to start working with.
