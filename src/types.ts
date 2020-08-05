@@ -1,4 +1,4 @@
-import { INode as IHTML5ParserNode } from "https://cdn.pika.dev/html5parser@^1.1.0";
+import { INode as IHTML5ParserNode } from "https://cdn.skypack.dev/html5parser";
 
 // ----- internal ----- //
 

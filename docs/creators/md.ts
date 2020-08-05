@@ -2,7 +2,7 @@ import {
   SsgoBag,
   BuildPage,
 } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
-import markdownit from "https://cdn.pika.dev/@gerhobbelt/markdown-it@^10.0.0-30";
+import markdownit from "https://cdn.skypack.dev/@gerhobbelt/markdown-it";
 import { readFileStrSync } from "https://deno.land/std@0.61.0/fs/mod.ts";
 
 import { DOCS } from "../src/constants.ts";

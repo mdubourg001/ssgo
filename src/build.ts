@@ -1,8 +1,8 @@
-import cloneDeep from "https://deno.land/x/lodash/cloneDeep.js";
+import cloneDeep from "https://cdn.skypack.dev/lodash.clonedeep";
 import {
   parse,
   IAttribute as IHTMLAttr,
-} from "https://cdn.pika.dev/html5parser@^1.1.0";
+} from "https://cdn.skypack.dev/html5parser";
 
 import { readFileStrSync } from "https://deno.land/std@0.61.0/fs/mod.ts";
 
@@ -28,7 +28,6 @@ import {
   getStaticFileFromRel,
   getStaticFileBundlePath,
   checkStaticFileIsInsideStaticDir,
-  isDev,
 } from "./utils.ts";
 import { POTENTIAL_STATIC_ATTR, CHILDREN_COMPONENT_PROP } from "./constants.ts";
 import { serialize } from "./index.ts";

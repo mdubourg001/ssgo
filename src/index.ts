@@ -1,4 +1,4 @@
-import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
+import { parse } from "https://cdn.skypack.dev/html5parser";
 
 import {
   emptyDirSync,

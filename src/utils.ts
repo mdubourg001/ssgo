@@ -1,4 +1,4 @@
-import { IAttribute } from "https://cdn.pika.dev/html5parser@^1.1.0";
+import { IAttribute } from "https://cdn.skypack.dev/html5parser";
 import {
   red,
   blue,
