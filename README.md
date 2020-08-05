@@ -12,6 +12,10 @@ A minimalist, unconfigurable static site generator.
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 ![netlify: passing](https://img.shields.io/netlify/d9dae2e0-b3b2-4c86-aee8-7a625de6e18a?style=flat-square)
 
+## Documentation
+
+Read the (yet incomplete 😕) documentation at https://ssgo.netlify.app/docs.
+
 ## Quickstart
 
 To install `ssgo` using Deno:

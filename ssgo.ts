@@ -8,13 +8,11 @@ import {
   DIST_DIR_BASE,
   VERSION_FLAG,
   SITEMAP_OPTION,
-  ENV,
 } from "./src/constants.ts";
 import { log } from "./src/utils.ts";
 import getVersion from "./version.ts";
 
 const FLAGS = parse(Deno.args);
-export let SSGO_ENV = ENV.PROD;
 
 log.info(`ssgo ${getVersion()}`);
 
@@ -40,9 +38,6 @@ switch (true) {
 
   // dev: build, watch files and serve
   case FLAGS["_"].includes(DEV_FLAG):
-    // setting the env to DEV
-    SSGO_ENV = ENV.DEV;
-
     build().then(() => {
       log.success("Project built.");
 

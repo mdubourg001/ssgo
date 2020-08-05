@@ -1,4 +1,4 @@
-import { parse } from "https://cdn.pika.dev/html5parser@^1.1.0";
+import { parse } from "https://cdn.skypack.dev/html5parser";
 
 import { buildHtml } from "../build.ts";
 import { serialize } from "../index.ts";
@@ -6,7 +6,7 @@ import { INode, IContextData } from "../types.ts";
 
 export async function buildHtmlAndSerialize(
   templateStr: string,
-  data: IContextData,
+  data: IContextData
 ): Promise<string> {
   const parsed = parse(templateStr).reverse();
 
@@ -17,7 +17,7 @@ export async function buildHtmlAndSerialize(
       data,
       [],
       () => {},
-      () => {},
+      () => {}
     ).catch((e) => {
       throw Error(e);
     });
