@@ -1,7 +1,4 @@
-import {
-  SsgoBag,
-  BuildPage,
-} from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
+import { SsgoBag, BuildPage } from "https://deno.land/x/ssgo/mod.ts";
 import markdownit from "https://cdn.skypack.dev/@gerhobbelt/markdown-it";
 import { readFileStrSync } from "https://deno.land/std@0.61.0/fs/mod.ts";
 

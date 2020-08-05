@@ -21,7 +21,7 @@ Read the (yet incomplete 😕) documentation at https://ssgo.netlify.app/docs.
 To install `ssgo` using Deno:
 
 ```bash
-deno install --unstable --allow-read --allow-write --allow-net https://denopkg.com/mdubourg001/ssgo/ssgo.ts
+deno install --unstable --allow-read --allow-write --allow-net https://deno.land/x/ssgo/ssgo.ts
 ```
 
 Here's what a `ssgo` project looks like:

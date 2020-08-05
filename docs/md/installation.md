@@ -3,7 +3,7 @@
 You can install `ssgo` using `deno`:
 
 ```bash
-deno install --unstable --allow-read --allow-write --allow-net -q https://denopkg.com/mdubourg001/ssgo/ssgo.ts
+deno install --unstable --allow-read --allow-write --allow-net -q https://deno.land/x/ssgo/ssgo.ts
 ```
 
 > The `--unstable` flag is needed for the moment as `ssgo` uses Deno's compiler API, which is still unstable.

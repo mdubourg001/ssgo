@@ -1,4 +1,4 @@
-// import { ISsgoBag } from "https://denopkg.com/mdubourg001/ssgo/mod.ts";
+// import { ISsgoBag } from "https://deno.land/x/ssgo/mod.ts";
 
 // export default async (buildPage: Function, ssgoBag: ISsgoBag) => {
 //   buildPage(
