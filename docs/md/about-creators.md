@@ -29,3 +29,15 @@ Here's details about the parameters accepted by `buildPage`:
   - **`dir`**: (_string - optional_) The sub-directory of `dist/` to create the HTML page in, relative to the root of the `dist/` directory. If the specified directory doesn't exists, it will be created. If this option isn't provided, the page will be built at the root of the `dist/` directory.
 
 ## The `ssgoBag` and its contents
+
+The `ssgoBag` is an object containing utilities you might need inside of your creators. It is given by `ssgo` to every creator's default exported function, as second parameter.
+
+At the moment, the `ssgoBag` exposes 3 utility functions:
+
+- **`watchDir`** (_`(path: string) => void`_): Recursively watches the directory given as first parameter and re-run the creator whenever one of the files inside of the directory changes. **The `path` given must be relative to the root of the project.**
+- **`watchFile`** (_`(path: string) => void`_): Same as `watchDir` but for a single file. Whenever the watched file changes, the creator is re-ran. Here again, **the `path` given must be relative to the root of the project.**
+- **`addStaticToBundle`** (_`(path: string, bundleDest: string, compile?: boolean, override?: boolean) => void`_): Adds the file given as `path` parameter to the `dist/` directory, inside of the `bundleDest` subdirectory. If the file must be put at the root of `dist/`, you can give an empty string as the `bundleDest` parameter.
+  - **`compile`** is an optional boolean telling `ssgo` to try to compile the file to add to the bundle. Can be useful if the file is a `.ts` file for example.
+  - **`override`** is an optional boolean telling `ssgo` wether it should override the file in the case it already exists in the bundle.
+
+This bag of utilities aims to be filled with more content in the future. **If you have an idea of something useful that could be added to the `ssgoBag`, please feel free to <a href="https://github.com/mdubourg001/ssgo/issues" target="_blank" rel="noreferrer nofollow noopener">fill and issue</a>.**
