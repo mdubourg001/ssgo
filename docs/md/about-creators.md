@@ -28,7 +28,7 @@ Here's details about the parameters accepted by `buildPage`:
   - **`filename`**: (_string - **required**_) The name (without extension) of the HTML page to create.
   - **`dir`**: (_string - optional_) The sub-directory of `dist/` to create the HTML page in, relative to the root of the `dist/` directory. If the specified directory doesn't exists, it will be created. If this option isn't provided, the page will be built at the root of the `dist/` directory.
 
-## The `ssgoBag` and its contents
+## The `ssgoBag` object
 
 The `ssgoBag` is an object containing utilities you might need inside of your creators. It is given by `ssgo` to every creator's default exported function, as second parameter.
 
