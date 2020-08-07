@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" eval:content="title" />
-
-    <title>{{ title }} - ssgo docs</title>
+    <seo title="`${title} - ssgo docs`" pageUrl="pageUrl"></seo>
 
     <link
       href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css"
@@ -28,6 +24,9 @@
         document.querySelectorAll("pre code").forEach((block) => {
           hljs.highlightBlock(block);
         });
+
+        document.querySelector("sidebar").parentNode.style.maxHeight =
+          window.innerHeight - document.querySelector("header").offsetHeight;
       };
     </script>
   </head>
@@ -35,7 +34,10 @@
     <docs-header isDocs="isDocs"></docs-header>
 
     <section class="container relative flex flex-col mx-auto md:flex-row">
-      <div class="md:w-1/4 lg:w-1/5">
+      <div
+        class="md:w-1/4 lg:w-1/5 overflow-y-scroll sticky"
+        style="top: 73px;"
+      >
         <docs-sidebar
           entries="sidebarEntries"
           currentDoc="title"

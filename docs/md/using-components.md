@@ -10,7 +10,7 @@ Before building your pages, `ssgo` first recursively walks inside of your `compo
 
 Every component found is usable from templates or from other components. **To use a component, just use the name of its HTML declaration file as an HTML tag**. The data needed by your component must be given to it using the tag's attributes.
 
-For example, let's say you `components/` directory looks as follows:
+For example, let's say your `components/` directory looks like this:
 
 ```
 components/

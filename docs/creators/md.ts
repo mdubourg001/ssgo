@@ -34,6 +34,7 @@ export default async (
         content: parsed,
         sidebarEntries: sidebarEntries,
         isDocs: true,
+        pageUrl: doc.path,
       },
       { filename: doc.path, dir: "docs" }
     );
