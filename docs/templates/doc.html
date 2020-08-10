@@ -25,8 +25,10 @@
           hljs.highlightBlock(block);
         });
 
-        document.querySelector("sidebar").parentNode.style.maxHeight =
-          window.innerHeight - document.querySelector("header").offsetHeight;
+        if (window.innerWidth >= 768) {
+          document.querySelector("sidebar").parentNode.style.maxHeight =
+            window.innerHeight - document.querySelector("header").offsetHeight;
+        }
       };
     </script>
   </head>
@@ -35,7 +37,7 @@
 
     <section class="container relative flex flex-col mx-auto md:flex-row">
       <div
-        class="md:w-1/4 lg:w-1/5 overflow-y-scroll sticky"
+        class="md:w-1/4 lg:w-1/5 md:overflow-y-scroll md:sticky"
         style="top: 73px;"
       >
         <docs-sidebar
