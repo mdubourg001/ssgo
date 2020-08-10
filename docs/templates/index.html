@@ -21,26 +21,41 @@
   <body>
     <docs-header isDocs="false"></docs-header>
 
-    <article class="container flex flex-col items-center px-4 py-12 mx-auto">
-      <img class="h-10 mb-6" src="images/logo.png" alt="SSGO Logo" />
-      <strong class="mb-10 text-xl text-center"
-        >A minimalist, unconfigurable static site generator built with Deno, for
-        Deno.</strong
+    <article
+      class="container flex flex-col items-center px-4 py-12 mx-auto"
+      style="min-height: 100vh;"
+    >
+      <img class="h-20 mb-16" src="images/logo.png" alt="SSGO Logo" />
+      <strong class="mb-10 text-4xl text-center"
+        >A minimalist static site generator built with Deno.</strong
       >
 
-      <hr class="w-1/2 mb-4 border-orange-600" />
+      <div class="my-6 rounded bg-gray-200 border border-gray-400 p-4">
+        <div class="flex items-center mb-6">
+          <div class="rounded-full h-3 w-3 bg-red-500 mr-2"></div>
+          <div class="rounded-full h-3 w-3 bg-orange-500 mr-2"></div>
+          <div class="rounded-full h-3 w-3 bg-green-500 mr-2"></div>
+        </div>
 
-      <img
-        class="my-6 lg:h-64"
-        src="images/quickstart.png"
-        alt="Quickstart ssgo example"
-      />
+        <code>
+          <p>mkdir my-ssgo-project && cd my-ssgo-project</p>
+          <br />
+          <p>ssgo init</p>
+          <br />
+          <p>ls</p>
+          <p class="text-gray-500">
+            .gitignore creators/ templates/ components/ static/
+          </p>
+          <br />
+          <p>ssgo dev <span class="text-gray-500">#</span> 🚀</p>
+        </code>
+      </div>
 
       <a
-        href="/docs"
-        class="px-8 py-2 mt-4 font-bold text-white bg-orange-600 rounded-md hover:shadow-md"
+        href="/docs/quickstart"
+        class="transition-shadow duration-200 ease-in-out px-8 py-3 mt-4 font-bold text-white bg-orange-600 shadow hover:shadow-xl"
       >
-        Read the docs</a
+        Quickstart</a
       >
     </article>
 
