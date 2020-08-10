@@ -1,3 +1,10 @@
+---
+title: Attributes evaluation
+path: attributes-evaluation
+weight: 3
+category: Templates
+---
+
 # Attributes evaluation
 
 Attributes evaluation allow you to dynamically compute the value of your attributes.

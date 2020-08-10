@@ -40,17 +40,18 @@
       style="min-height: 100vh;"
     >
       <div
-        class="md:w-1/4 lg:w-1/5 md:overflow-y-scroll md:sticky"
+        class="md:w-2/5 lg:w-1/4 md:overflow-y-scroll md:sticky"
         style="top: 73px;"
       >
         <docs-sidebar
           entries="sidebarEntries"
           currentDoc="title"
+          sortCategories="sortCategories"
         ></docs-sidebar>
       </div>
 
       <article
-        class="box-border w-screen p-4 mx-auto mb-10 md:mb-0 md:w-3/4 lg:w-4/5 markdown-body md:p-12"
+        class="box-border w-screen p-4 mx-auto mb-10 md:mb-0 md:w-3/5 lg:w-3/4 markdown-body md:p-12"
       >
         {{ content }}
 

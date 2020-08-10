@@ -1,3 +1,10 @@
+---
+title: Text interpolation
+path: text-interpolation
+weight: 2
+category: Templates
+---
+
 # Text interpolation
 
 Text interpolation is one of the most essential features of templates.

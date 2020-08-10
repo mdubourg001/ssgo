@@ -1,3 +1,10 @@
+---
+title: About templates
+path: about-templates
+weight: 1
+category: Templates
+---
+
 # About templates
 
 Templates are the skeletons of your pages, and are used by [Creators](/docs/about-creators.html) to build pages.

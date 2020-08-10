@@ -1,3 +1,10 @@
+---
+title: Using components
+path: using-components
+weight: 1
+category: Components
+---
+
 # Using components
 
 Components are a nice and simple way to do code splitting inside of your templates. **If you are familiar with JavaScript frameworks like ReactJS of Angular**, you already know what `ssgo` components are about.

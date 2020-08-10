@@ -1,3 +1,9 @@
+---
+title: Limitations
+path: limitations
+weight: 3
+---
+
 # Known limitations
 
 `ssgo` is a project that I build and maintain on my spare time, and that is not fully tested yet. Moreover, it is build with [Deno](https://deno.land), that still lacks some third-party tooling because of his youngness (even if I personnally ❤️it).

@@ -1,3 +1,9 @@
+---
+title: Installation
+path: installation
+weight: 1
+---
+
 # Installation
 
 You can install `ssgo` using `deno`:

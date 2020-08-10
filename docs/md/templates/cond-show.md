@@ -1,3 +1,10 @@
+---
+title: Conditionaly show elements
+path: conditionaly-show-elements
+weight: 4
+category: Templates
+---
+
 # Conditionaly show elements
 
 To conditionally include elements of your templates inside of your build pages, simply use the `if` prefix attribute.

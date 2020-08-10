@@ -1,3 +1,10 @@
+---
+title: About creators
+path: about-creators
+weight: 1
+category: Creators
+---
+
 # About creators
 
 Creators are, with components, the central part of an `ssgo` project. You can see them as **page factories**. They are basically the entry points of your data fetching and your page building.
