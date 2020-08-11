@@ -289,7 +289,7 @@ export function serialize(node: INode) {
   if (isComment(node)) {
     return "";
   } else if (node.type === "Text") {
-    result += node.value;
+    result += node.value.trim();
   } else if (node.type === "Tag") {
     const attributes = formatAttributes(node.attributes);
     result += `<${node.rawName}${
