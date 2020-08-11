@@ -60,3 +60,4 @@ It is on the roadmap.
 - [ ] Find a way to make Deno.bundle quiet
 - [ ] Find a way to clear import / compiler cache programmatically
 - [ ] Do not throw when errors occur in dev mode
+- [ ] Provide a way to opt out of static ressources resolution on a per-file basis
