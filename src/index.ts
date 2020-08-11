@@ -357,6 +357,8 @@ export async function runCreator(creator: WalkEntry) {
   if (basename(creator.path).startsWith(TEMP_FILES_PREFIX)) return;
 
   const creatorRel = getRel(creator.path);
+  log.info(`Running ${creatorRel}...`);
+
   const module = await importModule(creator.path);
 
   // as every valid creator should export a default function
@@ -370,7 +372,6 @@ export async function runCreator(creator: WalkEntry) {
   // clearing creators buildPage cache if exists
   clearCreatorBuildPageCalls(creator.path);
 
-  log.info(`Running ${creatorRel}...`);
   return module.default(
     async function (
       template: string,
