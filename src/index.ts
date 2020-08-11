@@ -61,6 +61,7 @@ import {
   importModule,
   cleanTempFiles,
   getFormattedErrorPage,
+  isDevelopmentEnv,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -372,42 +373,51 @@ export async function runCreator(creator: WalkEntry) {
   // clearing creators buildPage cache if exists
   clearCreatorBuildPageCalls(creator.path);
 
-  return module.default(
-    async function (
-      template: string,
-      data: IContextData,
-      options: IBuildPageOptions
-    ) {
-      // caching the call to buildPage on the fly
-      const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
-      cacheBuildPageCall(creator.path, {
-        template: template,
-        data,
-        options,
-      });
+  return module
+    .default(
+      async function (
+        template: string,
+        data: IContextData,
+        options: IBuildPageOptions
+      ) {
+        // caching the call to buildPage on the fly
+        const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
+        cacheBuildPageCall(creator.path, {
+          template: template,
+          data,
+          options,
+        });
 
-      checkBuildPageOptions(template, options);
+        checkBuildPageOptions(template, options);
 
-      await buildPage(templateAbs, data, options, components);
-    },
-    {
-      watchFile: (path: string) =>
-        addFileToWatcher(creator.path, resolve(Deno.cwd(), path)),
-      watchDir: (path: string) =>
-        addDirToWatcher(creator.path, resolve(Deno.cwd(), path)),
-      addStaticToBundle: (
-        path: string,
-        bundleDest: string = "",
-        compile: boolean = false,
-        override: boolean = false
-      ) =>
-        addStaticToBundle(
-          { path: resolve(Deno.cwd(), path), isCompiled: compile },
-          getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
-          override
-        ),
-    } as ISsgoBag
-  );
+        await buildPage(templateAbs, data, options, components);
+      },
+      {
+        watchFile: (path: string) =>
+          addFileToWatcher(creator.path, resolve(Deno.cwd(), path)),
+        watchDir: (path: string) =>
+          addDirToWatcher(creator.path, resolve(Deno.cwd(), path)),
+        addStaticToBundle: (
+          path: string,
+          bundleDest: string = "",
+          compile: boolean = false,
+          override: boolean = false
+        ) =>
+          addStaticToBundle(
+            { path: resolve(Deno.cwd(), path), isCompiled: compile },
+            getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
+            override
+          ),
+      } as ISsgoBag
+    )
+    .catch(
+      (error: Error) =>
+        error.stack &&
+        log.error(
+          `When running '${creatorRel}': ${error.stack}`,
+          !isDevelopmentEnv()
+        )
+    );
 }
 
 /**
