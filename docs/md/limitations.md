@@ -6,7 +6,7 @@ weight: 3
 
 # Known limitations
 
-`ssgo` is a project that I build and maintain on my spare time, and that is not fully tested yet. Moreover, it is build with [Deno](https://deno.land), that still lacks some third-party tooling because of his youngness (even if I personnally ❤️it).
+`ssgo` is a project that I build and maintain on my spare time, and that is not fully tested yet. Moreover, it is build with [Deno](https://deno.land), that still lacks some third-party tooling because of his youngness (even if I personnally ❤️ it).
 
 Here are the limitations of `ssgo` I know about (if you find some more, please [fill an issue](https://github.com/mdubourg001/ssgo/issues)):
 
@@ -15,5 +15,3 @@ Here are the limitations of `ssgo` I know about (if you find some more, please [
 - **`ssgo` does not format or minify the pages he builds (it is also on the roadmap)**.
 
 - **`ssgo` does not remove obsolete files in dev mode**: if one of your template used to reference a static file, and does not anymore, it will not automatically be removed from `dist/`, until next full build.
-
-- **`ssgo` logs everytime he compiles something (creators, static files...)**: you will notice some logs that look like `Compile file:///path/to/your/project/creators/__ssgo66514ba2.ts`. It will be fixed anytime Deno allows quieting it's compiler API programmatically.

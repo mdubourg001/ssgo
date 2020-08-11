@@ -14,7 +14,7 @@ A minimalist, unconfigurable static site generator.
 
 ## Documentation
 
-Read the (yet incomplete 😕) documentation at https://ssgo.netlify.app/docs.
+Read the documentation at https://ssgo.netlify.app/docs.
 
 ## Quickstart
 
