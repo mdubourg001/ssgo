@@ -60,6 +60,7 @@ import {
   writeTempFileWithContentOf,
   importModule,
   cleanTempFiles,
+  getFormattedErrorPage,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -322,12 +323,13 @@ async function buildPage(
   const parsed = parse(read).filter((n: INode) =>
     "value" in n ? n.value !== "\n" : true
   );
+  let serialized = null;
 
   checkEmptyTemplate(parsed, templateAbs);
 
   for (let node of parsed) {
     (node as INode).parent = parsed;
-    await buildHtml(
+    buildHtml(
       node,
       data,
       availableComponents,
@@ -335,11 +337,16 @@ async function buildPage(
       (e: IStaticFile, destRel: string) => {
         bindTemplateToStatic(templateAbs, e);
         addStaticToBundle(e, destRel);
+      },
+      (e: Error) => {
+        serialized = getFormattedErrorPage(e.message, e.stack);
       }
     );
   }
 
-  const serialized = parsed.map((node: INode) => serialize(node)).join("");
+  if (serialized === null) {
+    serialized = parsed.map((node: INode) => serialize(node)).join("");
+  }
 
   const outputPageAbs = getOutputPagePath(options);
   ensureDirSync(dirname(outputPageAbs));
@@ -422,10 +429,8 @@ export async function build() {
   }
 
   return new Promise(async (resolve) => {
-    // wait for buildPage calls to end
-    await Promise.all(builds);
-    // wait for Deno.bundle calls to end
-    await Promise.all(compilations);
+    // wait for buildPage and Deno.bundle calls to end
+    await Promise.all([Promise.all(builds), Promise.all(compilations)]);
 
     resolve();
   });

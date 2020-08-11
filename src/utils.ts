@@ -1,4 +1,5 @@
 import { IAttribute } from "https://cdn.skypack.dev/html5parser";
+import { parse } from "https://deno.land/std/flags/mod.ts";
 import {
   red,
   blue,
@@ -41,7 +42,12 @@ import {
   BUILDABLE_STATIC_EXT,
   DIST_STATIC_BASE,
   TEMP_FILES_PREFIX,
+  DEV_FLAG,
 } from "./constants.ts";
+
+export function isDevelopmentEnv(): boolean {
+  return parse(Deno.args)["_"].includes(DEV_FLAG);
+}
 
 export function tapLog<T extends Array<any>>(...args: T): T {
   console.log(...args);
@@ -95,9 +101,11 @@ export function contextEval(
     return evaluation;
   } catch (e) {
     if (typeof errorContext !== "undefined") {
-      log.error(`When trying to evaluate '${errorContext.trim()}'`, false);
+      log.error(
+        `When trying to evaluate '${errorContext.trim()}': ${e.message}`,
+        true
+      );
     }
-    throw e;
   }
 }
 
@@ -423,4 +431,26 @@ export function checkIsValidHttpUrl(str: string) {
       true
     );
   }
+}
+
+/**
+ * Get an error page formatted with the given error
+ */
+export function getFormattedErrorPage(
+  errorMessage: string,
+  errorStack?: string
+) {
+  const escapeTags = (str: string) =>
+    str.replace("<", "&lt;").replace(">", "&gt;");
+
+  return `
+  <section style="font-family: sans-serif; padding: 1px 10px;">
+    <h1 style="color: #D2283C;"><code>${escapeTags(errorMessage)}</code></h1>
+    <div style="padding: 10px; background-color: #FDF3F4; border-radius: 1px; width: fit-content;">
+      <code style="font-weight: bold; font-size: 1.3rem; white-space: pre-wrap;">${
+        errorStack ? escapeTags(errorStack) : "No error stack provided."
+      }</code>
+    </div>
+  </section>
+  `;
 }

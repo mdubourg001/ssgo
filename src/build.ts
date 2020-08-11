@@ -28,6 +28,7 @@ import {
   getStaticFileFromRel,
   getStaticFileBundlePath,
   checkStaticFileIsInsideStaticDir,
+  isDevelopmentEnv,
 } from "./utils.ts";
 import { POTENTIAL_STATIC_ATTR, CHILDREN_COMPONENT_PROP } from "./constants.ts";
 import { serialize } from "./index.ts";
@@ -40,7 +41,8 @@ function computeForOf(
   data: IContextData,
   availableComponents: ICustomComponent[],
   onCustomComponentFound: (event: ICustomComponent) => void,
-  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
+  onBuildError?: (e: Error) => void
 ) {
   // ----- errors handling ----- //
 
@@ -115,7 +117,8 @@ function computeForOf(
         { ...data, index: index--, [forAttr?.value?.value ?? "item"]: item },
         availableComponents,
         onCustomComponentFound,
-        onStaticFileFound
+        onStaticFileFound,
+        onBuildError
       );
     }
 
@@ -184,7 +187,8 @@ function computeCustomComponents(
   data: IContextData,
   availableComponents: ICustomComponent[],
   onCustomComponentFound: (component: ICustomComponent) => void,
-  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
+  onBuildError?: (e: Error) => void
 ) {
   if ("name" in node) {
     // checking if tag matched a component
@@ -220,7 +224,8 @@ function computeCustomComponents(
           data,
           availableComponents,
           onCustomComponentFound,
-          onStaticFileFound
+          onStaticFileFound,
+          onBuildError
         );
       }
       node.body.reverse();
@@ -244,7 +249,8 @@ function computeCustomComponents(
         props,
         availableComponents,
         onCustomComponentFound,
-        onStaticFileFound
+        onStaticFileFound,
+        onBuildError
       );
       componentNode.parent = node.parent;
     });
@@ -346,46 +352,61 @@ export async function buildHtml(
   data: IContextData,
   availableComponents: ICustomComponent[],
   onCustomComponentFound: (component: ICustomComponent) => void,
-  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
+  onBuildError?: (e: Error) => void
 ) {
   // preventing double builds of nodes or build of comments
   if (node.built) return;
   if (isComment(node)) return;
 
-  if (computeText(node, data)) {
+  try {
+    if (computeText(node, data)) {
+      node.built = true;
+      return;
+    }
+    if (
+      computeForOf(
+        node,
+        data,
+        availableComponents,
+        onCustomComponentFound,
+        onStaticFileFound,
+        onBuildError
+      )
+    ) {
+      node.built = true;
+      return;
+    }
+    if (!computeIf(node, data)) {
+      node.built = true;
+      return;
+    }
+    if (
+      computeCustomComponents(
+        node,
+        data,
+        availableComponents,
+        onCustomComponentFound,
+        onStaticFileFound,
+        onBuildError
+      )
+    ) {
+      node.built = true;
+      return;
+    }
+    computeEval(node, data);
+    computeStaticFiles(node, onStaticFileFound);
+  } catch (e) {
     node.built = true;
-    return;
+    log.error(e);
+
+    if (!isDevelopmentEnv()) {
+      log.error("Project build failed.");
+      Deno.exit();
+    } else if (onBuildError) {
+      onBuildError(e);
+    }
   }
-  if (
-    computeForOf(
-      node,
-      data,
-      availableComponents,
-      onCustomComponentFound,
-      onStaticFileFound
-    )
-  ) {
-    node.built = true;
-    return;
-  }
-  if (!computeIf(node, data)) {
-    node.built = true;
-    return;
-  }
-  if (
-    computeCustomComponents(
-      node,
-      data,
-      availableComponents,
-      onCustomComponentFound,
-      onStaticFileFound
-    )
-  ) {
-    node.built = true;
-    return;
-  }
-  computeEval(node, data);
-  computeStaticFiles(node, onStaticFileFound);
 
   if ("body" in node && !!node.body) {
     for (const childNode of node.body.reverse() as INode[]) {
@@ -395,7 +416,8 @@ export async function buildHtml(
         data,
         availableComponents,
         onCustomComponentFound,
-        onStaticFileFound
+        onStaticFileFound,
+        onBuildError
       );
     }
     node.body.reverse();

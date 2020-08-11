@@ -33,7 +33,7 @@ Here's what a `ssgo` project looks like:
 └── static/      <- here go your static files
 ```
 
-**To launch a build**:, just run:
+**To launch a build**: just run:
 
 ```bash
 ssgo
@@ -55,5 +55,4 @@ It is on the roadmap.
 - [ ] Serve built site
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Find a way to clear import / compiler cache programmatically
-- [ ] Do not throw when errors occur in dev mode
 - [ ] Provide a way to opt out of static ressources resolution on a per-file basis
