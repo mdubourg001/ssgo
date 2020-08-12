@@ -4,7 +4,7 @@
 
 # ssgo
 
-A minimalist, unconfigurable static site generator.
+A minimalistic, unconfigurable static site generator.
 
 **`ssgo`** is built with Deno, and aims to be used within a Deno ecosystem.
 
