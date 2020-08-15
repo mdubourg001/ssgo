@@ -82,9 +82,11 @@ function walkCreatorsAndComponents() {
   creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file: WalkEntry) =>
     isScript(file.name)
   );
-  components = Array.from(
-    walkSync(COMPONENTS_DIR_ABS)
-  ).filter((file: WalkEntry) => isTemplate(file.name));
+  components = existsSync(COMPONENTS_DIR_ABS)
+    ? Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file: WalkEntry) =>
+        isTemplate(file.name)
+      )
+    : [];
 }
 
 function clearCreatorBuildPageCalls(creatorAbs: string) {
