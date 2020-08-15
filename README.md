@@ -52,6 +52,10 @@ It is on the roadmap.
 
 ## Roadmap
 
+- [ ] Add a support for a config file (.ssgorc, ssgo.config.js)
+- [ ] Provide a way to build a single template with given data from CLI
+- [ ] Export `buildPage` and `ssgoBag` from `mod.ts` to allow access from outside of creators
+
 - [ ] Serve built site
 - [ ] Serialize the cache on FS to allow faster cold builds
 - [ ] Find a way to clear import / compiler cache programmatically
