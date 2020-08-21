@@ -1,15 +1,14 @@
 import { parse } from "https://cdn.skypack.dev/html5parser";
+import denoliver from "https://deno.land/x/denoliver/mod.ts";
 
 import {
   emptyDirSync,
   walkSync,
   existsSync,
-  writeFileStrSync,
-  readFileStrSync,
   ensureDirSync,
   copySync,
   WalkEntry,
-} from "https://deno.land/std@0.61.0/fs/mod.ts";
+} from "https://deno.land/std@0.65.0/fs/mod.ts";
 import {
   normalize,
   dirname,
@@ -17,7 +16,7 @@ import {
   basename,
   resolve,
   relative,
-} from "https://deno.land/std@0.61.0/path/mod.ts";
+} from "https://deno.land/std@0.65.0/path/mod.ts";
 
 import {
   WATCHER_THROTTLE,
@@ -29,6 +28,7 @@ import {
   STATIC_DIR_ABS,
   BUILDABLE_STATIC_EXT,
   TEMP_FILES_PREFIX,
+  SERVE_PORT,
 } from "./constants.ts";
 import {
   INode,
@@ -212,7 +212,7 @@ function addStaticToBundle(
         Deno.remove(tempAbs);
 
         if (!diag) {
-          writeFileStrSync(destAbs, emit);
+          Deno.writeTextFileSync(destAbs, emit);
           resolve({
             destRel,
             result: emit,
@@ -322,7 +322,7 @@ async function buildPage(
 ) {
   log.info(`Building ${getRel(getOutputPagePath(options))}...`);
 
-  const read = readFileStrSync(templateAbs, { encoding: "utf8" });
+  const read = Deno.readTextFileSync(templateAbs);
   const parsed = parse(read).filter((n: INode) =>
     "value" in n ? n.value !== "\n" : true
   );
@@ -353,7 +353,7 @@ async function buildPage(
 
   const outputPageAbs = getOutputPagePath(options);
   ensureDirSync(dirname(outputPageAbs));
-  writeFileStrSync(outputPageAbs, serialized);
+  Deno.writeTextFileSync(outputPageAbs, serialized);
 }
 
 export async function runCreator(creator: WalkEntry) {
@@ -375,44 +375,45 @@ export async function runCreator(creator: WalkEntry) {
   // clearing creators buildPage cache if exists
   clearCreatorBuildPageCalls(creator.path);
 
-  return module
-    .default(
-      async function (
-        template: string,
-        data: IContextData,
-        options: IBuildPageOptions
-      ) {
-        // caching the call to buildPage on the fly
-        const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
-        cacheBuildPageCall(creator.path, {
-          template: template,
-          data,
-          options,
-        });
+  const modulePromise = module.default(
+    async function (
+      template: string,
+      data: IContextData,
+      options: IBuildPageOptions
+    ) {
+      // caching the call to buildPage on the fly
+      const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
+      cacheBuildPageCall(creator.path, {
+        template: template,
+        data,
+        options,
+      });
 
-        checkBuildPageOptions(template, options);
+      checkBuildPageOptions(template, options);
 
-        await buildPage(templateAbs, data, options, components);
-      },
-      {
-        watchFile: (path: string) =>
-          addFileToWatcher(creator.path, resolve(Deno.cwd(), path)),
-        watchDir: (path: string) =>
-          addDirToWatcher(creator.path, resolve(Deno.cwd(), path)),
-        addStaticToBundle: (
-          path: string,
-          bundleDest: string = "",
-          compile: boolean = false,
-          override: boolean = false
-        ) =>
-          addStaticToBundle(
-            { path: resolve(Deno.cwd(), path), isCompiled: compile },
-            getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
-            override
-          ),
-      } as ISsgoBag
-    )
-    .catch(
+      await buildPage(templateAbs, data, options, components);
+    },
+    {
+      watchFile: (path: string) =>
+        addFileToWatcher(creator.path, resolve(Deno.cwd(), path)),
+      watchDir: (path: string) =>
+        addDirToWatcher(creator.path, resolve(Deno.cwd(), path)),
+      addStaticToBundle: (
+        path: string,
+        bundleDest: string = "",
+        compile: boolean = false,
+        override: boolean = false
+      ) =>
+        addStaticToBundle(
+          { path: resolve(Deno.cwd(), path), isCompiled: compile },
+          getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
+          override
+        ),
+    } as ISsgoBag
+  );
+
+  if (modulePromise)
+    modulePromise.catch(
       (error: Error) =>
         error.stack &&
         log.error(
@@ -420,6 +421,8 @@ export async function runCreator(creator: WalkEntry) {
           !isDevelopmentEnv()
         )
     );
+
+  return modulePromise;
 }
 
 /**
@@ -582,7 +585,14 @@ export async function watch() {
  */
 export async function serve() {
   log.warning(`Serving is not implemented yet.`);
-  //log.info(`Serving on port ${SERVE_PORT}...`);
+
+  await denoliver({
+    root: DIST_DIR_ABS,
+    port: SERVE_PORT,
+    cors: true,
+    silent: true,
+  });
+  log.info(`Serving on port ${SERVE_PORT}...`);
 }
 
 /**
@@ -601,7 +611,7 @@ export async function init() {
 
   // creating the .gitignore
   if (!existsSync(".gitignore")) {
-    writeFileStrSync(".gitignore", `**/*/__ssgo*\ndist`);
+    Deno.writeTextFileSync(".gitignore", `**/*/__ssgo*\ndist`);
   }
 
   log.success(`Project initialized.`);
@@ -632,7 +642,7 @@ export function sitemap(host: string) {
     ""
   );
 
-  writeFileStrSync(
+  Deno.writeTextFileSync(
     resolve(DIST_DIR_ABS, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}</urlset>`
   );

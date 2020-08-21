@@ -5,7 +5,7 @@ import {
   blue,
   yellow,
   green,
-} from "https://deno.land/std@0.61.0/fmt/colors.ts";
+} from "https://deno.land/std@0.65.0/fmt/colors.ts";
 import {
   relative,
   resolve,
@@ -15,14 +15,12 @@ import {
   extname,
   common,
   dirname,
-} from "https://deno.land/std@0.61.0/path/mod.ts";
+} from "https://deno.land/std@0.65.0/path/mod.ts";
 import {
   existsSync,
-  readFileStrSync,
-  writeFileStrSync,
   walkSync,
   WalkEntry,
-} from "https://deno.land/std@0.61.0/fs/mod.ts";
+} from "https://deno.land/std@0.65.0/fs/mod.ts";
 
 import {
   INode,
@@ -243,14 +241,14 @@ export function getRel(abs: string): string {
  * Copy the content of a file to a temp file and returns the temp path
  */
 export function writeTempFileWithContentOf(contentAbs: string): string {
-  const contentStr = readFileStrSync(contentAbs);
+  const contentStr = Deno.readTextFileSync(contentAbs);
 
   const tempAbs = Deno.makeTempFileSync({
     dir: dirname(contentAbs),
     prefix: TEMP_FILES_PREFIX,
     suffix: extname(contentAbs),
   });
-  writeFileStrSync(tempAbs, contentStr);
+  Deno.writeTextFileSync(tempAbs, contentStr);
 
   return tempAbs;
 }

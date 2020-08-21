@@ -4,8 +4,6 @@ import {
   IAttribute as IHTMLAttr,
 } from "https://cdn.skypack.dev/html5parser";
 
-import { readFileStrSync } from "https://deno.land/std@0.61.0/fs/mod.ts";
-
 import {
   INode,
   IAttribute,
@@ -236,7 +234,7 @@ function computeCustomComponents(
     }
 
     // reading and parsing the component file
-    const read = readFileStrSync(component.path, { encoding: "utf8" });
+    const read = Deno.readTextFileSync(component.path);
     const parsed = parse(read);
 
     // building the parsed component

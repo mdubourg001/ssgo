@@ -1,5 +1,5 @@
 import { parse } from "https://deno.land/std/flags/mod.ts";
-import { build, watch, init, sitemap } from "./src/index.ts";
+import { build, watch, serve, init, sitemap } from "./src/index.ts";
 import {
   DEV_FLAG,
   BUILD_FLAG,
@@ -11,7 +11,6 @@ import {
 } from "./src/constants.ts";
 import { log } from "./src/utils.ts";
 import getVersion from "./version.ts";
-
 const FLAGS = parse(Deno.args);
 
 log.info(`ssgo ${getVersion()}`);
@@ -41,6 +40,7 @@ switch (true) {
     build().then(() => {
       log.success("Project built.");
 
+      //serve();
       watch();
     });
     break;

@@ -2,13 +2,10 @@ import { SsgoBag, BuildPage } from "https://deno.land/x/ssgo/mod.ts";
 import markdownit from "https://cdn.skypack.dev/@gerhobbelt/markdown-it";
 import parseMarkdown from "https://cdn.skypack.dev/parse-md";
 import _ from "https://cdn.skypack.dev/lodash";
-import {
-  readFileStrSync,
-  walkSync,
-} from "https://deno.land/std@0.61.0/fs/mod.ts";
+import { walkSync } from "https://deno.land/std@0.65.0/fs/mod.ts";
 
 // memoizing some work to prevent reading / parsing the same file twice
-const readFile = _.memoize(readFileStrSync);
+const readFile = _.memoize(Deno.readTextFileSync);
 const parseMD = _.memoize(parseMarkdown);
 
 export default async (

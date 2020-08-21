@@ -3,7 +3,7 @@ import { IAttribute } from "https://cdn.skypack.dev/html5parser";
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.61.0/testing/asserts.ts";
+} from "https://deno.land/std@0.65.0/testing/asserts.ts";
 
 import {
   log,

@@ -15,7 +15,7 @@ export const TEMP_FILES_PREFIX = "__ssgo";
 
 export const WATCHER_THROTTLE = 300;
 
-export const SERVE_PORT = 8080;
+export const SERVE_PORT = 5580;
 
 export const CREATORS_DIR_BASE = "creators";
 export const CREATORS_DIR_ABS = `${Deno.cwd()}/${CREATORS_DIR_BASE}/`;

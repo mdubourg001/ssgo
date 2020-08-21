@@ -1,7 +1,7 @@
 import {
   assertEquals,
   assertThrowsAsync,
-} from "https://deno.land/std@0.61.0/testing/asserts.ts";
+} from "https://deno.land/std@0.65.0/testing/asserts.ts";
 
 import { buildHtmlAndSerialize } from "./utils.ts";
 
