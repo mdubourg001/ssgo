@@ -1,11 +1,11 @@
 ---
-title: Conditionaly show elements
-path: conditionaly-show-elements
+title: Conditionally show elements
+path: conditionally-show-elements
 weight: 4
 category: Templates
 ---
 
-# Conditionaly show elements
+# Conditionally show elements
 
 To conditionally include elements of your templates inside of your build pages, simply use the `if` prefix attribute.
 
@@ -18,7 +18,7 @@ For example, let's say that one of your [creators](/docs/about-creators.html) is
 }
 ```
 
-Then you could for example conditionnally display elements of your templates as follows:
+Then you could conditionally display elements of your templates as follows:
 
 ```html
 <p if="foo === 'bar'">eeny</p>
