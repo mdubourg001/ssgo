@@ -2,7 +2,7 @@ import { SsgoBag, BuildPage } from "https://deno.land/x/ssgo/mod.ts";
 import markdownit from "https://cdn.skypack.dev/@gerhobbelt/markdown-it";
 import parseMarkdown from "https://cdn.skypack.dev/parse-md";
 import _ from "https://cdn.skypack.dev/lodash";
-import { walkSync } from "https://deno.land/std@0.65.0/fs/mod.ts";
+import { walkSync } from "https://deno.land/std@0.66.0/fs/mod.ts";
 
 // memoizing some work to prevent reading / parsing the same file twice
 const readFile = _.memoize(Deno.readTextFileSync);
@@ -10,7 +10,7 @@ const parseMD = _.memoize(parseMarkdown);
 
 export default async (
   buildPage: BuildPage,
-  { watchDir, addStaticToBundle }: SsgoBag
+  { watchDir, addStaticToBundle }: SsgoBag,
 ) => {
   // having this creator to re-run when a file inside of md/ or /src changes
   watchDir("./md");
@@ -76,12 +76,12 @@ export default async (
                 Components: 3,
                 Guides: 4,
               };
-              if (a in ordering && b in ordering)
+              if (a in ordering && b in ordering) {
                 return ordering[a] - ordering[b];
-              else return Infinity;
+              } else return Infinity;
             },
           },
-          { filename: metadata.path, dir: "docs" }
+          { filename: metadata.path, dir: "docs" },
         );
       }
     }

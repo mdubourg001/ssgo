@@ -40,16 +40,16 @@ function computeForOf(
   availableComponents: ICustomComponent[],
   onCustomComponentFound: (event: ICustomComponent) => void,
   onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
-  onBuildError?: (e: Error) => void
+  onBuildError?: (e: Error) => void,
 ) {
   // ----- errors handling ----- //
 
   if ("attributes" in node) {
     const forAttr = node.attributes.find(
-      (attr: IHTMLAttr) => attr.name.value === IAttribute.FOR
+      (attr: IHTMLAttr) => attr.name.value === IAttribute.FOR,
     );
     const ofAttr = node.attributes.find(
-      (attr: IHTMLAttr) => attr.name.value === IAttribute.OF
+      (attr: IHTMLAttr) => attr.name.value === IAttribute.OF,
     );
 
     if (!forAttr && !ofAttr) return;
@@ -57,24 +57,26 @@ function computeForOf(
     if (forAttr && !forAttr.value?.value) {
       log.error(
         `When parsing "${node.open.value}" : The ${IAttribute.FOR} attribute must be given a value.`,
-        true
+        true,
       );
     } else if (ofAttr && !ofAttr.value?.value) {
       log.error(
         `When parsing "${node.open.value}" : The ${IAttribute.OF} attribute must be given a value.`,
-        true
+        true,
       );
     }
 
     if (forAttr && !ofAttr) {
       log.error(
-        `The use of ${forAttr.name.value}="${forAttr.value?.value}" must be paired with the use of ${IAttribute.OF}="<iterable>".`,
-        true
+        `The use of ${forAttr.name.value}="${forAttr.value
+          ?.value}" must be paired with the use of ${IAttribute.OF}="<iterable>".`,
+        true,
       );
     } else if (ofAttr && !forAttr) {
       log.error(
-        `The use of ${ofAttr.name.value}="${ofAttr.value?.value}" must be paired with the use of ${IAttribute.FOR}="<iterator>".`,
-        true
+        `The use of ${ofAttr.name.value}="${ofAttr.value
+          ?.value}" must be paired with the use of ${IAttribute.FOR}="<iterator>".`,
+        true,
       );
     }
 
@@ -83,13 +85,14 @@ function computeForOf(
     const evaluatedOf: Array<any> = contextEval(
       ofAttr?.value?.value ?? "",
       data,
-      node.open.value
+      node.open.value,
     );
 
     if (typeof evaluatedOf[Symbol.iterator] !== "function") {
       log.error(
-        `When parsing "${node.open.value}": "${ofAttr?.value?.value} is not an iterable.`,
-        true
+        `When parsing "${node.open.value}": "${ofAttr?.value
+          ?.value} is not an iterable.`,
+        true,
       );
     }
 
@@ -97,8 +100,8 @@ function computeForOf(
     node.attributes = node.attributes.filter(
       (attr: IHTMLAttr) =>
         ![IAttribute.FOR.toString(), IAttribute.OF.toString()].includes(
-          attr.name.value
-        )
+          attr.name.value,
+        ),
     );
 
     // @ts-ignore
@@ -116,7 +119,7 @@ function computeForOf(
         availableComponents,
         onCustomComponentFound,
         onStaticFileFound,
-        onBuildError
+        onBuildError,
       );
     }
 
@@ -136,7 +139,7 @@ function computeIf(node: INode, data: IContextData): boolean {
 
   if ("attributes" in node) {
     const ifAttr = node.attributes.find(
-      (attr: IHTMLAttr) => attr.name.value === IAttribute.IF
+      (attr: IHTMLAttr) => attr.name.value === IAttribute.IF,
     );
 
     if (!ifAttr) return true;
@@ -144,7 +147,7 @@ function computeIf(node: INode, data: IContextData): boolean {
     if (ifAttr && typeof ifAttr.value === "undefined") {
       log.error(
         `When parsing "${node.open.value}" : The ${IAttribute.IF} attribute must be given a value.`,
-        true
+        true,
       );
     }
 
@@ -153,7 +156,7 @@ function computeIf(node: INode, data: IContextData): boolean {
     const evaluatedIf: boolean = contextEval(
       ifAttr?.value?.value ?? "",
       data,
-      node.open.value
+      node.open.value,
     );
 
     if (!evaluatedIf && !!node.parent) {
@@ -170,7 +173,7 @@ function computeIf(node: INode, data: IContextData): boolean {
 
     // remove the if attribute from node attributes
     node.attributes = node.attributes.filter(
-      (attr: IHTMLAttr) => attr.name.value !== IAttribute.IF.toString()
+      (attr: IHTMLAttr) => attr.name.value !== IAttribute.IF.toString(),
     );
   }
 
@@ -186,12 +189,12 @@ function computeCustomComponents(
   availableComponents: ICustomComponent[],
   onCustomComponentFound: (component: ICustomComponent) => void,
   onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
-  onBuildError?: (e: Error) => void
+  onBuildError?: (e: Error) => void,
 ) {
   if ("name" in node) {
     // checking if tag matched a component
     const component: ICustomComponent | undefined = availableComponents.find(
-      (file) => removeExt(file.name) === node.name
+      (file) => removeExt(file.name) === node.name,
     );
     if (!component) return;
 
@@ -207,7 +210,7 @@ function computeCustomComponents(
           props[attr.name.value] = contextEval(
             attr.value?.value ?? "",
             data,
-            node.open.value
+            node.open.value,
           );
         }
       }
@@ -223,7 +226,7 @@ function computeCustomComponents(
           availableComponents,
           onCustomComponentFound,
           onStaticFileFound,
-          onBuildError
+          onBuildError,
         );
       }
       node.body.reverse();
@@ -248,7 +251,7 @@ function computeCustomComponents(
         availableComponents,
         onCustomComponentFound,
         onStaticFileFound,
-        onBuildError
+        onBuildError,
       );
       componentNode.parent = node.parent;
     });
@@ -278,7 +281,7 @@ function computeEval(node: INode, data: IContextData) {
       if (attr.name.value.startsWith(IAttribute.EVAL)) {
         if (typeof attr.value?.value === "undefined") {
           return log.warning(
-            `When parsing ${node.open.value}: ${attr.name.value} has been given no value to evaluate.`
+            `When parsing ${node.open.value}: ${attr.name.value} has been given no value to evaluate.`,
           );
         }
 
@@ -305,7 +308,7 @@ function computeEval(node: INode, data: IContextData) {
  */
 function computeStaticFiles(
   node: INode,
-  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void
+  onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
 ) {
   if ("attributes" in node) {
     for (const attr of node.attributes) {
@@ -351,7 +354,7 @@ export async function buildHtml(
   availableComponents: ICustomComponent[],
   onCustomComponentFound: (component: ICustomComponent) => void,
   onStaticFileFound: (staticFile: IStaticFile, destRel: string) => void,
-  onBuildError?: (e: Error) => void
+  onBuildError?: (e: Error) => void,
 ) {
   // preventing double builds of nodes or build of comments
   if (node.built) return;
@@ -369,7 +372,7 @@ export async function buildHtml(
         availableComponents,
         onCustomComponentFound,
         onStaticFileFound,
-        onBuildError
+        onBuildError,
       )
     ) {
       node.built = true;
@@ -386,7 +389,7 @@ export async function buildHtml(
         availableComponents,
         onCustomComponentFound,
         onStaticFileFound,
-        onBuildError
+        onBuildError,
       )
     ) {
       node.built = true;
@@ -415,7 +418,7 @@ export async function buildHtml(
         availableComponents,
         onCustomComponentFound,
         onStaticFileFound,
-        onBuildError
+        onBuildError,
       );
     }
     node.body.reverse();
