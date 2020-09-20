@@ -62,6 +62,9 @@ import {
   cleanTempFiles,
   getFormattedErrorPage,
   isDevelopmentEnv,
+  createDefaultTemplate,
+  createDefaultCreator,
+  createDefaultStaticFile,
 } from "./utils.ts";
 import { buildHtml } from "./build.ts";
 
@@ -604,10 +607,19 @@ export async function init() {
 
   // creating ssgo directories...
   for (const dir of Object.keys(directories)) {
-    if (!directories[dir]) {
+    if (directories[dir] === "noexists") {
       log.info(`Creating ${getRel(dir)}/ directory...`);
       ensureDirSync(dir);
     }
+  }
+
+  // if all directories are empty, creating default files
+  if (Object.values(directories).every((state) => state !== "exists")) {
+    log.info(`Creating default project files...`);
+
+    createDefaultTemplate();
+    createDefaultCreator();
+    createDefaultStaticFile();
   }
 
   // creating the .gitignore

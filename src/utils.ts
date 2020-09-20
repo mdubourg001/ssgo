@@ -42,6 +42,9 @@ import {
   TEMP_FILES_PREFIX,
   DEV_FLAG,
 } from "./constants.ts";
+import defaultTemplate from "./default/_template.ts";
+import defaultCreator from "./default/_creator.ts";
+import defaultStaticFile from "./default/_static.ts";
 
 export function isDevelopmentEnv(): boolean {
   return parse(Deno.args)["_"].includes(DEV_FLAG);
@@ -384,19 +387,33 @@ export function checkStaticFileIsInsideStaticDir(
 }
 
 /**
+ * Get the state of a directory
+ * noexists -> directory doesn't exist
+ * exists -> directory exists and isn't empty
+ * empty -> directory exists but is empty
+ */
+export function getDirState(abs: string): "exists" | "empty" | "noexists" {
+  return !existsSync(abs)
+    ? "noexists"
+    : Array.from(walkSync(abs)).length > 0
+    ? "exists"
+    : "empty";
+}
+
+/**
  * Check that mandatory directories exist
  */
 export function checkProjectDirectoriesExist(throwErr: boolean = false) {
-  const creatorsExists = existsSync(CREATORS_DIR_ABS);
-  if (!creatorsExists && throwErr) {
+  const creatorsState = getDirState(CREATORS_DIR_ABS);
+  if (creatorsState === "noexists" && throwErr) {
     log.error(
       `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
       throwErr
     );
   }
 
-  const templatesExists = existsSync(TEMPLATES_DIR_ABS);
-  if (!templatesExists && throwErr) {
+  const templatesState = getDirState(TEMPLATES_DIR_ABS);
+  if (templatesState === "noexists" && throwErr) {
     log.error(
       `Could not find mandatory '${TEMPLATES_DIR_BASE}/' directory.`,
       throwErr
@@ -404,10 +421,10 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
   }
 
   return {
-    [CREATORS_DIR_ABS]: creatorsExists,
-    [TEMPLATES_DIR_ABS]: templatesExists,
-    [STATIC_DIR_ABS]: existsSync(STATIC_DIR_ABS),
-    [COMPONENTS_DIR_ABS]: existsSync(COMPONENTS_DIR_ABS),
+    [CREATORS_DIR_ABS]: creatorsState,
+    [TEMPLATES_DIR_ABS]: templatesState,
+    [STATIC_DIR_ABS]: getDirState(STATIC_DIR_ABS),
+    [COMPONENTS_DIR_ABS]: getDirState(COMPONENTS_DIR_ABS),
   };
 }
 
@@ -451,4 +468,31 @@ export function getFormattedErrorPage(
     </div>
   </section>
   `;
+}
+
+/**
+ *
+ */
+export function createDefaultTemplate() {
+  Deno.writeTextFileSync(
+    resolve(TEMPLATES_DIR_ABS, "index.html"),
+    defaultTemplate
+  );
+}
+
+/**
+ *
+ */
+export function createDefaultCreator() {
+  Deno.writeTextFileSync(resolve(CREATORS_DIR_ABS, "index.ts"), defaultCreator);
+}
+
+/**
+ *
+ */
+export function createDefaultStaticFile() {
+  Deno.writeTextFileSync(
+    resolve(STATIC_DIR_ABS, "index.css"),
+    defaultStaticFile
+  );
 }
