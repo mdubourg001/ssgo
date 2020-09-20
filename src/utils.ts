@@ -5,7 +5,7 @@ import {
   blue,
   yellow,
   green,
-} from "https://deno.land/std@0.66.0/fmt/colors.ts";
+} from "https://deno.land/std@0.70.0/fmt/colors.ts";
 import {
   relative,
   resolve,
@@ -15,12 +15,12 @@ import {
   extname,
   common,
   dirname,
-} from "https://deno.land/std@0.66.0/path/mod.ts";
+} from "https://deno.land/std@0.70.0/path/mod.ts";
 import {
   existsSync,
   walkSync,
   WalkEntry,
-} from "https://deno.land/std@0.66.0/fs/mod.ts";
+} from "https://deno.land/std@0.70.0/fs/mod.ts";
 
 import {
   INode,
@@ -88,7 +88,7 @@ export function isTemplate(filename: string): boolean {
 export function contextEval(
   expression: string,
   context: IContextData,
-  errorContext?: string,
+  errorContext?: string
 ) {
   try {
     // @ts-ignore
@@ -101,7 +101,7 @@ export function contextEval(
     if (typeof errorContext !== "undefined") {
       log.error(
         `When trying to evaluate '${errorContext.trim()}': ${e.message}`,
-        true,
+        true
       );
     }
   }
@@ -184,7 +184,7 @@ export function getOutputPagePath(options: IBuildPageOptions): string {
     options.dir ?? "",
     options.filename.endsWith(".html")
       ? options.filename
-      : options.filename + ".html",
+      : options.filename + ".html"
   );
 }
 
@@ -202,7 +202,7 @@ export function getStaticFileFromRel(staticRel: string): IStaticFile {
   return {
     path: staticFileAbs,
     isCompiled: BUILDABLE_STATIC_EXT.includes(
-      posix.extname(staticFileBasename),
+      posix.extname(staticFileBasename)
     ),
   };
 }
@@ -270,7 +270,7 @@ export async function importModule(moduleAbs: string) {
  */
 export function cleanTempFiles() {
   const tempFiles: WalkEntry[] = Array.from(
-    walkSync(Deno.cwd()),
+    walkSync(Deno.cwd())
   ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX));
 
   for (const file of tempFiles) {
@@ -285,15 +285,13 @@ export function cleanTempFiles() {
  */
 export function checkEmptyTemplate(
   parsedTemplate: INode[],
-  templateAbs: string,
+  templateAbs: string
 ) {
   if (parsedTemplate.length === 0) {
     log.warning(
-      `When parsing '${
-        getRel(
-          templateAbs,
-        )
-      }': This template/component file is empty.`,
+      `When parsing '${getRel(
+        templateAbs
+      )}': This template/component file is empty.`
     );
   }
 }
@@ -307,16 +305,14 @@ export function checkComponentNameUnicity(components: ICustomComponent[]) {
       components.some(
         (c) =>
           removeExt(c.name) === removeExt(component.name) &&
-          c.path !== component.path,
+          c.path !== component.path
       )
     ) {
       log.error(
-        `When listing custom components: Two components with the same name '${
-          removeExt(
-            component.name,
-          )
-        }' found.`,
-        true,
+        `When listing custom components: Two components with the same name '${removeExt(
+          component.name
+        )}' found.`,
+        true
       );
     }
   }
@@ -329,7 +325,7 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
   if ("name" in node && node.name === removeExt(componentName)) {
     log.error(
       `When parsing '${componentName}': Recursive call of component found.`,
-      true,
+      true
     );
   }
 
@@ -345,12 +341,12 @@ export function checkRecursiveComponent(node: INode, componentName: string) {
  */
 export function checkBuildPageOptions(
   templateRel: string,
-  options: IBuildPageOptions,
+  options: IBuildPageOptions
 ) {
   if (!options.filename) {
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
-      true,
+      true
     );
   }
 }
@@ -360,11 +356,11 @@ export function checkBuildPageOptions(
  */
 export function checkStaticFileExists(
   staticFileAbs: string,
-  staticAttrValue: string,
+  staticAttrValue: string
 ): boolean {
   if (!existsSync(staticFileAbs)) {
     log.warning(
-      `Could not resolve ${staticAttrValue}: won't be included in output build.`,
+      `Could not resolve ${staticAttrValue}: won't be included in output build.`
     );
     return false;
   }
@@ -376,11 +372,11 @@ export function checkStaticFileExists(
  */
 export function checkStaticFileIsInsideStaticDir(
   staticFileAbs: string,
-  staticAttrValue: string,
+  staticAttrValue: string
 ) {
   if (common([staticFileAbs, STATIC_DIR_ABS]) !== STATIC_DIR_ABS) {
     log.warning(
-      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`,
+      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`
     );
     return false;
   }
@@ -395,7 +391,7 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
   if (!creatorsExists && throwErr) {
     log.error(
       `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
-      throwErr,
+      throwErr
     );
   }
 
@@ -403,7 +399,7 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
   if (!templatesExists && throwErr) {
     log.error(
       `Could not find mandatory '${TEMPLATES_DIR_BASE}/' directory.`,
-      throwErr,
+      throwErr
     );
   }
 
@@ -430,7 +426,7 @@ export function checkIsValidHttpUrl(str: string) {
   } catch (_) {
     log.error(
       `When trying to build sitemap.xml: '${str}' is not a valid URL strarting with 'http://' or 'https://'.`,
-      true,
+      true
     );
   }
 }
@@ -440,7 +436,7 @@ export function checkIsValidHttpUrl(str: string) {
  */
 export function getFormattedErrorPage(
   errorMessage: string,
-  errorStack?: string,
+  errorStack?: string
 ) {
   const escapeTags = (str: string) =>
     str.replace("<", "&lt;").replace(">", "&gt;");
@@ -450,8 +446,8 @@ export function getFormattedErrorPage(
     <h1 style="color: #D2283C;"><code>${escapeTags(errorMessage)}</code></h1>
     <div style="padding: 10px; background-color: #FDF3F4; border-radius: 1px; width: fit-content;">
       <code style="font-weight: bold; font-size: 1.3rem; white-space: pre-wrap;">${
-    errorStack ? escapeTags(errorStack) : "No error stack provided."
-  }</code>
+        errorStack ? escapeTags(errorStack) : "No error stack provided."
+      }</code>
     </div>
   </section>
   `;
