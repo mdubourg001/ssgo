@@ -35,8 +35,6 @@ Deno.test("isTemplate", () => {
 });
 
 Deno.test("contextEval", () => {
-  assertThrows(() => contextEval("foo", {}), ReferenceError);
-
   assertEquals(contextEval("1 + 2", {}), 3);
   assertEquals(contextEval("'foo'", {}), "foo");
   assertEquals(contextEval("foo", { foo: "bar" }), "bar");

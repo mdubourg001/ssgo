@@ -1,5 +1,5 @@
 import { parse } from "https://deno.land/std/flags/mod.ts";
-import { build, watch, serve, init, sitemap } from "./src/index.ts";
+import { build, watch, init, sitemap } from "./src/index.ts";
 import {
   DEV_FLAG,
   BUILD_FLAG,

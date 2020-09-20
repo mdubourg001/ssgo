@@ -1,36 +1,8 @@
-import {
-  assertEquals,
-  assertThrowsAsync,
-} from "https://deno.land/std@0.70.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
 
 import { buildHtmlAndSerialize } from "./utils.ts";
 
 Deno.test("for/of attribute should be properly computed", async () => {
-  // no of paired
-  await assertThrowsAsync(async () => {
-    await buildHtmlAndSerialize('<p for="foo" />', {});
-  });
-  // no for paired
-  await assertThrowsAsync(async () => {
-    await buildHtmlAndSerialize('<p of="bar" />', {});
-  });
-  // no value given to of
-  await assertThrowsAsync(async () => {
-    await buildHtmlAndSerialize('<p for="foo" of />', {});
-  });
-  // no value given to for
-  await assertThrowsAsync(async () => {
-    await buildHtmlAndSerialize('<p for of="bar" />', {});
-  });
-  // invalid syntax
-  await assertThrowsAsync(async () => {
-    await buildHtmlAndSerialize(`<p for="foo" of="["aaa"]" />`, {});
-  });
-  // value given to for isn't an iterable
-  await assertThrowsAsync(async () => {
-    await buildHtmlAndSerialize(`<p for="foo" of="{foo: 1}"/>`, {});
-  });
-
   // simple
   assertEquals(
     await buildHtmlAndSerialize(

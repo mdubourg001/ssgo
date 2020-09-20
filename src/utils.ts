@@ -277,7 +277,7 @@ export function cleanTempFiles() {
   ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX));
 
   for (const file of tempFiles) {
-    Deno.removeSync(file.path);
+    Deno.removeSync(file.path, { recursive: true });
   }
 }
 

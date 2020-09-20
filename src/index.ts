@@ -432,9 +432,9 @@ export async function runCreator(creator: WalkEntry) {
 /**
  * Build the project
  */
-export async function build() {
+export async function build(skipCleaning = false) {
   checkProjectDirectoriesExist(true);
-  cleanTempFiles();
+  if (!skipCleaning) cleanTempFiles();
   walkCreatorsAndComponents();
 
   checkComponentNameUnicity(components);
