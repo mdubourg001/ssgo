@@ -17,3 +17,5 @@ scripts:
     allow:
       - read
       - write
+  release:
+    cmd: ./release.sh $1
