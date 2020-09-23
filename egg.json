@@ -3,8 +3,8 @@
   "description": "A minimalistic, unconfigurable static site generator",
   "stable": true,
   "files": [
-    "assets",
-    "src",
+    "assets/**/*",
+    "src/**/*",
     "mod.ts",
     "README.md",
     "ssgo.ts",
