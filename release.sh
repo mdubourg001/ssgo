@@ -2,9 +2,9 @@
 
 vr bump-version $1
 
-new_version=$(cat ./VERSION)
+new_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION = "//' |sed 's/";//')
 
-git add VERSION
+git add version.ts
 git commit --amend --no-edit
 git tag "v$new_version"
 git push --force

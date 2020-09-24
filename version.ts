@@ -1,6 +1,7 @@
+import { resolve } from "https://deno.land/std@0.70.0/path/mod.ts";
 import { log } from "./src/utils.ts";
 
-const VERSION = Deno.readTextFileSync("./VERSION");
+const VERSION = "0.12.4";
 
 function hasBumpFlag() {
   return (
@@ -27,7 +28,18 @@ function getNextVersionNumber(actualVersion: string): string | undefined {
 function bumpVersion() {
   const nextVersionNumber = getNextVersionNumber(VERSION) as string;
 
-  Deno.writeTextFileSync("./VERSION", nextVersionNumber);
+  const versionFileStr = Deno.readTextFileSync("./version.ts").split("\n");
+  const newVersionFileStr = versionFileStr
+    .map((line: string) => {
+      if (line.startsWith("const VERSION")) {
+        line = line.replace(VERSION, nextVersionNumber ?? VERSION);
+      }
+
+      return line;
+    })
+    .join("\n");
+
+  Deno.writeTextFileSync("./version.ts", newVersionFileStr);
   log.success(`Version bumped from ${VERSION} to ${nextVersionNumber}`);
 }
 
