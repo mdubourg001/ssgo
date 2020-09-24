@@ -8,6 +8,7 @@ import {
   STATIC_DIR_BASE,
   COMPONENTS_DIR_BASE,
   setSsgoDir,
+  setVerbosity,
 } from "../constants.ts";
 
 import defaultCreator from "../default/_creator.ts";
@@ -16,7 +17,7 @@ import defaultStaticFile from "../default/_static.ts";
 
 type Directory = Record<string, object | string>;
 
-export const DEFAULT_PROJECT_STRUCTURE = {
+export const DEFAULT_PROJECT_STRUCTURE: Directory = {
   [CREATORS_DIR_BASE]: {
     "index.ts": defaultCreator,
   },
@@ -29,6 +30,10 @@ export const DEFAULT_PROJECT_STRUCTURE = {
   [COMPONENTS_DIR_BASE]: {},
 };
 
+/**
+ * Given a object representing a directory structure,
+ * recursively creates a temp directory
+ */
 function makeDirFromStructure(
   root: string,
   structure: Directory,
@@ -48,17 +53,23 @@ function makeDirFromStructure(
   }
 }
 
+/**
+ * Given a object representing a ssgo project structure,
+ * create a project in a temporary directory
+ */
 function createTempProject(structure = DEFAULT_PROJECT_STRUCTURE): string {
   const root = Deno.makeTempDirSync({ prefix: TEMP_FILES_PREFIX });
-
   makeDirFromStructure(root, structure, true);
-
   return root;
 }
 
+/**
+ * Create a temporary project and set the cwd inside of it
+ */
 export function getTestEnv(structure = DEFAULT_PROJECT_STRUCTURE): string {
   const dir = createTempProject(structure);
   setSsgoDir(dir);
+  setVerbosity(0);
   return dir;
 }
 

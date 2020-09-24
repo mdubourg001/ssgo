@@ -13,6 +13,8 @@ export const SITEMAP_OPTION = "sitemap";
 
 // ----- config ----- //
 
+export let VERBOSITY = 1;
+
 export const TEMP_FILES_PREFIX = "__ssgo";
 
 export const WATCHER_THROTTLE = 300;
@@ -46,6 +48,10 @@ export function setSsgoDir(path: string) {
   COMPONENTS_DIR_ABS = normalize(`${Deno.cwd()}/${COMPONENTS_DIR_BASE}/`);
   DIST_DIR_ABS = normalize(`${Deno.cwd()}/${DIST_DIR_BASE}/`);
   DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
+}
+
+export function setVerbosity(verbosity: number) {
+  VERBOSITY = verbosity;
 }
 
 // ----- business ----- //

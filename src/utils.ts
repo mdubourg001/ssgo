@@ -30,6 +30,7 @@ import {
   IStaticFile,
 } from "./types.ts";
 import {
+  VERBOSITY,
   CREATORS_DIR_BASE,
   CREATORS_DIR_ABS,
   TEMPLATES_DIR_BASE,
@@ -57,17 +58,17 @@ export function tapLog<T extends Array<any>>(...args: T): T {
 
 export const log = {
   info: (message: string) => {
-    console.log(blue("info"), message);
+    VERBOSITY === 1 && console.log(blue("info"), message);
   },
   error: (message: string, throwErr: boolean = false) => {
     if (throwErr) throw new Error(message);
-    else console.log(red("error"), message);
+    else VERBOSITY === 1 && console.log(red("error"), message);
   },
   warning: (message: string) => {
-    console.log(yellow("warning"), message);
+    VERBOSITY === 1 && console.log(yellow("warning"), message);
   },
   success: (message: string) => {
-    console.log(green("success"), message);
+    VERBOSITY === 1 && console.log(green("success"), message);
   },
 };
 
@@ -395,7 +396,7 @@ export function checkStaticFileIsInsideStaticDir(
 export function getDirState(abs: string): "exists" | "empty" | "noexists" {
   return !existsSync(abs)
     ? "noexists"
-    : Array.from(walkSync(abs)).length > 0
+    : Array.from(walkSync(abs)).filter((e) => e.path !== abs).length > 0
     ? "exists"
     : "empty";
 }
