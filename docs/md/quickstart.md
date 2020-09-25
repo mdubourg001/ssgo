@@ -27,73 +27,19 @@ the four main directories used by `ssgo`:
 
 ```text
 ├── creators/    <- here go the scripts creating your pages
+|     └── index.ts
 ├── templates/   <- here go the templates of your pages
-├── components/  <- here go your components
-└── static/      <- here go your static files
+|     └── index.html
+├── static/      <- here go your static files
+|     └── index.css
+└── components/  <- here go your components
 ```
 
 > If some of this directories already exists, `ssgo` won't touch them.
 
-## Create a template
-
-> You can learn more about them by reading [About templates](/docs/about-templates.html).
-
-Template files are the HTML files used as skeletons to build your pages.
-These template file are located in the `templates` directory.
-
-Here's what a basic template would look like:
-
-```html
-<!-- post.html -->
-
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="title" eval:content="post.metas.title" />
-
-    <title>My blog - {{ post.title }}</title>
-
-    <link rel="stylesheet" href="/css/index.css" />
-  </head>
-  <body>
-    <i if="post.readTime">Read time: {{ post.readTime }}</i>
-
-    {{ post.content }}
-  </body>
-</html>
-```
-
-## Add a creator
-
-> You can learn more about them by reading [About creators](/docs/about-creators.html).
-
-Creators are the scripts evaluated by `ssgo` to build your static pages.
-They are basically `.ts` or `.js` modules living inside of the `creators` directory.
-
-Here's what a basic creator would look like:
-
-```typescript
-// blog-posts.ts
-
-import { fetchBlogPosts } from "../src/api.ts";
-
-export default function (buildPage) {
-  const blogPosts = fetchBlogPosts();
-
-  for (const post of blogPosts) {
-    buildPage("post.html", post, {
-      filename: post.slug,
-      dir: "blog-posts/",
-    });
-  }
-}
-```
-
 ## Build the site
 
-Now that you have some template files and creators, launching the build of your site is as easy as this:
+As `ssgo` automatically creates a default creator, template and stylesheet, you can already build the site:
 
 ```bash
 ssgo
@@ -119,6 +65,7 @@ Here's a little schema to help you figure out about how `ssgo` works:
 
 Now that you are up and running, you can learn about the other cool things coming with `ssgo` like:
 
+- [Going further with templates](/docs/about-templates.html)
+- [Going further with creators](/docs/about-creators.html)
 - [Using your own components](/docs/using-components.html)
 - [Using static files](/docs/how-are-static-files-handled.html)
-- [Having a dynamic runtime using AlpineJS](/docs/having-a-dynamic-runtime.html)

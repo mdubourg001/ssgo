@@ -22,7 +22,7 @@ Same as `build` except `ssgo` will also spawn a file watcher on your project fil
 
 ## `ssgo init`
 
-Initializes a ssgo project in the current working directory by creating the needed directories: `creators/`, `templates/`, `components/`, `static/`. A default creator, template and stylesheet will also be created.
+Initializes a ssgo project in the current working directory by creating the needed directories: `creators/`, `templates/`, `components/`, `static/`. **A default creator, template and stylesheet will also be created.**
 `init` will also create a default `.gitignore` file and add the `dist/` directory inside it.
 
 ```bash

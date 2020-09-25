@@ -1,6 +1,6 @@
 scripts:
   install:
-    cmd: deno install -f --unstable --quiet https://deno.land/x/ssgo/ssgo.ts
+    cmd: deno install -f --unstable --no-check --quiet https://deno.land/x/ssgo/ssgo.ts
     allow:
       - read
       - write
