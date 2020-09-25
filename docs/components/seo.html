@@ -2,7 +2,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="title" eval:content="title" />
 
+<meta name="title" eval:content="title" />
+<meta
+  if="typeof description !== 'undefined'"
+  name="description"
+  eval:content="description"
+/>
+
 <meta property="og:title" eval:content="title" />
+<meta
+  if="typeof description !== 'undefined'"
+  property="og:description"
+  eval:content="description"
+/>
 <meta property="og:type" content="website" />
 <meta property="og:url" eval:content="`https://ssgo.netlify.app/${pageUrl}`" />
 <meta
