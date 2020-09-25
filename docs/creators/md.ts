@@ -1,4 +1,7 @@
-import { SsgoBag, BuildPage } from "https://deno.land/x/ssgo/mod.ts";
+import type {
+  SsgoBag,
+  BuildPage,
+} from "https://deno.land/x/ssgo@v0.12.6/mod.ts";
 import markdownit from "https://cdn.skypack.dev/@gerhobbelt/markdown-it";
 import parseMarkdown from "https://cdn.skypack.dev/parse-md";
 import _ from "https://cdn.skypack.dev/lodash";
@@ -10,7 +13,7 @@ const parseMD = _.memoize(parseMarkdown);
 
 export default async (
   buildPage: BuildPage,
-  { watchDir, addStaticToBundle }: SsgoBag
+  { watchDir, addStaticToBundle }: SsgoBag,
 ) => {
   // having this creator to re-run when a file inside of md/ or /src changes
   watchDir("./md");
@@ -81,7 +84,7 @@ export default async (
               } else return Infinity;
             },
           },
-          { filename: metadata.path, dir: "docs" }
+          { filename: metadata.path, dir: "docs" },
         );
       }
     }
