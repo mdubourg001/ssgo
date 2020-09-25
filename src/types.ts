@@ -1,4 +1,4 @@
-import { INode as IHTML5ParserNode } from "https://cdn.skypack.dev/html5parser";
+import type { INode as IHTML5ParserNode } from "https://cdn.skypack.dev/html5parser";
 
 // ----- internal ----- //
 
@@ -97,6 +97,6 @@ export interface ISsgoBag {
     path: string,
     bundleDest: string,
     compile?: boolean,
-    override?: boolean
+    override?: boolean,
   ) => void;
 }

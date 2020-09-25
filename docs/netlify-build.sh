@@ -1,5 +1,5 @@
     echo "Installing deno..."
-    curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.3.3
+    curl -fsSL https://deno.land/x/install/install.sh | sh
     export PATH="/opt/buildhome/.deno/bin:$PATH" 
 
     echo "Installing ssgo..."
