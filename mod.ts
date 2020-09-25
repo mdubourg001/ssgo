@@ -1,4 +1,4 @@
-import {
+import type {
   ISsgoBag as SsgoBag,
   IContextData,
   IBuildPageOptions,
@@ -16,7 +16,7 @@ type BuildPage = (
   /**
    * Page build options
    */
-  options: IBuildPageOptions
+  options: IBuildPageOptions,
 ) => void;
 
-export { BuildPage, SsgoBag };
+export type { BuildPage, SsgoBag };
