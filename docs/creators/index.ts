@@ -1,3 +1,5 @@
-export default async (buildPage: Function) => {
+import { BuildPage } from "https://deno.land/x/ssgo/mod.ts";
+
+export default async (buildPage: BuildPage) => {
   buildPage("index.html", {}, { filename: "index" });
 };
