@@ -30,5 +30,5 @@ export default (buildPage) => {
 
 - [Text interpolation](/docs/text-interpolation.html)
 - [Evaluate tag's attributes at built time](/docs/attributes-evaluation.html)
-- [Show elements conditionnally](/docs/conditionnally-show-elements.html)
-- [Iterate over data](/docs/templates-loops.html)
+- [Show elements conditionnally](/docs/conditionally-show-elements.html)
+- [Iterate over data](/docs/loops.html)
