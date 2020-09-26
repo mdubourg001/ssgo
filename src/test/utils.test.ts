@@ -1,4 +1,4 @@
-import { IAttribute } from "https://cdn.skypack.dev/html5parser";
+import type { IAttribute } from "https://cdn.skypack.dev/html5parser";
 
 import {
   assertEquals,
@@ -42,7 +42,7 @@ Deno.test("contextEval", () => {
   assertEquals(contextEval("({ foo })", { foo: "bar" }), { foo: "bar" });
   assertEquals(
     contextEval("isScript(filename)", { isScript, filename: "script.svg" }),
-    false
+    false,
   );
 });
 
@@ -55,7 +55,7 @@ Deno.test("formatAttributes", () => {
       } as IAttribute,
       { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
     ]),
-    `href="https://example.com" target="_blank"`
+    `href="https://example.com" target="_blank"`,
   );
   assertEquals(
     formatAttributes([
@@ -66,7 +66,7 @@ Deno.test("formatAttributes", () => {
       { name: { value: "disabled" } } as IAttribute,
       { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
     ]),
-    `href="https://example.com" disabled target="_blank"`
+    `href="https://example.com" disabled target="_blank"`,
   );
   assertEquals(
     formatAttributes([
@@ -74,7 +74,7 @@ Deno.test("formatAttributes", () => {
       { name: { value: "hidden" } } as IAttribute,
       { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
     ]),
-    `disabled hidden target="_blank"`
+    `disabled hidden target="_blank"`,
   );
   assertEquals(
     formatAttributes([
@@ -82,7 +82,7 @@ Deno.test("formatAttributes", () => {
       { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
       { name: { value: "hidden" } } as IAttribute,
     ]),
-    `disabled target="_blank" hidden`
+    `disabled target="_blank" hidden`,
   );
 });
 
@@ -96,15 +96,15 @@ Deno.test("interpolate", () => {
       isScript,
       filename: "script.svg",
     }),
-    "false"
+    "false",
   );
   assertEquals(
     interpolate("{{ foo ? foo : bar }}", { foo: "foo", bar: "bar" }),
-    "foo"
+    "foo",
   );
   assertEquals(
     interpolate("{{ typeof foo !== 'undefined' ? foo : bar }}", { bar: "bar" }),
-    "bar"
+    "bar",
   );
 });
 
@@ -124,7 +124,7 @@ Deno.test("pushBefore", () => {
 Deno.test("getUnprefixedAttributeName", () => {
   assertEquals(
     getUnprefixedAttributeName({ name: { value: "eval:href" } } as IAttribute),
-    "href"
+    "href",
   );
 });
 

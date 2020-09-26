@@ -1,3 +1,4 @@
+import tosource from "https://cdn.skypack.dev/tosource";
 import type { IAttribute } from "https://cdn.skypack.dev/html5parser";
 import { parse } from "https://deno.land/std/flags/mod.ts";
 import {
@@ -95,11 +96,21 @@ export function contextEval(
   errorContext?: string,
 ) {
   try {
+    const richContext = {
+      // adding useful functions to context
+      ssgo: {
+        assrc: (expression: any) =>
+          tosource(expression).replaceAll(/(?<!\\)(?:\\\\)*"/gi, `'`),
+      },
+      ...context,
+    };
+
     // @ts-ignore
-    for (const key of Object.keys(context)) window[key] = context[key];
+    for (const key of Object.keys(richContext)) window[key] = richContext[key];
     const evaluation = eval(expression);
+
     // @ts-ignore
-    for (const key of Object.keys(context)) delete window[key];
+    for (const key of Object.keys(richContext)) delete window[key];
     return evaluation;
   } catch (e) {
     if (typeof errorContext !== "undefined") {

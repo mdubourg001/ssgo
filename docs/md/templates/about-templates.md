@@ -33,3 +33,7 @@ export default (buildPage) => {
 - [Evaluate tag's attributes at built time](/docs/attributes-evaluation.html)
 - [Show elements conditionnally](/docs/conditionally-show-elements.html)
 - [Iterate over data](/docs/loops.html)
+
+Some helpers are also automatically provided to page builds contexts under the `ssgo` key:
+
+- **`ssgo.assrc`** (_`(expression: any) => string`_): Using [tosource](https://www.pika.dev/npm/tosource) under the hood, `assrc` allows you to convert a JavaScript expression to its textual representation (ex: `ssgo.assrc([1, 2, 3]) === '[1, 2, 3]'`). It can be really useful when using `ssgo` with [AlpineJS](https://github.com/alpinejs/alpine), when populating `x-data` attributes using the `eval:` prefix. [Check out an usage example in the sidebar component of this website](https://github.com/mdubourg001/ssgo/blob/master/docs/components/docs-sidebar.html).
