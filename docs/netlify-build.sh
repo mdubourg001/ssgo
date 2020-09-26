@@ -3,7 +3,7 @@
     export PATH="/opt/buildhome/.deno/bin:$PATH" 
 
     echo "Installing ssgo..."
-    deno install -f --unstable --allow-read --allow-write --allow-net https://deno.land/x/ssgo/ssgo.ts 
+    deno install --reload -f --unstable --allow-read --allow-write --allow-net https://deno.land/x/ssgo/ssgo.ts 
     
     echo "Building docs website..."
     ssgo --sitemap=https://ssgo.netlify.app 

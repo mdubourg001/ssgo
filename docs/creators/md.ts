@@ -1,7 +1,7 @@
 import type {
   SsgoBag,
   BuildPage,
-} from "https://deno.land/x/ssgo@v0.12.6/mod.ts";
+} from "https://deno.land/x/ssgo/mod.ts";
 import markdownit from "https://cdn.skypack.dev/@gerhobbelt/markdown-it";
 import parseMarkdown from "https://cdn.skypack.dev/parse-md";
 import _ from "https://cdn.skypack.dev/lodash";

@@ -5,10 +5,10 @@
     entries: entries,
     showEntry: (title, value) => 
       !value || title.toLowerCase().includes(value.trim()),
-    showCategory: (category, entries, showEntry, value) => 
-      entries[category].some(e => showEntry(e.title, value)),
-    showClear: (entries, showCategory, showEntry, value) => 
-      !Object.keys(entries).some(c => showCategory(c, entries, showEntry, value))
+    showCategory: (category, entr, showEntry, value) => 
+      entr[category].some(e => showEntry(e.title, value)),
+    showClear: (entr, showCategory, showEntry, value) => 
+      !Object.keys(entr).some(c => showCategory(c, entr, showEntry, value))
   })"
   class="flex flex-col w-full px-6 pt-6 border-r md:pt-12 md:pb-6"
 >
@@ -25,7 +25,7 @@
     for="category"
     of="Object.keys(entries).sort(sortCategories)"
     class="flex flex-col mb-4"
-    eval:x-show="`!focus || showCategory('${category}', ${ssgo.assrc(entries)}, showEntry, value)`"
+    eval:x-show="`!focus || showCategory('${category}', entries, showEntry, value)`"
   >
     <strong if="category !== 'None'" class="mb-1 text-sm text-gray-500"
       >{{ category }}</strong
@@ -47,7 +47,7 @@
   </div>
 
   <div
-    eval:x-show="`focus && showClear(${ssgo.assrc(entries)}, showCategory, showEntry, value)`"
+    x-show="focus && showClear(entries, showCategory, showEntry, value)"
     class="flex items-center justify-center p-4"
   >
     <i class="text-gray-600 text-sm"
