@@ -1,5 +1,6 @@
 ---
 title: Quickstart
+description: After installing it, here's what you would want to do. Initialize a ssgo project. Build the site. Start development mode. How does it work ? What now ?
 path: quickstart
 weight: 2
 ---

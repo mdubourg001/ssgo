@@ -1,5 +1,6 @@
 ---
 title: Installation
+description: You can install ssgo using deno by running `deno install --unstable --allow-read --allow-write --allow-net -q https://deno.land/x/ssgo/ssgo.ts`. Run the same command with the -f flag to upgrade.
 path: installation
 weight: 1
 ---

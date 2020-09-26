@@ -1,5 +1,6 @@
 ---
 title: About templates
+description: Templates are the skeletons of your pages, and are used by Creators to build pages. Templates are used through the first argument of the buildPage function.
 path: about-templates
 weight: 1
 category: Templates
@@ -12,7 +13,7 @@ A template can be used as much time as needed to build pages.
 
 For example, this documentation site is built with `ssgo` and uses a single template for all the documentations pages (pages under `/docs`).
 
-Templates are used through the first argument of the `buildPage` method, that is given to every creator default exported function as first parameter.
+Templates are used through the first argument of the `buildPage` function, that is given to every creator default exported function as first parameter.
 
 ```typescript
 // my-creator.ts
@@ -22,8 +23,8 @@ export default (buildPage) => {
     "my-template.html", // <-- the path of the template to use (relative to the root of the templates/ directory)
     contextData,
     { filename: "my-page.html" }
-  );
-};
+  )
+}
 ```
 
 `ssgo` templates allow you to do the following things:

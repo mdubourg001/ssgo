@@ -66,6 +66,7 @@ export default async (
           "doc.html",
           {
             title: metadata.title,
+            description: metadata.description,
             md: doc.path.replace("md/", ""),
             content: parsed,
             sidebarEntries: sidebarEntries,

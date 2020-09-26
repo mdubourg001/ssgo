@@ -1,5 +1,6 @@
 ---
 title: Templating utilities
+description: If you are already familiar with templating engines like Jinja or Twig, you might want to use some utility functions from within your templates. Here's how to do it.
 path: templating-utilities
 weight: 2
 category: Guides
@@ -19,7 +20,7 @@ For example, try to simply give the `lodash` library to your build context:
 
 ```typescript
 // my-creator.ts
-import lodash from "https://cdn.skypack.dev/lodash";
+import lodash from "https://cdn.skypack.dev/lodash"
 
 export default (buildPage) => {
   buildPage(
@@ -29,8 +30,8 @@ export default (buildPage) => {
       _: lodash, // making lodash available from within my template
     },
     { filename: "my-page.html" }
-  );
-};
+  )
+}
 ```
 
 Now you'll be able to use it from within your template:

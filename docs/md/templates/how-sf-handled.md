@@ -1,5 +1,6 @@
 ---
 title: Static files resolution
+description: ssgo provides a simple way to use static ressources (like images, stylesheets, scripts...) inside of your templates and components. To be able to use static ressources, add them to the 'static/' directory.
 path: static-files-resolution
 weight: 6
 category: Templates

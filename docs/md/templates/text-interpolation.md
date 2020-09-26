@@ -1,5 +1,6 @@
 ---
 title: Text interpolation
+description: Text interpolation is one of the most essential features of templates. It allows you to render text from contextual data. Every text of the format '{{ foo }}' will be evaluated as text interpolation.
 path: text-interpolation
 weight: 2
 category: Templates

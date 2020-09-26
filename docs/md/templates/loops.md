@@ -1,5 +1,6 @@
 ---
 title: Loops
+description: In order to let you build pages and components by iterating over fetched datas inside of you templates, ssgo provides the 'for' / 'of' couple of attributes.
 path: loops
 weight: 5
 category: Templates

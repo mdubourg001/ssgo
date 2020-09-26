@@ -1,5 +1,6 @@
 ---
 title: CLI
+description: Here's the reference of the command line interface commands built in ssgo. Commands are build, dev, init, version and help.
 path: cli
 weight: 4
 ---

@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <seo title="`${title} - ssgo docs`" pageUrl="pageUrl"></seo>
+    <seo
+      title="`${title} | ssgo docs`"
+      description="description"
+      pageUrl="pageUrl"
+    ></seo>
 
     <link
       href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css"
@@ -22,14 +26,14 @@
     <script>
       window.onload = () => {
         document.querySelectorAll("pre code").forEach((block) => {
-          hljs.highlightBlock(block);
-        });
+          hljs.highlightBlock(block)
+        })
 
         if (window.innerWidth >= 768) {
           document.querySelector("sidebar").parentNode.style.maxHeight =
-            window.innerHeight - document.querySelector("header").offsetHeight;
+            window.innerHeight - document.querySelector("header").offsetHeight
         }
-      };
+      }
     </script>
   </head>
   <body class="relative overflow-y-scroll">

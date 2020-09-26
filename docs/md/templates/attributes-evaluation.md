@@ -1,5 +1,6 @@
 ---
 title: Attributes evaluation
+description: Attributes evaluation allow you to dynamically compute the value of your attributes. To dinamically compute the value of an attribute, just prefix it with 'eval:'.
 path: attributes-evaluation
 weight: 3
 category: Templates
