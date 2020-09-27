@@ -16,7 +16,7 @@
     x-model="value"
     @focus="focus = true"
     @blur="focus = false"
-    class="transition-shadow duration-200 ease-in-out mb-6 border border-gray-500 rounded px-3 py-2 focus:shadow-lg focus:outline-none"
+    class="hidden transition-shadow duration-200 ease-in-out mb-6 border border-gray-500 rounded px-3 py-2 focus:shadow-lg focus:outline-none"
     type="text"
     placeholder="Search..."
   />
@@ -48,7 +48,7 @@
 
   <div
     x-show="focus && showClear(entries, showCategory, showEntry, value)"
-    class="flex items-center justify-center p-4"
+    class="invisible flex items-center justify-center p-4"
   >
     <i class="text-gray-600 text-sm"
       >No results for '<span x-text="value"></span>'</i
