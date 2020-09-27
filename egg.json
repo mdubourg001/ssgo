@@ -1,14 +1,19 @@
 {
   "name": "ssgo",
   "description": "A minimalistic, unconfigurable static site generator",
+  "repository": "https://github.com/mdubourg001/ssgo",
   "stable": true,
+  "entry": "/ssgo.ts",
   "files": [
-    "assets/**/*",
-    "src/**/*",
-    "mod.ts",
-    "README.md",
-    "ssgo.ts",
-    "version.ts",
-    "VERSION"
-  ]
+    "./assets/**/*",
+    "./src/**/*",
+    "./mod.ts",
+    "./README.md",
+    "./ssgo.ts",
+    "./version.ts",
+    "./ssgo.ts"
+  ],
+  "version": "0.13.0",
+  "checkAll": false,
+  "unlisted": false
 }
