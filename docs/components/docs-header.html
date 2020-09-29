@@ -17,9 +17,22 @@
     <ul class="flex items-center gap-5">
       <li>
         <a
-          eval:class="({'hover:underline hover:text-orange-500': true, 'text-orange-500': isDocs})"
+          eval:class="({
+            'hover:underline hover:text-orange-500': true, 
+            'text-orange-500': isDocs
+          })"
           href="/docs"
           >Docs</a
+        >
+      </li>
+      <li>
+        <a
+          eval:class="({
+            'hover:underline hover:text-orange-500': true, 
+            'text-orange-500': pageUrl === 'changelog'
+          })"
+          href="/docs/changelog.html"
+          >Changelog</a
         >
       </li>
       <li>
