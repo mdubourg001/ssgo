@@ -1,5 +1,6 @@
-import { parse } from "https://deno.land/std/flags/mod.ts";
-import { build, watch, init, sitemap } from "./src/index.ts";
+import { parse } from "https://deno.land/std/flags/mod.ts"
+import type { WebSocket } from "https://deno.land/std/ws/mod.ts"
+import { build, watch, serve, init, sitemap } from "./src/index.ts"
 import {
   DEV_FLAG,
   BUILD_FLAG,
@@ -8,17 +9,17 @@ import {
   DIST_DIR_BASE,
   VERSION_FLAG,
   SITEMAP_OPTION,
-} from "./src/constants.ts";
-import { log } from "./src/utils.ts";
-import getVersion from "./version.ts";
-const FLAGS = parse(Deno.args);
+} from "./src/constants.ts"
+import { log } from "./src/utils.ts"
+import getVersion from "./version.ts"
+const FLAGS = parse(Deno.args)
 
-log.info(`ssgo ${getVersion()}`);
+log.info(`ssgo ${getVersion()}`)
 
 switch (true) {
   // display version only
   case FLAGS["_"].includes(VERSION_FLAG):
-    break;
+    break
 
   // display help
   case FLAGS["_"].includes(HELP_FLAG):
@@ -32,34 +33,36 @@ switch (true) {
        options:
        --sitemap [host]: generate a sitemap of the built pages for the given host
     `
-    );
-    break;
+    )
+    break
 
   // dev: build, watch files and serve
   case FLAGS["_"].includes(DEV_FLAG):
     build().then(() => {
-      log.success("Project built.");
+      log.success("Project built.")
 
-      //serve();
-      watch();
-    });
-    break;
+      const listeners: Array<WebSocket> = []
+
+      serve(listeners)
+      watch(listeners)
+    })
+    break
 
   // init: create missing project directories
   case FLAGS["_"].includes(INIT_FLAG):
-    init();
-    break;
+    init()
+    break
 
   // build only
   case FLAGS["_"].includes(BUILD_FLAG) || FLAGS["_"].length === 0:
     build().then(() => {
-      sitemap(FLAGS[SITEMAP_OPTION]);
+      sitemap(FLAGS[SITEMAP_OPTION])
 
-      log.success("Project built.");
-    });
-    break;
+      log.success("Project built.")
+    })
+    break
 
   // unknow arguments
   default:
-    log.error(`Unknow arguments: '${FLAGS["_"].join(" ")}'`);
+    log.error(`Unknow arguments: '${FLAGS["_"].join(" ")}'`)
 }
