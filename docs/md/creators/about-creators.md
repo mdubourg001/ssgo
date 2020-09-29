@@ -8,7 +8,7 @@ category: Creators
 
 # About creators
 
-Creators are, with components, the central part of an `ssgo` project. You can see them as **page factories**. They are basically the entry points of your data fetching and your page building.
+Creators are, with templates, the central part of an `ssgo` project. You can see them as **page factories**. They are basically the entry points of your data fetching and your page building.
 
 In order to be known by `ssgo` and to be ran, creators must meet two conditions:
 
