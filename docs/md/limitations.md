@@ -2,7 +2,7 @@
 title: Limitations
 description: ssgo is a project that I build and maintain on my spare time. It has actually some minor limitations.
 path: limitations
-weight: 3
+weight: 4
 ---
 
 # Known limitations

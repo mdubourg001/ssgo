@@ -24,19 +24,7 @@ ssgo init
 ```
 
 This will initialize a project in the current directory by creating
-the four main directories used by `ssgo`:
-
-```text
-├── creators/    <- here go the scripts creating your pages
-|     └── index.ts
-├── templates/   <- here go the templates of your pages
-|     └── index.html
-├── static/      <- here go your static files
-|     └── index.css
-└── components/  <- here go your components
-```
-
-> If some of this directories already exists, `ssgo` won't touch them.
+the four main directories used by `ssgo`: `templates/`, `creators/`, `components/` and `static/`. **If some of this directories already exists, `ssgo` won't touch them.**
 
 ## Build the site
 
