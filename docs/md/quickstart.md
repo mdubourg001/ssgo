@@ -44,6 +44,8 @@ Your site will be built inside of the `dist` directory.
 ssgo dev
 ```
 
+`ssgo dev` also **locally serves the built `dist/` directory on http://localhost:5580**.
+
 ## How does it work ?
 
 Here's a little schema to help you figure out about how `ssgo` works:

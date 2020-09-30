@@ -10,11 +10,12 @@ import {
   VERSION_FLAG,
   SITEMAP_OPTION,
 } from "./src/constants.ts"
-import { log } from "./src/utils.ts"
+import { log, checkAreValidCLIOptions } from "./src/utils.ts"
 import getVersion from "./version.ts"
-const FLAGS = parse(Deno.args)
 
 log.info(`ssgo ${getVersion()}`)
+
+const FLAGS = checkAreValidCLIOptions(parse(Deno.args))
 
 switch (true) {
   // display version only
@@ -26,12 +27,16 @@ switch (true) {
     log.info(
       `ssgo commands:
        - dev: build project to ${DIST_DIR_BASE} and watch project files for changes
+            options:
+            --host [host]: serve dist/ over specified host (default 'localhost')
+            --port [port]: serve dist/ over specified port (default 5580)
+
        - build (default): build project to ${DIST_DIR_BASE}
+            options:
+            --sitemap [host]: generate a sitemap of the built pages for the given host
+
        - init: initialize project directories (does NOT override if these already exist)
        - help: display help menu
-  
-       options:
-       --sitemap [host]: generate a sitemap of the built pages for the given host
     `
     )
     break

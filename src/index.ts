@@ -58,7 +58,6 @@ import {
   checkComponentNameUnicity,
   checkBuildPageOptions,
   checkProjectDirectoriesExist,
-  checkIsValidHttpUrl,
   getStaticFileBundlePath,
   isFileInDir,
   getRel,
@@ -683,7 +682,6 @@ export async function init() {
  */
 export function sitemap(host: string) {
   if (typeof host === "undefined") return
-  checkIsValidHttpUrl(host)
 
   log.info("Generating sitemap.xml...")
 

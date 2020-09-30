@@ -11,19 +11,25 @@ export const INIT_FLAG = "init"
 export const VERSION_FLAG = "version"
 
 export const SITEMAP_OPTION = "sitemap"
+export const PORT_OPTION = "port"
+export const HOST_OPTION = "host"
 
 // ----- config ----- //
 
-export const IS_DEV_MODE = parse(Deno.args)["_"].includes(DEV_FLAG)
+const FLAGS = parse(Deno.args)
 
 export let VERBOSITY = 1
+
+export const IS_DEV_MODE = FLAGS["_"].includes(DEV_FLAG)
+export const IS_PROD_MODE =
+  FLAGS["_"].includes(BUILD_FLAG) || FLAGS["_"].length === 0
 
 export const TEMP_FILES_PREFIX = "__ssgo"
 
 export const WATCHER_THROTTLE = 300
 
-export const SERVE_PORT = 5580
-export const SERVE_HOST = "localhost"
+export const SERVE_PORT = FLAGS[PORT_OPTION] ?? 5580
+export const SERVE_HOST = FLAGS[HOST_OPTION] ?? "localhost"
 export const WS_HOT_RELOAD_KEY = "__ssgo_ws_hot_reload"
 export const WS_PING_KEY = "__ssgo_ws_ping"
 

@@ -15,11 +15,18 @@ Here's the reference of the command line interface commands built in `ssgo`:
 
 Builds the `ssgo` project of the current directory to the `dist/` directory.
 
-See the _Options_ documentation under to learn about build options.
+### Options
+
+- **`--sitemap`**: Generate a sitemap.xml file of the build pages for the given host. Example: `ssgo build --sitemap=https://example.com`. Works only with the `build` command.
 
 ## `ssgo dev`
 
-Same as `build` except `ssgo` will also spawn a file watcher on your project files to re-build specific parts of the project upon changes.
+Same as `build` except `ssgo` will also spawn a file watcher on your project files to re-build specific parts of the project upon changes. `dev` will also serve the content of the `dist/` directory over `http://localhost:5580`.
+
+### Options
+
+- **`--host`**: Set the host to serve `dist/` over (default 'localhost'). Example: `ssgo dev --host=0.0.0.0` (to serve `dist/` on local network). Works only with the `dev` command.
+- **`--port`**: Set the port to serve `dist/` over (default 5580). Example: `ssgo dev --port=8080`. Works only with the `dev` command.
 
 ## `ssgo init`
 
@@ -43,7 +50,3 @@ Outputs the current version of `ssgo`.
 ## `ssgo help`
 
 Shows some help about ssgo commands.
-
-## Options
-
-- **`--sitemap`**: Generates a sitemap.xml file of the build pages for the given host. Example: `ssgo build --sitemap=https://example.com`. Works only with the `build` command.
