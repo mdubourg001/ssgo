@@ -13,6 +13,6 @@ git tag "v$new_version"
 git push --force
 git push origin "v$new_version"
 
-eggs publish --version $new_version
+eggs publish --version $new_version && git restore ./egg.json
 
 echo "Succesfully released $new_version to nest.land and deno.land."

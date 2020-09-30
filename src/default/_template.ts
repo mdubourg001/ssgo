@@ -8,8 +8,22 @@ export default `<!DOCTYPE html>
     <link rel="stylesheet" href="index.css" />
   </head>
   <body>
-    <h1>Hello, ssgo !</h1>
+    <img
+      src="https://raw.githubusercontent.com/mdubourg001/ssgo/master/assets/logo-orange.png"
+      alt="ssgo"
+    />
+
+    <h1>Hello, ssgo master !</h1>
     <p>Just run <code>ssgo dev</code> to get started !</p>
+    <p>
+      or read the&nbsp;
+      <a
+        href="https://ssgo.netlify.app/docs"
+        target="_blank"
+        rel="noopener norefferer"
+        >documentation</a
+      >
+    </p>
   </body>
 </html>
-`;
+`
