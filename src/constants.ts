@@ -13,6 +13,7 @@ export const VERSION_FLAG = "version"
 export const SITEMAP_OPTION = "sitemap"
 export const PORT_OPTION = "port"
 export const HOST_OPTION = "host"
+export const ONLY_CREATORS_OPTION = "only-creators"
 
 // ----- config ----- //
 
@@ -32,6 +33,9 @@ export const SERVE_PORT = FLAGS[PORT_OPTION] ?? 5580
 export const SERVE_HOST = FLAGS[HOST_OPTION] ?? "localhost"
 export const WS_HOT_RELOAD_KEY = "__ssgo_ws_hot_reload"
 export const WS_PING_KEY = "__ssgo_ws_ping"
+
+export const CREATORS_FILTERING: string | undefined =
+  FLAGS[ONLY_CREATORS_OPTION] ?? undefined
 
 export const CREATORS_DIR_BASE = "creators"
 export const TEMPLATES_DIR_BASE = "templates"

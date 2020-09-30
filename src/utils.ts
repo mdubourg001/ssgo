@@ -52,6 +52,7 @@ import {
   SITEMAP_OPTION,
   PORT_OPTION,
   HOST_OPTION,
+  ONLY_CREATORS_OPTION,
 } from "./constants.ts"
 import defaultTemplate from "./default/_template.ts"
 import defaultCreator from "./default/_creator.ts"
@@ -500,7 +501,15 @@ export function checkIsValidHostnameOrIP(str: string, throwErr = true) {
   return true
 }
 
-;/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/
+export function checkIsValidOnlyCreatorsString(str: string, throwErr = true) {
+  if (typeof str !== "string") {
+    const error = `When trying to narrow creators to run: '${str}' is not a valid list of creators (comma separated).`
+    log.error(error, throwErr)
+    return false
+  }
+
+  return true
+}
 
 /**
  * Check if provided CLI flags are valid
@@ -513,6 +522,8 @@ export function checkAreValidCLIOptions(options: Record<string, any>) {
       !IS_DEV_MODE || checkIsValidPortNumber(value, false),
     [HOST_OPTION]: (value: string) =>
       !IS_DEV_MODE || checkIsValidHostnameOrIP(value, false),
+    [ONLY_CREATORS_OPTION]: (value: string) =>
+      checkIsValidOnlyCreatorsString(value, false),
   }
 
   for (let key of Object.keys(options)) {

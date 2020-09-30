@@ -18,6 +18,7 @@ Builds the `ssgo` project of the current directory to the `dist/` directory.
 ### Options
 
 - **`--sitemap`**: Generate a sitemap.xml file of the build pages for the given host. Example: `ssgo build --sitemap=https://example.com`. Works only with the `build` command.
+- **`--only-creators`**: Filter the creators to run. Example: `ssgo dev --only-creators=index.ts,other.js`. Specifying this option will prevent `ssgo` to empty the `dist/` directory before building. Useful to rebuilt only some pages.
 
 ## `ssgo dev`
 
@@ -27,6 +28,7 @@ Same as `build` except `ssgo` will also spawn a file watcher on your project fil
 
 - **`--host`**: Set the host to serve `dist/` over (default 'localhost'). Example: `ssgo dev --host=0.0.0.0` (to serve `dist/` on local network). Works only with the `dev` command.
 - **`--port`**: Set the port to serve `dist/` over (default 5580). Example: `ssgo dev --port=8080`. Works only with the `dev` command.
+- **`--only-creators`**: See `ssgo build > Options`.
 
 ## `ssgo init`
 

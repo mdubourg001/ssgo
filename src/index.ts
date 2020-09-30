@@ -17,6 +17,7 @@ import {
   basename,
   resolve,
   relative,
+  common,
 } from "https://deno.land/std@0.70.0/path/mod.ts"
 
 import {
@@ -34,6 +35,7 @@ import {
   SERVE_PORT,
   SERVE_HOST,
   WS_HOT_RELOAD_KEY,
+  CREATORS_FILTERING,
 } from "./constants.ts"
 import type {
   INode,
@@ -87,9 +89,26 @@ let compilations: Promise<any>[] = []
  * Walk through creators/ and components/ to init global vars
  */
 function walkCreatorsAndComponents() {
-  creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter((file: WalkEntry) =>
-    isScript(file.name)
+  if (CREATORS_FILTERING) {
+    const hr = CREATORS_FILTERING.split(",")
+      .join(", ")
+      .replace(/,([^,]*)$/, " and$1")
+    log.info(`Narrowing the creators to run to ${hr} (if exist).`)
+  }
+
+  creators = Array.from(walkSync(CREATORS_DIR_ABS)).filter(
+    (file: WalkEntry) => {
+      // check if creator is included into the creators filtering
+      const matchCreatorFiltering =
+        !CREATORS_FILTERING ||
+        CREATORS_FILTERING.split(",").includes(
+          file.path.replace(common([CREATORS_DIR_ABS, file.path]), "")
+        )
+
+      return isScript(file.name) && matchCreatorFiltering
+    }
   )
+
   components = existsSync(COMPONENTS_DIR_ABS)
     ? Array.from(walkSync(COMPONENTS_DIR_ABS)).filter((file: WalkEntry) =>
         isTemplate(file.name)
@@ -447,9 +466,12 @@ export async function build(skipCleaning = false) {
 
   checkComponentNameUnicity(components)
 
-  log.info(`Creating or emptying ${getRel(DIST_DIR_ABS)} directory...`)
   ensureDirSync(DIST_DIR_ABS)
-  emptyDirSync(DIST_DIR_ABS)
+  if (!CREATORS_FILTERING) {
+    emptyDirSync(DIST_DIR_ABS)
+
+    log.info(`Creating or emptying ${getRel(DIST_DIR_ABS)} directory...`)
+  }
 
   const builds: Promise<any>[] = []
   for (let creator of creators) {
@@ -483,7 +505,10 @@ export async function watch(listeners: Array<WebSocket>) {
       for (const path of event.paths) {
         if (basename(path).startsWith(TEMP_FILES_PREFIX)) continue
 
-        if (isFileInDir(path, CREATORS_DIR_ABS)) {
+        if (
+          isFileInDir(path, CREATORS_DIR_ABS) &&
+          creators.find((c) => c.path === path) !== undefined
+        ) {
           console.log("")
           log.info(`${getRel(path)} changed.`)
 
