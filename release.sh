@@ -4,8 +4,15 @@ previous_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION =
 vr bump-version $1
 new_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION = "//' |sed 's/"//' |sed 's/;//')
 
-echo -e "\n## v$new_version ($(date "+%Y-%m-%d"))\n" >> CHANGELOG.md
-git log --pretty=oneline --abbrev-commit v$previous_version..v$new_version| grep 'feat:\|fix:\|chore:'| sed 's/^/- /' >> CHANGELOG.md
+echo -e "# Changelog
+
+_This page is updated automatically for every new release._
+
+## v$new_version ($(date "+%Y-%m-%d"))
+
+$(git log --pretty=oneline --abbrev-commit v$previous_version..v$new_version| grep 'feat:\|fix:\|chore:'| sed 's/^/- /')
+$(tail -n +4 CHANGELOG.md)
+" > CHANGELOG.md
 
 git add version.ts CHANGELOG.md
 git commit --amend --no-edit
