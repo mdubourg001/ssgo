@@ -32,6 +32,8 @@ import type {
 } from "./types.ts"
 import {
   VERBOSITY,
+  IS_PROD_MODE,
+  IS_DEV_MODE,
   CREATORS_DIR_BASE,
   CREATORS_DIR_ABS,
   TEMPLATES_DIR_BASE,
@@ -47,6 +49,9 @@ import {
   SERVE_HOST,
   WS_HOT_RELOAD_KEY,
   WS_PING_KEY,
+  SITEMAP_OPTION,
+  PORT_OPTION,
+  HOST_OPTION,
 } from "./constants.ts"
 import defaultTemplate from "./default/_template.ts"
 import defaultCreator from "./default/_creator.ts"
@@ -447,7 +452,7 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
 /**
  * Check if a string is a valid URL starting with http or https
  */
-export function checkIsValidHttpUrl(str: string) {
+export function checkIsValidHttpUrl(str: string, throwErr = true) {
   let url
 
   try {
@@ -457,11 +462,66 @@ export function checkIsValidHttpUrl(str: string) {
       throw ""
     }
   } catch (_) {
-    log.error(
-      `When trying to build sitemap.xml: '${str}' is not a valid URL strarting with 'http://' or 'https://'.`,
-      true
-    )
+    const error = `When trying to build sitemap.xml: '${str}' is not a valid URL starting with 'http://' or 'https://'.`
+    log.error(error, throwErr)
+    return false
   }
+
+  return true
+}
+
+/**
+ * Check if a string is a valid port number
+ */
+export function checkIsValidPortNumber(str: string, throwErr = true) {
+  if (Number.isNaN(Number.parseInt(str, 10))) {
+    const error = `When trying to serve 'dist/': '${str}' is not a valid port number.`
+    log.error(error, throwErr)
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Check if a string is a valid hostname or IP
+ */
+export function checkIsValidHostnameOrIP(str: string, throwErr = true) {
+  if (
+    !new RegExp(
+      /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gm
+    ).test(str)
+  ) {
+    const error = `When trying to serve 'dist/': '${str}' is not a valid host or IP.`
+    log.error(error, throwErr)
+    return false
+  }
+
+  return true
+}
+
+;/^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/
+
+/**
+ * Check if provided CLI flags are valid
+ */
+export function checkAreValidCLIOptions(options: Record<string, any>) {
+  const validators: Record<string, Function> = {
+    [SITEMAP_OPTION]: (value: string) =>
+      !IS_PROD_MODE || checkIsValidHttpUrl(value, false),
+    [PORT_OPTION]: (value: string) =>
+      !IS_DEV_MODE || checkIsValidPortNumber(value, false),
+    [HOST_OPTION]: (value: string) =>
+      !IS_DEV_MODE || checkIsValidHostnameOrIP(value, false),
+  }
+
+  for (let key of Object.keys(options)) {
+    if (key in validators) {
+      !validators[key](options[key]) && Deno.exit(1)
+    }
+  }
+
+  return options
 }
 
 /**
@@ -486,9 +546,6 @@ export function getFormattedErrorPage(
   `
 }
 
-/**
- *
- */
 export function createDefaultTemplate() {
   Deno.writeTextFileSync(
     resolve(TEMPLATES_DIR_ABS, "index.html"),
@@ -496,16 +553,10 @@ export function createDefaultTemplate() {
   )
 }
 
-/**
- *
- */
 export function createDefaultCreator() {
   Deno.writeTextFileSync(resolve(CREATORS_DIR_ABS, "index.ts"), defaultCreator)
 }
 
-/**
- *
- */
 export function createDefaultStaticFile() {
   Deno.writeTextFileSync(
     resolve(STATIC_DIR_ABS, "index.css"),

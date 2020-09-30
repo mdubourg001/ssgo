@@ -11,9 +11,10 @@
     "./README.md",
     "./ssgo.ts",
     "./version.ts",
+    "./ssgo.ts",
     "./ssgo.ts"
   ],
-  "version": "0.13.0",
+  "version": "0.14.0",
   "checkAll": false,
   "unlisted": false
 }

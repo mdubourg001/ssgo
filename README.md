@@ -46,16 +46,15 @@ Here's what a `ssgo` project looks like:
 ssgo
 ```
 
-Your site will be built inside of the `dist/` directory.
+Your site will be built inside of the `dist/` directory.s
 
-**To start dev mode** with file watching:
+**To start development mode** with file watching, and a hot reloaded dev server:
 
 ```bash
 ssgo dev
 ```
 
-**For the moment**, `ssgo` doesn't provide a web server out of the box.
-It is on the roadmap.
+The `dist/` directory will be served over `http://localhost:5580`.
 
 ## Overview
 
