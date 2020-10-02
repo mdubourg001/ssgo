@@ -4,6 +4,8 @@ previous_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION =
 vr bump-version $1
 new_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION = "//' |sed 's/"//' |sed 's/;//')
 
+git fetch --tags
+
 echo -e "# Changelog
 
 _This page is updated automatically for every new release._
@@ -20,6 +22,6 @@ git tag "v$new_version"
 git push --force
 git push origin "v$new_version"
 
-eggs publish --version $new_version && git restore ./egg.json
+eggs publish --version $new_version
 
 echo "Succesfully released $new_version to nest.land and deno.land."
