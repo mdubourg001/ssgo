@@ -10,8 +10,10 @@ import {
   VERSION_FLAG,
   SITEMAP_OPTION,
 } from "./src/constants.ts"
-import { log, checkAreValidCLIOptions } from "./src/utils.ts"
+import { log, getSecondsFrom, checkAreValidCLIOptions } from "./src/utils.ts"
 import getVersion from "./version.ts"
+
+const t0 = performance.now()
 
 log.info(`ssgo ${getVersion()}`)
 
@@ -44,7 +46,7 @@ switch (true) {
   // dev: build, watch files and serve
   case FLAGS["_"].includes(DEV_FLAG):
     build().then(() => {
-      log.success("Project built.")
+      log.success(`Project built in ${getSecondsFrom(t0)} seconds.`)
 
       const listeners: Array<WebSocket> = []
 
@@ -63,7 +65,7 @@ switch (true) {
     build().then(() => {
       sitemap(FLAGS[SITEMAP_OPTION])
 
-      log.success("Project built.")
+      log.success(`Project built in ${getSecondsFrom(t0)} seconds.`)
     })
     break
 

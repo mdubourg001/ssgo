@@ -84,6 +84,13 @@ export const log = {
 }
 
 /**
+ * Get number of seconds between a number (performance.now) and now
+ */
+export function getSecondsFrom(t0: number): string {
+  return ((performance.now() - t0) / 1000).toFixed(3)
+}
+
+/**
  * Check if a file is a script file (JS or TS)
  */
 export function isScript(filename: string): boolean {
