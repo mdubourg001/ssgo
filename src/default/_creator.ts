@@ -1,4 +1,4 @@
-export default `import { BuildPage } from "https://deno.land/x/ssgo/mod.ts";
+export default `import type { BuildPage } from "https://deno.land/x/ssgo/mod.ts";
 
 export default function (buildPage: BuildPage) {
   buildPage(
