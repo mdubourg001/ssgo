@@ -4,9 +4,9 @@
 
 # ssgo
 
-A minimalistic, unconfigurable static site generator.
+The minimalistic but flexible static site generator.
 
-**`ssgo`** is built with Deno, and aims to be used within a Deno ecosystem.
+**`ssgo`** is built with Deno and relies on it.
 
 ![license: MIT](https://img.shields.io/github/license/mdubourg001/ssgo?style=flat-square)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)

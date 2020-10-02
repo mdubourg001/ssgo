@@ -1,6 +1,6 @@
 {
   "name": "ssgo",
-  "description": "A minimalistic, unconfigurable static site generator",
+  "description": "The minimalistic but flexible static site generator",
   "repository": "https://github.com/mdubourg001/ssgo",
   "stable": true,
   "entry": "ssgo.ts",
