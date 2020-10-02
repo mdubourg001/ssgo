@@ -85,7 +85,7 @@ The `dist/` directory will be served over `http://localhost:5580`.
 ```typescript
 // creators/my-creator.ts
 
-import { BuildPage } from "https://deno.land/x/ssgo/mod.ts"
+import type { BuildPage } from "https://deno.land/x/ssgo/mod.ts"
 
 export default function (buildPage: BuildPage) {
   buildPage(
@@ -104,8 +104,4 @@ export default function (buildPage: BuildPage) {
 ## Roadmap
 
 - [ ] Add a support for a config file (.ssgorc, ssgo.config.js)
-- [ ] Provide a way to build only some creators (`--only-creators=index.ts,other.js`)
-- [ ] Export `buildPage` and `ssgoBag` from `mod.ts` to allow access from outside of creators
-- [ ] Serialize the cache on FS to allow faster cold builds
-- [ ] Find a way to clear import / compiler cache programmatically
 - [ ] Provide a way to opt out of static ressources resolution on a per-file basis
