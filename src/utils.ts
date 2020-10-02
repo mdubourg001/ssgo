@@ -287,13 +287,15 @@ export function writeTempFileWithContentOf(contentAbs: string): string {
 
 /**
  * Dynamically import module from abs path
- * Using a temp file to hack import cache
+ * Using a temp file to hack import cache if in development mode
  */
 export async function importModule(moduleAbs: string) {
-  const tempModuleAbs = writeTempFileWithContentOf(moduleAbs)
+  const tempModuleAbs = IS_DEV_MODE
+    ? writeTempFileWithContentOf(moduleAbs)
+    : moduleAbs
 
   const module = await import(`file://${tempModuleAbs}`)
-  Deno.remove(tempModuleAbs)
+  IS_DEV_MODE && Deno.remove(tempModuleAbs)
   return module
 }
 
