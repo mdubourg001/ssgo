@@ -2,7 +2,7 @@ import type {
   ISsgoBag as SsgoBag,
   IContextData,
   IBuildPageOptions,
-} from "./src/types.ts";
+} from "./src/types.ts"
 
 type BuildPage = (
   /**
@@ -16,7 +16,7 @@ type BuildPage = (
   /**
    * Page build options
    */
-  options: IBuildPageOptions,
-) => void;
+  options: IBuildPageOptions
+) => void
 
-export type { BuildPage, SsgoBag };
+export type { BuildPage, SsgoBag }

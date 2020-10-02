@@ -439,6 +439,7 @@ export async function runCreator(creator: WalkEntry) {
           getStaticFileBundlePath(`${bundleDest}/${basename(path)}`),
           override
         ),
+      log,
     } as ISsgoBag
   )
 

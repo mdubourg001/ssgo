@@ -47,5 +47,6 @@ At the moment, the `ssgoBag` exposes 3 utility functions:
 - **`addStaticToBundle`** (_`(path: string, bundleDest: string, compile?: boolean, override?: boolean) => void`_): Adds the file given as `path` parameter to the `dist/` directory, inside of the `bundleDest` subdirectory. If the file must be put at the root of `dist/`, you can give an empty string as the `bundleDest` parameter.
   - **`compile`** is an optional boolean telling `ssgo` to try to compile the file to add to the bundle. Can be useful if the file is a `.ts` file for example.
   - **`override`** is an optional boolean telling `ssgo` wether it should override the file in the case it already exists in the bundle.
+- **`log`** (_`{ info, success, warning, error }`_): Logs a message using the internal `ssgo` logger. `log.error` accepts an additional `throwErr: boolean` argument, throwing an error if set to `true` (default to `false`).
 
 This bag of utilities aims to be filled with more content in the future. **If you have an idea of something useful that could be added to the `ssgoBag`, please feel free to <a href="https://github.com/mdubourg001/ssgo/issues" target="_blank" rel="noreferrer nofollow noopener">fill and issue</a>.**
