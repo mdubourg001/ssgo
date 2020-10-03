@@ -1,4 +1,3 @@
-import { resolve } from "https://deno.land/std@0.70.0/path/mod.ts"
 import { log } from "./src/utils.ts"
 
 const VERSION = "0.16.0"
