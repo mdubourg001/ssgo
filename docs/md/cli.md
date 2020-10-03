@@ -49,6 +49,10 @@ Note that if some of the directories or files to create already exist, `init` wi
 
 Outputs the current version of `ssgo`.
 
+## `ssgo upgrade`
+
+Upgrades to the latest ssgo version.
+
 ## `ssgo help`
 
 Shows some help about ssgo commands.

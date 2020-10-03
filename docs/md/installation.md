@@ -19,4 +19,8 @@ You can learn about how to easily start using `ssgo` by reading the [Quickstart]
 
 ## Upgrading
 
-To upgrade `ssgo` whenever a new version is released, just run the previous installation command **adding the `-f` flag.**
+To upgrade `ssgo` whenever a new version is released, just run:
+
+```bash
+ssgo upgrade
+```

@@ -1,6 +1,6 @@
 import { parse } from "https://deno.land/std/flags/mod.ts"
 import type { WebSocket } from "https://deno.land/std/ws/mod.ts"
-import { build, watch, serve, init, sitemap } from "./src/index.ts"
+import { build, watch, serve, init, sitemap, upgrade } from "./src/index.ts"
 import {
   DEV_FLAG,
   BUILD_FLAG,
@@ -8,6 +8,7 @@ import {
   INIT_FLAG,
   DIST_DIR_BASE,
   VERSION_FLAG,
+  UPGRADE_FLAG,
   SITEMAP_OPTION,
 } from "./src/constants.ts"
 import { log, getSecondsFrom, checkAreValidCLIOptions } from "./src/utils.ts"
@@ -41,6 +42,11 @@ switch (true) {
        - help: display help menu
     `
     )
+    break
+
+  // upgrade ssgo version if exists
+  case FLAGS["_"].includes(UPGRADE_FLAG):
+    upgrade()
     break
 
   // dev: build, watch files and serve

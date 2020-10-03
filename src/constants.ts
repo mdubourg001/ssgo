@@ -9,6 +9,7 @@ export const BUILD_FLAG = "build"
 export const HELP_FLAG = "help"
 export const INIT_FLAG = "init"
 export const VERSION_FLAG = "version"
+export const UPGRADE_FLAG = "upgrade"
 
 export const SITEMAP_OPTION = "sitemap"
 export const PORT_OPTION = "port"
@@ -75,3 +76,5 @@ export const POTENTIAL_STATIC_ATTR = ["src", "href", "icon", "poster", "srcset"]
 export const BUILDABLE_STATIC_EXT = [".ts", ".jsx", ".tsx"]
 
 export const CHILDREN_COMPONENT_PROP = "children"
+
+export const REPOSITORY_URL = "https://api.github.com/repos/mdubourg001/ssgo"

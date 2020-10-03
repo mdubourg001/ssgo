@@ -36,6 +36,7 @@ import {
   SERVE_HOST,
   WS_HOT_RELOAD_KEY,
   CREATORS_FILTERING,
+  REPOSITORY_URL,
 } from "./constants.ts"
 import type {
   INode,
@@ -74,6 +75,7 @@ import {
   injectServeWebsocketScript,
 } from "./utils.ts"
 import { buildHtml } from "./build.ts"
+import getVersion from "../version.ts"
 
 // ----- globals ----- //
 
@@ -731,4 +733,52 @@ export function sitemap(host: string) {
     resolve(DIST_DIR_ABS, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urlEntries}</urlset>`
   )
+}
+
+/**
+ * Upgrade to latest ssgo version if exists
+ */
+export async function upgrade() {
+  log.info("Upgrading ssgo...")
+
+  const actual = getVersion()
+  const tags = await fetch(`${REPOSITORY_URL}/tags`)
+
+  if (tags.status === 200) {
+    const latest = (await tags.json())[0]
+
+    if (latest.name === `v${actual}`) {
+      log.info("You are already using the latest version of ssgo.")
+    } else {
+      const installProcess = Deno.run({
+        cmd: [
+          "deno",
+          "install",
+          "--unstable",
+          "-A",
+          "-q",
+          "-f",
+          `https://deno.land/x/ssgo/ssgo.ts`,
+        ],
+        stdout: "piped",
+        stderr: "piped",
+      })
+
+      const status = await installProcess.status()
+
+      if (!status.success) {
+        throw new Error(
+          `Something went wrong while upgrading to v${latest.name}. Aborting upgrade.`
+        )
+      } else {
+        log.success(`Upgraded ssgo to v${latest.name}!`)
+      }
+
+      installProcess.close()
+    }
+  } else {
+    log.error(
+      "Something went wrong while fetching latest version. Aborting upgrade."
+    )
+  }
 }
