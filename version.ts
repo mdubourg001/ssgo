@@ -3,11 +3,11 @@ import { log } from "./src/utils.ts"
 
 const VERSION = "0.16.0"
 
+const { args } = Deno
+
 function hasBumpFlag() {
   return (
-    Deno.args.includes("patch") ||
-    Deno.args.includes("minor") ||
-    Deno.args.includes("major")
+    args.includes("patch") || args.includes("minor") || args.includes("major")
   )
 }
 
@@ -16,11 +16,11 @@ function getNextVersionNumber(actualVersion: string): string | undefined {
     .split(".")
     .map((n) => parseInt(n, 10))
 
-  if (Deno.args.includes("patch")) {
+  if (args.includes("patch")) {
     return [major, minor, patch + 1].map((n) => n.toString()).join(".")
-  } else if (Deno.args.includes("minor")) {
+  } else if (args.includes("minor")) {
     return [major, minor + 1, 0].map((n) => n.toString()).join(".")
-  } else if (Deno.args.includes("major")) {
+  } else if (args.includes("major")) {
     return [major + 1, 0, 0].map((n) => n.toString()).join(".")
   }
 }
