@@ -13,7 +13,7 @@ export default `<!DOCTYPE html>
       alt="ssgo"
     />
 
-    <h1>Hello, ssgo master !</h1>
+    <h1>Hello from ssgo !</h1>
     <p>Just run <code>ssgo dev</code> to get started !</p>
     <p>
       or read the&nbsp;
@@ -26,4 +26,4 @@ export default `<!DOCTYPE html>
     </p>
   </body>
 </html>
-`
+`;

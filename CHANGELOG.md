@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.16.1 (2020-10-06)
+
+
+
 ## v0.16.0 (2020-10-03)
 
 - ee7c2e4 feat: added 'ssgo upgrade' CLI command to upgrade to latest version
@@ -27,3 +31,4 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
+
