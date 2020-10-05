@@ -5,6 +5,7 @@ scripts:
       - read
       - write
       - net
+      - run
   ssgo: cd example-project && deno run --unstable --allow-read --allow-write --allow-net ../ssgo.ts --sitemap=https://ssgo.netlify.app
   test:
     cmd: deno test --unstable
