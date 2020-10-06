@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ title }}</title>
+
+    <script src="index.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js" defer></script>
+  </head>
+  <body>
+    <ul eval:x-data="`itemsData(${ssgo.assrc(list)})`" x-init="init()">
+      <template x-for="item in items">
+        <li x-text="item" ></li>
+      </template>
+    </ul>
+  </body>
+</html>
