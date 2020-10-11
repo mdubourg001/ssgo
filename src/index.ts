@@ -1,7 +1,7 @@
 import { parse } from "https://cdn.skypack.dev/html5parser";
-import { Application, Context, send } from "https://deno.land/x/oak/mod.ts";
+import { Application, Context, send } from "https://deno.land/x/oak@v6.3.1/mod.ts";
 
-import type { WebSocket } from "https://deno.land/std/ws/mod.ts";
+import type { WebSocket } from "https://deno.land/std@0.74.0/ws/mod.ts";
 import {
   copySync,
   emptyDirSync,

@@ -1,4 +1,4 @@
-import { parse } from "https://deno.land/std/flags/mod.ts"
+import { parse } from "https://deno.land/std@0.74.0/flags/mod.ts"
 import { normalize } from "https://deno.land/std@0.70.0/path/mod.ts"
 
 // ----- cli ----- //

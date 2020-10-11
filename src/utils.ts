@@ -1,6 +1,6 @@
 import tosource from "https://cdn.skypack.dev/tosource"
 import type { IAttribute } from "https://cdn.skypack.dev/html5parser"
-import { parse } from "https://deno.land/std/flags/mod.ts"
+import { parse } from "https://deno.land/std@0.74.0/flags/mod.ts"
 import {
   red,
   blue,

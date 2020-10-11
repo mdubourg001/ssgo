@@ -1,5 +1,5 @@
-import { parse } from "https://deno.land/std/flags/mod.ts"
-import type { WebSocket } from "https://deno.land/std/ws/mod.ts"
+import { parse } from "https://deno.land/std@0.74.0/flags/mod.ts"
+import type { WebSocket } from "https://deno.land/std@0.74.0/ws/mod.ts"
 import { build, watch, serve, init, sitemap, upgrade } from "./src/index.ts"
 import {
   DEV_FLAG,
