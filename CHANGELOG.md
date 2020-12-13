@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.17.0 (2020-12-13)
+
+
+
 ## v0.16.1 (2020-10-06)
 
 - 665a025 chore: changed default project wording

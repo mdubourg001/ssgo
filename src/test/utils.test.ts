@@ -1,21 +1,19 @@
-import type { IAttribute } from "https://cdn.skypack.dev/html5parser";
-
 import {
   assertEquals,
   assertThrows,
-} from "https://deno.land/std@0.70.0/testing/asserts.ts";
+} from "https://deno.land/std@0.80.0/testing/asserts.ts";
 
 import {
-  log,
-  isScript,
-  isTemplate,
   contextEval,
   formatAttributes,
-  interpolate,
-  removeExt,
-  pushBefore,
   getUnprefixedAttributeName,
+  interpolate,
   isExternalURL,
+  isScript,
+  isTemplate,
+  log,
+  pushBefore,
+  removeExt,
 } from "../utils.ts";
 
 Deno.test("log.error should throw when asked to", () => {
@@ -52,8 +50,8 @@ Deno.test("formatAttributes", () => {
       {
         name: { value: "href" },
         value: { value: "https://example.com" },
-      } as IAttribute,
-      { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
+      } as any,
+      { name: { value: "target" }, value: { value: "_blank" } } as any,
     ]),
     `href="https://example.com" target="_blank"`,
   );
@@ -62,25 +60,25 @@ Deno.test("formatAttributes", () => {
       {
         name: { value: "href" },
         value: { value: "https://example.com" },
-      } as IAttribute,
-      { name: { value: "disabled" } } as IAttribute,
-      { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
+      } as any,
+      { name: { value: "disabled" } } as any,
+      { name: { value: "target" }, value: { value: "_blank" } } as any,
     ]),
     `href="https://example.com" disabled target="_blank"`,
   );
   assertEquals(
     formatAttributes([
-      { name: { value: "disabled" } } as IAttribute,
-      { name: { value: "hidden" } } as IAttribute,
-      { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
+      { name: { value: "disabled" } } as any,
+      { name: { value: "hidden" } } as any,
+      { name: { value: "target" }, value: { value: "_blank" } } as any,
     ]),
     `disabled hidden target="_blank"`,
   );
   assertEquals(
     formatAttributes([
-      { name: { value: "disabled" } } as IAttribute,
-      { name: { value: "target" }, value: { value: "_blank" } } as IAttribute,
-      { name: { value: "hidden" } } as IAttribute,
+      { name: { value: "disabled" } } as any,
+      { name: { value: "target" }, value: { value: "_blank" } } as any,
+      { name: { value: "hidden" } } as any,
     ]),
     `disabled target="_blank" hidden`,
   );
@@ -123,7 +121,7 @@ Deno.test("pushBefore", () => {
 
 Deno.test("getUnprefixedAttributeName", () => {
   assertEquals(
-    getUnprefixedAttributeName({ name: { value: "eval:href" } } as IAttribute),
+    getUnprefixedAttributeName({ name: { value: "eval:href" } } as any),
     "href",
   );
 });

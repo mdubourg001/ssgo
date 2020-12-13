@@ -1,34 +1,32 @@
 import cloneDeep from "https://cdn.skypack.dev/lodash.clonedeep";
-import {
-  parse,
-  IAttribute as IHTMLAttr,
-} from "https://cdn.skypack.dev/html5parser";
+import { parse } from "https://cdn.skypack.dev/html5parser";
 
 import {
-  INode,
   IAttribute,
   IContextData,
   ICustomComponent,
+  IHTMLAttr,
+  INode,
   IStaticFile,
 } from "./types.ts";
 import {
-  log,
-  contextEval,
-  interpolate,
-  removeExt,
-  isComment,
-  removeFromParent,
-  pushBefore,
   checkRecursiveComponent,
   checkStaticFileExists,
-  getUnprefixedAttributeName,
-  isExternalURL,
-  getStaticFileFromRel,
-  getStaticFileBundlePath,
   checkStaticFileIsInsideStaticDir,
+  contextEval,
+  getStaticFileBundlePath,
+  getStaticFileFromRel,
+  getUnprefixedAttributeName,
+  interpolate,
+  isComment,
   isDevelopmentEnv,
+  isExternalURL,
+  log,
+  pushBefore,
+  removeExt,
+  removeFromParent,
 } from "./utils.ts";
-import { POTENTIAL_STATIC_ATTR, CHILDREN_COMPONENT_PROP } from "./constants.ts";
+import { CHILDREN_COMPONENT_PROP, POTENTIAL_STATIC_ATTR } from "./constants.ts";
 import { serialize } from "./index.ts";
 
 /**

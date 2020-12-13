@@ -1,7 +1,11 @@
 import { parse } from "https://cdn.skypack.dev/html5parser";
-import { Application, Context, send } from "https://deno.land/x/oak/mod.ts";
+import {
+  Application,
+  Context,
+  send,
+} from "https://deno.land/x/oak@v6.3.2/mod.ts";
 
-import type { WebSocket } from "https://deno.land/std/ws/mod.ts";
+import type { WebSocket } from "https://deno.land/std@0.80.0/ws/mod.ts";
 import {
   copySync,
   emptyDirSync,
@@ -9,7 +13,7 @@ import {
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.70.0/fs/mod.ts";
+} from "https://deno.land/std@0.80.0/fs/mod.ts";
 import {
   basename,
   common,
@@ -18,7 +22,7 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.70.0/path/mod.ts";
+} from "https://deno.land/std@0.80.0/path/mod.ts";
 
 import {
   BUILDABLE_STATIC_EXT,
@@ -488,7 +492,7 @@ export async function build(skipCleaning = false) {
     // wait for buildPage and Deno.bundle calls to end
     await Promise.all([Promise.all(builds), Promise.all(compilations)]);
 
-    resolve();
+    resolve(0);
   });
 }
 

@@ -1,17 +1,17 @@
-import { assertEquals } from "https://deno.land/std@0.70.0/testing/asserts.ts";
-import { join, resolve } from "https://deno.land/std@0.70.0/path/mod.ts";
-import { existsSync } from "https://deno.land/std@0.70.0/fs/mod.ts";
+import { assertEquals } from "https://deno.land/std@0.80.0/testing/asserts.ts";
+import { join, resolve } from "https://deno.land/std@0.80.0/path/mod.ts";
+import { existsSync } from "https://deno.land/std@0.80.0/fs/mod.ts";
 
 import {
-  DIST_DIR_ABS,
-  CREATORS_DIR_ABS,
-  TEMPLATES_DIR_ABS,
   COMPONENTS_DIR_ABS,
-  STATIC_DIR_ABS,
-  CREATORS_DIR_BASE,
-  TEMPLATES_DIR_BASE,
   COMPONENTS_DIR_BASE,
+  CREATORS_DIR_ABS,
+  CREATORS_DIR_BASE,
+  DIST_DIR_ABS,
+  STATIC_DIR_ABS,
   STATIC_DIR_BASE,
+  TEMPLATES_DIR_ABS,
+  TEMPLATES_DIR_BASE,
 } from "../constants.ts";
 import { build, init } from "../index.ts";
 import { getTestEnv } from "./helpers.ts";
@@ -35,7 +35,7 @@ Deno.test(
     assertEquals(existsSync(join(CREATORS_DIR_ABS, "index.ts")), true);
     assertEquals(existsSync(join(TEMPLATES_DIR_ABS, "index.html")), true);
     assertEquals(existsSync(join(STATIC_DIR_ABS, "index.css")), true);
-  }
+  },
 );
 
 Deno.test(
@@ -53,7 +53,7 @@ Deno.test(
     assertEquals(existsSync(join(CREATORS_DIR_ABS, "index.ts")), true);
     assertEquals(existsSync(join(TEMPLATES_DIR_ABS, "index.html")), true);
     assertEquals(existsSync(join(STATIC_DIR_ABS, "index.css")), true);
-  }
+  },
 );
 
 Deno.test(
@@ -71,5 +71,5 @@ Deno.test(
     assertEquals(existsSync(join(CREATORS_DIR_ABS, "index.ts")), true);
     assertEquals(existsSync(join(TEMPLATES_DIR_ABS, "index.html")), false);
     assertEquals(existsSync(join(STATIC_DIR_ABS, "index.css")), false);
-  }
+  },
 );
