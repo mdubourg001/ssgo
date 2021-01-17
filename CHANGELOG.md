@@ -2,9 +2,13 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.1 (2021-01-17)
+
+- 33531a2 feat: improved text interpolation regex and removed need of braces around evaluated objects
+
 ## v0.18.0 (2021-01-17)
 
-- 54a60036 fix: allowing recursive components calls
+- 3455eb1 fix: allowing recursive components calls
 - 632b310e feat(dev): stop building the entire project in dev mode but just the requested ressources
 
 ## v0.17.0 (2020-12-13)

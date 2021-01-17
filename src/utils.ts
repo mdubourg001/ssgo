@@ -124,7 +124,7 @@ export function contextEval(
 
     // @ts-ignore
     for (const key of Object.keys(richContext)) window[key] = richContext[key];
-    const evaluation = eval(expression);
+    const evaluation = eval(`(${expression})`);
 
     // @ts-ignore
     for (const key of Object.keys(richContext)) delete window[key];
@@ -160,8 +160,11 @@ export function formatAttributes(attributes: IHTMLAttr[]): string {
  */
 export function interpolate(templateStr: string, data?: IContextData) {
   // FIXME - This allow everything as long as the second char isn't a opening bracket ('{')
-  return templateStr.replace(/{{\s*{{0,1}[^{]+\s*}}/g, (match) => {
-    return contextEval(match, data ?? {}, templateStr);
+  return templateStr.replace(/{{(([^}][^}]?|[^}]}?)*)}}/g, (match) => {
+    // remove "{{" and "}}"
+    const cleanedMatch = match.trim().slice(2, -2).trim();
+
+    return contextEval(cleanedMatch, data ?? {}, templateStr);
   });
 }
 
