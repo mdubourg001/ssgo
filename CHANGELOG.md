@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.0 (2021-01-17)
+
+
+
 ## v0.17.0 (2020-12-13)
 
 - c4a7a9e1 chore: bumped to std@0.80.0 (deno v1.6.0)
@@ -36,3 +40,4 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
+

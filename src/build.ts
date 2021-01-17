@@ -10,7 +10,6 @@ import {
   IStaticFile,
 } from "./types.ts";
 import {
-  checkRecursiveComponent,
   checkStaticFileExists,
   checkStaticFileIsInsideStaticDir,
   contextEval,
@@ -240,8 +239,6 @@ function computeCustomComponents(
 
     // building the parsed component
     parsed.forEach((componentNode: INode) => {
-      checkRecursiveComponent(componentNode, component.name);
-
       componentNode.parent = parsed;
       buildHtml(
         componentNode,

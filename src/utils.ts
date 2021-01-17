@@ -357,24 +357,6 @@ export function checkComponentNameUnicity(components: ICustomComponent[]) {
 }
 
 /**
- * Check if component contains a recursive call
- */
-export function checkRecursiveComponent(node: INode, componentName: string) {
-  if ("name" in node && node.name === removeExt(componentName)) {
-    log.error(
-      `When parsing '${componentName}': Recursive call of component found.`,
-      true,
-    );
-  }
-
-  if ("body" in node && !!node.body) {
-    for (const childNode of node.body as INode[]) {
-      checkRecursiveComponent(childNode, componentName);
-    }
-  }
-}
-
-/**
  * Check that buildPage options are valid
  */
 export function checkBuildPageOptions(
