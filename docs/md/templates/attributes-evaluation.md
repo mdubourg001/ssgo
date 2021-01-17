@@ -56,15 +56,13 @@ As the `class` attribute generally contains more than one value, `ssgo` allows p
 
 ```html
 <div
-  eval:class="({
+  eval:class="{
     'flex shadow': true,
-    'flex-col': metaTitle.lenght > 2,
+    'flex-col': metaTitle.length > 2,
     'flex-row justify-between': metaTitle.length <= 2
-  })"
+  }"
 ></div>
 ```
-
-> Note the use of braces around the object notation, **it is needed for `ssgo` to correctly evaluate object expressions**
 
 The previous example will output:
 

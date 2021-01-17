@@ -6,6 +6,10 @@ new_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION = "//'
 
 git fetch --tags
 
+git add version.ts
+git commit --amend --no-edit
+git tag "v$new_version"
+
 echo -e "# Changelog
 
 _This page is updated automatically for every new release._
@@ -16,9 +20,9 @@ $(git log --pretty=oneline --abbrev-commit v$previous_version..v$new_version| gr
 $(tail -n +4 CHANGELOG.md)
 " > CHANGELOG.md
 
-git add version.ts CHANGELOG.md
+git add CHANGELOG.md
 git commit --amend --no-edit
-git tag "v$new_version"
+
 git push --force
 git push origin "v$new_version"
 
