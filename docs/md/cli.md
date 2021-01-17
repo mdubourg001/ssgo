@@ -22,7 +22,9 @@ Builds the `ssgo` project of the current directory to the `dist/` directory.
 
 ## `ssgo dev`
 
-Same as `build` except `ssgo` will also spawn a file watcher on your project files to re-build specific parts of the project upon changes. `dev` will also serve the content of the `dist/` directory over `http://localhost:5580`.
+Same as `build` except `ssgo` will not build the entire project directly, it will instead build only the needed files when requested.
+
+It will also spawn a file watcher on your project files to re-build specific parts of the project upon changes. `dev` will also serve the content of the `dist/` directory over `http://localhost:5580`.
 
 ### Options
 

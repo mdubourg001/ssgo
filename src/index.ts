@@ -420,17 +420,20 @@ export async function runCreator(creator: WalkEntry) {
       data: IContextData,
       options: IBuildPageOptions,
     ) {
-      // caching the call to buildPage on the fly
       const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`);
-      cacheBuildPageCall(creator.path, {
-        template: template,
-        data,
-        options,
-      });
 
-      checkBuildPageOptions(template, options);
-
-      await buildPage(templateAbs, data, options, components);
+      if (isDevelopmentEnv()) {
+        // caching the call to buildPage but not building
+        // as pages are built on demand in dev mode
+        cacheBuildPageCall(creator.path, {
+          template: template,
+          data,
+          options,
+        });
+      } else {
+        checkBuildPageOptions(template, options);
+        await buildPage(templateAbs, data, options, components);
+      }
     },
     {
       watchFile: (path: string) =>
@@ -533,30 +536,8 @@ export async function watch(listeners: Array<WebSocket>) {
           console.log("");
           log.info(`${getRel(path)} changed.`);
 
-          // buildPage calls that use the changed template
-          const calls = projectMap.reduce(
-            (acc, curr) => [
-              ...acc,
-              ...curr.buildPageCalls.filter((c) => c.template.path === path),
-            ],
-            [] as IBuildPageCall[],
-          );
-
-          const rebuilds = [];
-          for (const call of calls) {
-            rebuilds.push(
-              buildPage(
-                call.template.path,
-                call.data,
-                call.options,
-                components,
-              ),
-            );
-          }
-          Promise.all(rebuilds).then(() => {
-            notifyListeners();
-            log.success("Done.");
-          });
+          // just notify the listeners for them to reload the page
+          notifyListeners();
         } else if (isFileInDir(path, COMPONENTS_DIR_ABS)) {
           console.log("");
           log.info(`${getRel(path)} changed.`);
@@ -668,6 +649,7 @@ export async function serve(listeners: Array<WebSocket>) {
   const app = new Application();
 
   app.use(async (context: Context) => {
+    // handling WS connection / upgrade
     if (context.request.url.pathname === "/__ws" && context.isUpgradable) {
       const sock = await context.upgrade();
       const index = listeners.findIndex(
@@ -681,7 +663,33 @@ export async function serve(listeners: Array<WebSocket>) {
       } else {
         listeners[index] = sock;
       }
-    } else {
+    } // handling files requests
+    else {
+      const jitBuilds = [];
+
+      for (const creator of projectMap) {
+        for (const call of creator.buildPageCalls) {
+          const reqPathnameAbs = normalize(
+            `${Deno.cwd()}/${DIST_DIR_BASE}/${context.request.url.pathname}`,
+          );
+
+          // JIT build of requested dist templates
+          if (
+            getOutputPagePath(call.options) === reqPathnameAbs ||
+            getOutputPagePath(call.options) === `${reqPathnameAbs}index.html`
+          ) {
+            jitBuilds.push(buildPage(
+              call.template.path,
+              call.data,
+              call.options,
+              components,
+            ));
+          }
+        }
+      }
+
+      // wait for builds to finish
+      await Promise.all(jitBuilds);
       await send(context, context.request.url.pathname, {
         root: `${Deno.cwd()}/${DIST_DIR_BASE}`,
         index: "index.html",
