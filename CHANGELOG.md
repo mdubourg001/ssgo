@@ -2,6 +2,11 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.0 (2021-01-17)
+
+- 54a60036 fix: allowing recursive components calls
+- 632b310e feat(dev): stop building the entire project in dev mode but just the requested ressources
+
 ## v0.17.0 (2020-12-13)
 
 - c4a7a9e1 chore: bumped to std@0.80.0 (deno v1.6.0)
