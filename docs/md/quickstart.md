@@ -50,7 +50,7 @@ ssgo dev
 
 Here's a little schema to help you figure out about how `ssgo` works:
 
-![How ssgo works schema](/static/images/schema.png)
+<img alt="How ssgo works schema" src="/static/images/schema.png" loading="lazy" />
 
 ## What now ?
 

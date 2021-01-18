@@ -3,7 +3,7 @@ title: Templating utilities
 description: If you are already familiar with templating engines like Jinja or Twig, you might want to use some utility functions from within your templates. Here's how to do it.
 path: templating-utilities
 weight: 2
-category: Guides
+category: Recipes
 ---
 
 # Plug some templating utilities

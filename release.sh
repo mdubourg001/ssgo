@@ -26,6 +26,6 @@ git commit --amend --no-edit
 git push --force
 git push origin "v$new_version"
 
-eggs publish --version $new_version
+eggs publish --version $new_version --no-check
 
 echo "Succesfully released $new_version to nest.land and deno.land."

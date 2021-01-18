@@ -2,6 +2,11 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.3 (2021-01-18)
+
+- e713e8b feat: giving context.mode to ssgoBag
+- 1c2e9de fix: prevent full site rebuild in dev mode when a component changes
+
 ## v0.18.2 (2021-01-18)
 
 - 2306641 fix: prevent full site rebuild in dev mode when a component changes
@@ -49,3 +54,4 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
+
