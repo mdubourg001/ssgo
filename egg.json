@@ -3,7 +3,7 @@
   "description": "The minimalistic but flexible static site generator",
   "repository": "https://github.com/mdubourg001/ssgo",
   "stable": true,
-  "entry": "ssgo.ts",
+  "entry": "./ssgo.ts",
   "files": [
     "./assets/**/*",
     "./src/**/*",
@@ -16,7 +16,10 @@
     "ssgo.ts",
     "ssgo.ts"
   ],
-  "version": "0.16.1",
+  "version": "0.18.2",
   "checkAll": false,
-  "unlisted": false
+  "unlisted": false,
+  "check": false,
+  "homepage": "https://github.com/mdubourg001/ssgo",
+  "ignore": []
 }

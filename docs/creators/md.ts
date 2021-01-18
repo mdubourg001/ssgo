@@ -4,8 +4,6 @@ import parseMarkdown from "https://cdn.skypack.dev/parse-md"
 import _ from "https://cdn.skypack.dev/lodash"
 import { walkSync } from "https://deno.land/std@0.80.0/fs/mod.ts"
 
-import { IS_DEV_MODE } from "../src/constants.ts"
-
 // memoizing some work to prevent reading / parsing the same file twice
 const readFile = _.memoize(Deno.readTextFileSync)
 const parseMD = _.memoize(parseMarkdown)
@@ -16,7 +14,7 @@ const sortCategories = (a: string, b: string): number => {
     Templates: 1,
     Creators: 2,
     Components: 3,
-    Guides: 4,
+    Recipes: 4,
   }
   if (a in ordering && b in ordering) {
     return ordering[a] - ordering[b]
@@ -85,7 +83,6 @@ export default async (
             isDocs: true,
             pageUrl: metadata.path,
             sortCategories,
-            isDevMode: IS_DEV_MODE,
           },
           { filename: metadata.path, dir: "docs" }
         )
@@ -109,7 +106,6 @@ export default async (
       isDocs: false,
       pageUrl: "changelog",
       sortCategories,
-      isDevMode: IS_DEV_MODE,
     },
     { filename: "changelog", dir: "docs" }
   )
