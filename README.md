@@ -86,11 +86,14 @@ The `dist/` directory will be served over `http://localhost:5580`.
 // creators/my-creator.ts
 
 import type { BuildPage } from "https://deno.land/x/ssgo/mod.ts"
+import { fetchTitle } from "../src/api.ts"
 
-export default function (buildPage: BuildPage) {
+export default async function (buildPage: BuildPage) {
+  const title = await fetchTitle()
+
   buildPage(
     "my-template.html",
-    { title: "Hello, ssgo !" },
+    { title: title },
     {
       filename: "index.html",
       dir: "",
@@ -99,7 +102,7 @@ export default function (buildPage: BuildPage) {
 }
 ```
 
-`ssgo` also provides much more cool stuffs like components and static files management. You can learn more about all this things by [reading the documentation](https://ssgo.netlify.app/docs).
+`ssgo` also provides much more cool stuffs like components, automatic static files management, or just-in-time page build in dev mode. You can learn more about all this things by [reading the documentation](https://ssgo.netlify.app/docs).
 
 ## Roadmap
 
