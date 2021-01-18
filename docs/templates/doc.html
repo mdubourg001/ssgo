@@ -8,21 +8,21 @@
     ></seo>
 
     <link
-      href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css"
+      if="isDevMode"
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
       rel="stylesheet"
     />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
+    <link if="!isDevMode" href="tailwind.css" rel="stylesheet" />
     <link rel="stylesheet" href="github-markdown.css" />
     <link rel="stylesheet" href="hljs/github.css" />
     <link rel="stylesheet" href="index.css" />
 
-    <script
-      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.7.0/dist/alpine.min.js"
-      defer
-    ></script>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
     <script
       src="//instant.page/5.0.1"
       type="module"

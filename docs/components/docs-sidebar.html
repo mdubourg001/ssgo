@@ -1,21 +1,5 @@
-<sidebar
-  eval:x-data="ssgo.assrc({
-    focus: false,
-    value: '',
-    entries: entries,
-    showEntry: (title, value) => 
-      !value || title.toLowerCase().includes(value.trim()),
-    showCategory: (category, entr, showEntry, value) => 
-      entr[category].some(e => showEntry(e.title, value)),
-    showClear: (entr, showCategory, showEntry, value) => 
-      !Object.keys(entr).some(c => showCategory(c, entr, showEntry, value))
-  })"
-  class="flex flex-col w-full px-6 pt-6 border-r md:pt-12 md:pb-6"
->
+<sidebar class="flex flex-col w-full px-6 pt-6 border-r md:pt-12 md:pb-6">
   <input
-    x-model="value"
-    @focus="focus = true"
-    @blur="focus = false"
     class="hidden transition-shadow duration-200 ease-in-out mb-6 border border-gray-500 rounded px-3 py-2 focus:shadow-lg focus:outline-none"
     type="text"
     placeholder="Search..."
@@ -25,7 +9,6 @@
     for="category"
     of="Object.keys(entries).sort(sortCategories)"
     class="flex flex-col mb-4"
-    eval:x-show="`!focus || showCategory('${category}', entries, showEntry, value)`"
   >
     <strong if="category !== 'None'" class="mb-1 text-sm text-gray-500"
       >{{ category }}</strong
@@ -37,21 +20,11 @@
       eval:href="`/docs/${entry.path}`"
       eval:class="({ 
         'pb-1 mb-2 border-b border-transparent': true, 
-        'text-orange-500 font-bold border-b border-orange-200': currentDoc === entry.title ,
+        'text-yellow-500 font-bold border-b border-yellow-400': currentDoc === entry.title ,
         'hover:underline': currentDoc !== entry.title
       })"
-      eval:x-show="`!focus || showEntry('${entry.title}', value)`"
     >
       {{ entry.title }}
     </a>
-  </div>
-
-  <div
-    x-show="focus && showClear(entries, showCategory, showEntry, value)"
-    class="invisible flex items-center justify-center p-4"
-  >
-    <i class="text-gray-600 text-sm"
-      >No results for '<span x-text="value"></span>'</i
-    >
   </div>
 </sidebar>

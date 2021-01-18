@@ -103,6 +103,7 @@ export default function (buildPage: BuildPage) {
 
 ## Roadmap
 
+- [ ] Provide CLI args and isDevMode in a `context` object in `ssgoBag`
 - [ ] Use CWD's `.tsconfig.json` for typescript compilation if exists
 - [ ] Add a support for a config file (.ssgorc, ssgo.config.js)
 - [ ] Provide a way to opt out of static ressources resolution on a per-file basis

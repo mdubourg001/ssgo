@@ -8,14 +8,18 @@
     ></seo>
 
     <link
-      href="https://unpkg.com/tailwindcss@1.4.6/dist/tailwind.min.css"
+      if="isDevMode"
+      href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css"
       rel="stylesheet"
     />
+    <link if="!isDevMode" href="tailwind.css" rel="stylesheet" />
+    <link rel="stylesheet" href="index.css" />
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="index.css" />
 
     <script
       src="//instant.page/5.0.1"
@@ -38,7 +42,7 @@
       <div class="my-6 rounded bg-gray-200 border border-gray-400 p-4">
         <div class="flex items-center mb-6">
           <div class="rounded-full h-3 w-3 bg-red-500 mr-2"></div>
-          <div class="rounded-full h-3 w-3 bg-orange-500 mr-2"></div>
+          <div class="rounded-full h-3 w-3 bg-yellow-500 mr-2"></div>
           <div class="rounded-full h-3 w-3 bg-green-500 mr-2"></div>
         </div>
 
@@ -58,7 +62,7 @@
 
       <a
         href="/docs/quickstart.html"
-        class="--scale-on-click transition-all duration-200 ease-in-out px-8 py-3 mt-4 font-bold text-white bg-orange-600 shadow hover:shadow-xl"
+        class="--scale-on-click transition-all duration-200 ease-in-out px-8 py-3 mt-4 font-bold text-white bg-yellow-600 shadow hover:shadow-xl"
       >
         Quickstart</a
       >
