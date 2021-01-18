@@ -34,7 +34,7 @@ Then you could conditionally display elements of your templates as follows:
 Your built page would look like that:
 
 ```html
-<p if="foo === 'bar'">eeny</p>
+<p>eeny</p>
 
-<p if="howmuch === 42">meeny</p>
+<p>meeny</p>
 ```
