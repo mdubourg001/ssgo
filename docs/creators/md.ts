@@ -30,6 +30,7 @@ export default async (
   watchDir("./src")
 
   // adding an image needed by a markdown file to the dist/ dir
+  addStaticToBundle("static/images/schema.webp", "images", false, false)
   addStaticToBundle("static/images/schema.png", "images", false, false)
 
   const parser = markdownit("commonmark", {})

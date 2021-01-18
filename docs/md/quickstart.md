@@ -50,7 +50,11 @@ ssgo dev
 
 Here's a little schema to help you figure out about how `ssgo` works:
 
-<img alt="How ssgo works schema" src="/static/images/schema.png" loading="lazy" />
+<picture>
+  <source srcset="/static/images/schema.webp" type="image/webp">
+  <source srcset="/static/images/schema.png" type="image/png">
+  <img src="/static/images/schema.png" alt="How ssgo works schema" loading="lazy">
+</picture>
 
 ## What now ?
 
