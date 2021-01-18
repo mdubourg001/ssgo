@@ -2,6 +2,15 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.2 (2021-01-18)
+
+- 2306641 fix: prevent full site rebuild in dev mode when a component changes
+- 198f093 feat: improved text interpolation regex and removed need of braces around evaluated objects
+
+## v0.18.1 (2021-01-18)
+
+
+
 ## v0.18.1 (2021-01-17)
 
 - 33531a2 feat: improved text interpolation regex and removed need of braces around evaluated objects
@@ -45,3 +54,4 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
+
