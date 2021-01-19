@@ -419,15 +419,14 @@ export async function runCreator(creator: WalkEntry) {
     ) {
       const templateAbs = normalize(`${TEMPLATES_DIR_ABS}/${template}`)
 
-      if (isDevelopmentEnv()) {
-        // caching the call to buildPage but not building
-        // as pages are built on demand in dev mode
-        cacheBuildPageCall(creator.path, {
-          template: template,
-          data,
-          options,
-        })
-      } else {
+      cacheBuildPageCall(creator.path, {
+        template: template,
+        data,
+        options,
+      })
+
+      // not building pages directly in dev mode are pages are built on demand
+      if (!isDevelopmentEnv()) {
         checkBuildPageOptions(template, options)
         await buildPage(templateAbs, data, options, components)
       }
@@ -708,6 +707,8 @@ export function sitemap(host: string) {
   if (typeof host === "undefined") return
 
   log.info("Generating sitemap.xml...")
+
+  console.log(projectMap)
 
   const now = new Date().toISOString()
   let urlEntries: string = projectMap.reduce(
