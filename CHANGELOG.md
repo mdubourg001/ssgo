@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.4 (2021-01-19)
+
+- 62fa121 fix: fixed sitemap.xml generation by caching build in prod mode
+
 ## v0.18.3 (2021-01-18)
 
 - e713e8b feat: giving context.mode to ssgoBag
