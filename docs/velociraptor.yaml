@@ -2,7 +2,7 @@ scripts:
   build-tailwind:
     cmd: npx tailwindcss-cli@latest build -c ./tailwind.config.js -o ./static/tailwind.css
   build:
-    cmd: vr build-tailwind && ssgo
+    cmd: vr build-tailwind && ssgo --sitemap=https://ssgo.netlify.app
     env:
       NODE_ENV: production # by default, Tailwind purge is enabled only when NODE_ENV == 'production'
   develop:

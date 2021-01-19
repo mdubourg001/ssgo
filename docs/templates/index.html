@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <seo
-      title="'ssgo - The minimalistic but flexible static site generator.'"
+      title="'ssgo | the minimalistic but flexible static site generator.'"
       description="'ssgo is a static site generator built with Deno. It aims to be simple to start with and flexible, and it supports TypeScript out of the box.'"
       pageUrl="'/'"
     ></seo>
@@ -21,46 +21,149 @@
       type="module"
       integrity="sha384-0DvoZ9kNcB36fWcQApIMIGQoTzoBDYTQ85e8nmsfFOGz4RHAdUhADqJt4k3K2uLS"
     ></script>
+    <script src="index.js"></script>
   </head>
   <body>
     <docs-header isDocs="false" pageUrl="''"></docs-header>
 
-    <article
-      class="container flex flex-col items-center px-4 py-12 mx-auto"
-      style="min-height: 100vh"
-    >
-      <img class="h-20 mb-16" src="images/logo.png" alt="SSGO Logo" />
-      <h1 class="font-bold mb-10 text-4xl text-center">
-        The minimalistic but flexible static site generator.
-      </h1>
+    <article class="flex flex-col items-center pt-12" style="min-height: 95vh">
+      <section class="w-full relative mb-20 lg:pt-10">
+        <div
+          id="top-diagonal"
+          class="transition-transform duration-1000 absolute h-full bg-gradient-to-t from-yellow-400 to-yellow-600 shadow-inner"
+        ></div>
 
-      <div class="my-6 rounded bg-gray-200 border border-gray-400 p-4">
-        <div class="flex items-center mb-6">
-          <div class="rounded-full h-3 w-3 bg-red-500 mr-2"></div>
-          <div class="rounded-full h-3 w-3 bg-yellow-500 mr-2"></div>
-          <div class="rounded-full h-3 w-3 bg-green-500 mr-2"></div>
+        <div
+          class="container mx-auto flex flex-col md:flex-row items-center space-x-8 z-10 px-4"
+        >
+          <div class="w-full sm:w-2/3 md:w-1/2 flex flex-col">
+            <!-- <div class="h-20 mb-8">
+              <img class="h-full" src="images/logo.png" alt="SSGO Logo" />
+            </div> -->
+            <h1
+              class="text-center md:text-left font-bold mb-10 text-5xl text-left"
+              style="line-height: 3.5rem"
+            >
+              the minimalistic but flexible static site generator
+            </h1>
+
+            <p
+              class="text-center md:text-left text-gray-800 md:text-gray-700 text-lg"
+            >
+              ssgo generates static websites in a breeze.<br />
+              it's built on top of Deno and uses HTML templates and data to
+              create ready-to-serve pages, it's as simple as that.
+            </p>
+          </div>
+
+          <div class="w-full sm:w-4/5 md:w-1/2 flex flex-col text-left">
+            <div
+              class="my-6 bg-gradient-to-br from-white to-gray-100 shadow-lg p-4"
+            >
+              <div class="flex items-center mb-6">
+                <div class="rounded-full h-3 w-3 bg-red-500 mr-2"></div>
+                <div class="rounded-full h-3 w-3 bg-yellow-500 mr-2"></div>
+                <div class="rounded-full h-3 w-3 bg-green-500 mr-2"></div>
+              </div>
+
+              <code>
+                <p>mkdir my-ssgo-project && cd my-ssgo-project</p>
+                <br />
+                <p>ssgo init</p>
+                <br />
+                <p>ls</p>
+                <p class="text-gray-500">
+                  creators/ templates/ components/ static/
+                </p>
+                <br />
+                <p>
+                  ssgo dev <span class="text-gray-500">&nbsp;#</span>&nbsp;🚀
+                </p>
+              </code>
+            </div>
+
+            <a
+              href="/docs/quickstart.html"
+              class="--scale-on-click transition-all duration-200 w-fit ease-in-out px-8 py-3 mt-4 font-bold text-black bg-yellow-500 shadow hover:shadow-xl"
+            >
+              Quickstart</a
+            >
+          </div>
         </div>
+      </section>
 
-        <code>
-          <p>mkdir my-ssgo-project && cd my-ssgo-project</p>
-          <br />
-          <p>ssgo init</p>
-          <br />
-          <p>ls</p>
-          <p class="text-gray-500">
-            .gitignore creators/ templates/ components/ static/
-          </p>
-          <br />
-          <p>ssgo dev <span class="text-gray-500">&nbsp;#</span>&nbsp;🚀</p>
-        </code>
+      <section
+        class="relative w-full bg-gradient-to-b from-white to-gray-200 py-12 pb-24 md:py-16 md:pb-32 lg:py-24 lg:pb-32"
+      >
+        <hr
+          class="absolute left-0 top-0 w-full border-t border-dashed border-gray-200"
+        />
+        <div
+          class="container mx-auto flex flex-col space-x-8 items-center px-4 md:flex-row md:justify-between"
+        >
+          <div class="hidden md:flex flex-col items-center md:w-1/2 lg:w-2/5">
+            <div
+              class="w-fit bg-black text-white flex flex-col rounded p-10 mb-4"
+            >
+              <code class="text-sm lg:text-lg"
+                >deno install --unstable -A
+                https://deno.land/x/ssgo/ssgo.ts</code
+              >
+            </div>
+
+            <p if="typeof currentVersion !== 'undefined'" class="text-center">
+              current version:&nbsp;
+              <span class="text-yellow-600 font-bold"
+                >v{{ currentVersion }}</span
+              >
+            </p>
+          </div>
+
+          <div class="md:w-1/2 lg:w-2/5 px-4 md:px-0">
+            <h2 class="font-bold mb-10 text-3xl">features at a glance</h2>
+            <ul class="text-gray-800 list-inside list-disc leading-8">
+              <li>flexible page build engine</li>
+              <li>out-of-the-box TypeScript support</li>
+              <li>built-in components system</li>
+              <li>automatic static resources handling</li>
+              <li>just-in-time page build during development</li>
+              <li>hot-reload development server</li>
+              <li>
+                <a class="font-bold text-yellow-600 underline" href="/docs"
+                  >and much more...</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- <div class="w-full text-white relative mb-20 pt-10 text-center">
+        <div
+          class="transform -rotate-3 absolute top-0 h-full bg-gradient-to-br from-yellow-500 to-yellow-700 shadow-inner"
+          style="left: -50%; width: 150vw; z-index: -1"
+        ></div>
+
+        <div class="z-10">
+          <h2 class="font-bold mb-10 text-2xl mb-64">Features</h2>
+        </div>
       </div>
 
-      <a
-        href="/docs/quickstart.html"
-        class="--scale-on-click transition-all duration-200 ease-in-out px-8 py-3 mt-4 font-bold text-white bg-yellow-600 shadow hover:shadow-xl"
-      >
-        Quickstart</a
-      >
+      <h2 class="font-bold mb-10 text-2xl border-b">CodeSandbox example</h2> -->
+      <!-- <iframe
+        class="border-r border-black"
+        src="https://codesandbox.io/embed/ssgo-0ee26?fontsize=14&hidenavigation=1&module=%2Fcreators%2Findex.ts&theme=dark"
+        style="
+          width: 100%;
+          max-width: 1000px;
+          height: 500px;
+          border-radius: 4px;
+          overflow: hidden;
+        "
+        title="ssgo"
+        allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
+        sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"
+      ></iframe> -->
     </article>
 
     <docs-footer></docs-footer>

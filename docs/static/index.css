@@ -1,3 +1,8 @@
+html,
+body {
+  overflow-x: hidden;
+}
+
 body {
   font-family: "Inter", sans-serif;
 }
@@ -9,4 +14,30 @@ a:focus {
 a.--scale-on-click:active,
 button.--scale-on-click:active {
   transform: scale(0.97, 0.97);
+}
+
+.container {
+  max-width: 1000px;
+}
+
+.w-fit {
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+/* ------ index.html style ------ */
+
+#top-diagonal {
+  left: -50vw;
+  width: 200vw;
+  z-index: -1;
+  transform: rotate(-12deg);
+
+  top: calc(-40%);
+}
+
+@media screen and (min-width: 1280px) {
+  #top-diagonal {
+    top: calc(100vw / -6);
+  }
 }
