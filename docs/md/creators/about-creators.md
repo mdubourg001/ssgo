@@ -56,5 +56,5 @@ This bag of utilities aims to be filled with more content in the future. **If yo
 
 ## Tips
 
-- Paths given `watchDir`, `watchFile` and `addStaticToBundle` are automatically resolved for the current working directory.
+- Paths given to `watchDir`, `watchFile` and `addStaticToBundle` are automatically resolved for the current working directory.
 - When running `ssgo` using the `--cwd` option, calling Deno standard library functions (like `fs/walk` for example) might not resolve the paths correctly: you might want to prepend your paths with the `context.projectRoot` value given by `ssgoBag` (second argument given to your creators functions).
