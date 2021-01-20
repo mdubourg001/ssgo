@@ -58,3 +58,7 @@ Upgrades to the latest ssgo version.
 ## `ssgo help`
 
 Shows some help about ssgo commands.
+
+## Global options
+
+- **`--cwd`**: Set the current working directory to the given path.

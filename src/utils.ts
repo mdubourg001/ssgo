@@ -35,6 +35,7 @@ import {
   COMPONENTS_DIR_ABS,
   CREATORS_DIR_ABS,
   CREATORS_DIR_BASE,
+  CWD,
   DEV_FLAG,
   DIST_DIR_ABS,
   DIST_STATIC_BASE,
@@ -214,7 +215,7 @@ export function getUnprefixedAttributeName(attribute: IHTMLAttr) {
  */
 export function getOutputPagePath(options: IBuildPageOptions): string {
   return resolve(
-    Deno.cwd(),
+    CWD,
     DIST_DIR_ABS,
     options.dir ?? "",
     options.filename.endsWith(".html")
@@ -266,10 +267,17 @@ export function isFileInDir(fileAbs: string, dirAbs: string): boolean {
 }
 
 /**
+ * Check if a given path is absolute
+ */
+export function isPathAbsolute(path: string) {
+  return /^(?:\/|[a-z]+:\/\/)/.test(path);
+}
+
+/**
  * Get path relative to cwd
  */
 export function getRel(abs: string): string {
-  return relative(Deno.cwd(), abs);
+  return relative(CWD, abs);
 }
 
 /**
@@ -307,7 +315,7 @@ export async function importModule(moduleAbs: string) {
  */
 export function cleanTempFiles() {
   const tempFiles: WalkEntry[] = Array.from(
-    walkSync(Deno.cwd()),
+    walkSync(CWD),
   ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX));
 
   for (const file of tempFiles) {
@@ -513,6 +521,17 @@ export function checkIsValidOnlyCreatorsString(str: string, throwErr = true) {
   return true;
 }
 
+export function checkIsValidCWD(str: string, throwErr = true) {
+  if (!existsSync(CWD)) {
+    const error =
+      `Invalid current working directory provided: ${CWD} does not exists.`;
+    log.error(error, throwErr);
+    return false;
+  }
+
+  return true;
+}
+
 /**
  * Check if provided CLI flags are valid
  */
@@ -526,6 +545,7 @@ export function checkAreValidCLIOptions(options: Record<string, any>) {
       !IS_DEV_MODE || checkIsValidHostnameOrIP(value, false),
     [ONLY_CREATORS_OPTION]: (value: string) =>
       checkIsValidOnlyCreatorsString(value, false),
+    [CWD]: (value: string) => checkIsValidCWD(value, false),
   };
 
   for (let key of Object.keys(options)) {

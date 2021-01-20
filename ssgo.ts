@@ -3,6 +3,7 @@ import type { WebSocket } from "https://deno.land/std@0.80.0/ws/mod.ts";
 import { build, init, serve, sitemap, upgrade, watch } from "./src/index.ts";
 import {
   BUILD_FLAG,
+  CWD_OPTION,
   DEV_FLAG,
   DIST_DIR_BASE,
   HELP_FLAG,
@@ -20,8 +21,13 @@ log.info(`ssgo ${getVersion()}`);
 
 const FLAGS = checkAreValidCLIOptions(parse(Deno.args));
 
+if (FLAGS[CWD_OPTION]) {
+  log.info(`Setting the current working directory to ${FLAGS[CWD_OPTION]}`);
+}
+
 switch (true) {
   // display version only
+
   case FLAGS["_"].includes(VERSION_FLAG):
     break;
 
@@ -38,9 +44,13 @@ switch (true) {
        - build (default): build project to ${DIST_DIR_BASE}
             options:
             --sitemap [host]: generate a sitemap of the built pages for the given host
+            --only-creators [creators]: narrow the creators to run to the comma-separated list provided
 
        - init: initialize project directories (does NOT override if these already exist)
        - help: display help menu
+
+       global options:
+       --cwd [path]: set the current working directory to the given path
     `,
     );
     break;
@@ -55,7 +65,7 @@ switch (true) {
 
   case FLAGS["_"].includes(DEV_FLAG):
     build().then(() => {
-      log.success(`Project built in ${getSecondsFrom(t0)} seconds.`);
+      log.success(`Project started in ${getSecondsFrom(t0)} seconds.`);
 
       const listeners: Array<WebSocket> = [];
 

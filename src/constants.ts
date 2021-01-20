@@ -1,6 +1,8 @@
 import { parse } from "https://deno.land/std@0.80.0/flags/mod.ts";
 import { normalize } from "https://deno.land/std@0.80.0/path/mod.ts";
 
+import { isPathAbsolute } from "./utils.ts";
+
 // ----- cli ----- //
 
 export const DEV_FLAG = "dev";
@@ -15,6 +17,7 @@ export const SITEMAP_OPTION = "sitemap";
 export const PORT_OPTION = "port";
 export const HOST_OPTION = "host";
 export const ONLY_CREATORS_OPTION = "only-creators";
+export const CWD_OPTION = "cwd";
 
 // ----- config ----- //
 
@@ -45,25 +48,31 @@ export const STATIC_DIR_BASE = "static";
 export const DIST_DIR_BASE = "dist";
 export const DIST_STATIC_BASE = "static";
 
-export let CREATORS_DIR_ABS = normalize(`${Deno.cwd()}/${CREATORS_DIR_BASE}/`);
+export const CWD = FLAGS[CWD_OPTION]
+  ? isPathAbsolute(FLAGS[CWD_OPTION])
+    ? FLAGS[CWD_OPTION]
+    : normalize(`${Deno.cwd()}/${FLAGS[CWD_OPTION]}/`)
+  : Deno.cwd();
+
+export let CREATORS_DIR_ABS = normalize(`${CWD}/${CREATORS_DIR_BASE}/`);
 export let TEMPLATES_DIR_ABS = normalize(
-  `${Deno.cwd()}/${TEMPLATES_DIR_BASE}/`,
+  `${CWD}/${TEMPLATES_DIR_BASE}/`,
 );
-export let STATIC_DIR_ABS = normalize(`${Deno.cwd()}/${STATIC_DIR_BASE}/`);
+export let STATIC_DIR_ABS = normalize(`${CWD}/${STATIC_DIR_BASE}/`);
 export let COMPONENTS_DIR_ABS = normalize(
-  `${Deno.cwd()}/${COMPONENTS_DIR_BASE}/`,
+  `${CWD}/${COMPONENTS_DIR_BASE}/`,
 );
-export let DIST_DIR_ABS = normalize(`${Deno.cwd()}/${DIST_DIR_BASE}/`);
+export let DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`);
 export let DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
 
 export function setSsgoDir(path: string) {
   Deno.chdir(path);
 
-  CREATORS_DIR_ABS = normalize(`${Deno.cwd()}/${CREATORS_DIR_BASE}/`);
-  TEMPLATES_DIR_ABS = normalize(`${Deno.cwd()}/${TEMPLATES_DIR_BASE}/`);
-  STATIC_DIR_ABS = normalize(`${Deno.cwd()}/${STATIC_DIR_BASE}/`);
-  COMPONENTS_DIR_ABS = normalize(`${Deno.cwd()}/${COMPONENTS_DIR_BASE}/`);
-  DIST_DIR_ABS = normalize(`${Deno.cwd()}/${DIST_DIR_BASE}/`);
+  CREATORS_DIR_ABS = normalize(`${CWD}/${CREATORS_DIR_BASE}/`);
+  TEMPLATES_DIR_ABS = normalize(`${CWD}/${TEMPLATES_DIR_BASE}/`);
+  STATIC_DIR_ABS = normalize(`${CWD}/${STATIC_DIR_BASE}/`);
+  COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`);
+  DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`);
   DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
 }
 
