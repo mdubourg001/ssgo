@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.18.5 (2021-01-21)
+
+- e63a5db feat: added the --cwd option and added projectRoot to ssgoBag's context
+
 ## v0.18.4 (2021-01-19)
 
 - 62fa121 fix: fixed sitemap.xml generation by caching build in prod mode
