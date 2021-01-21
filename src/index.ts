@@ -349,13 +349,16 @@ export function serialize(node: INode) {
  * Build a given template with given data and write the file to fs
  * Function given to creators as first param
  */
-async function buildPage(
+export async function buildPage(
   templateAbs: string,
   data: IContextData,
   options: IBuildPageOptions,
   availableComponents: ICustomComponent[],
+  writeToFS = true,
 ) {
-  log.info(`Building ${getRel(getOutputPagePath(options))}...`);
+  if (writeToFS) {
+    log.info(`Building ${getRel(getOutputPagePath(options))}...`);
+  }
 
   const read = Deno.readTextFileSync(templateAbs);
   const parsed = parse(read).filter((n: INode) =>
@@ -392,8 +395,12 @@ async function buildPage(
     serialized = injectServeWebsocketScript(serialized);
   }
 
-  ensureDirSync(dirname(outputPageAbs));
-  Deno.writeTextFileSync(outputPageAbs, serialized);
+  if (writeToFS) {
+    ensureDirSync(dirname(outputPageAbs));
+    Deno.writeTextFileSync(outputPageAbs, serialized);
+  }
+
+  return serialized;
 }
 
 export async function runCreator(creator: WalkEntry) {
