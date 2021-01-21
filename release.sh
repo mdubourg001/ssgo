@@ -20,12 +20,12 @@ $(git log --pretty=oneline --abbrev-commit v$previous_version..v$new_version| gr
 $(tail -n +4 CHANGELOG.md)
 " > CHANGELOG.md
 
-git add CHANGELOG.md
+eggs publish --version $new_version --no-check
+
+git add CHANGELOG.md egg.json
 git commit -m "release: v$new_version"
 
 git push --force
 git push origin "v$new_version"
-
-eggs publish --version $new_version --no-check
 
 echo "Succesfully released $new_version to nest.land and deno.land."
