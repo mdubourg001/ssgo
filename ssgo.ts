@@ -1,6 +1,14 @@
 import { parse } from "https://deno.land/std@0.80.0/flags/mod.ts"
 import type { WebSocket } from "https://deno.land/std@0.80.0/ws/mod.ts"
-import { build, init, serve, sitemap, upgrade, watch } from "./src/index.ts"
+import {
+  build,
+  init,
+  serve,
+  sitemap,
+  upgrade,
+  watch,
+  compress,
+} from "./src/index.ts"
 import {
   BUILD_FLAG,
   CLEAN_OPTION,
@@ -89,6 +97,7 @@ switch (true) {
   case FLAGS["_"].includes(BUILD_FLAG) || FLAGS["_"].length === 0:
     build(clean).then(() => {
       sitemap(FLAGS[SITEMAP_OPTION])
+      compress()
 
       log.success(`Project built in ${getSecondsFrom(t0)} seconds.`)
     })

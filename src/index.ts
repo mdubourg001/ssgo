@@ -4,6 +4,10 @@ import {
   Context,
   send,
 } from "https://deno.land/x/oak@v6.3.2/mod.ts"
+import {
+  compress as brotliCompress,
+  decompress,
+} from "https://deno.land/x/brotli@v0.1.4/mod.ts"
 
 import type { WebSocket } from "https://deno.land/std@0.80.0/ws/mod.ts"
 import {
@@ -710,7 +714,7 @@ export async function init() {
 /**
  * Create the sitemap.xml file
  */
-export function sitemap(host: string) {
+export function sitemap(host?: string) {
   if (typeof host === "undefined") return
 
   log.info("Generating sitemap.xml...")
@@ -782,5 +786,23 @@ export async function upgrade() {
     log.error(
       "Something went wrong while fetching latest version. Aborting upgrade."
     )
+  }
+}
+
+export async function compress() {
+  log.info("Compressing built pages and assets...")
+
+  const distFiles = Array.from(walkSync(DIST_DIR_ABS)).filter(
+    (file: WalkEntry) => file.isFile && file.name.endsWith("css")
+  )
+
+  for (const file of distFiles) {
+    const content = Deno.readTextFileSync(file.path)
+    const encoded = new TextEncoder().encode(content)
+    const compressed = brotliCompress(encoded)
+
+    if (compressed) {
+      Deno.writeFileSync(file.path, compressed)
+    }
   }
 }

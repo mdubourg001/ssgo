@@ -24,7 +24,7 @@ To install `ssgo` using Deno:
 deno install --unstable --allow-read --allow-write --allow-net --allow-run -q https://deno.land/x/ssgo/ssgo.ts
 ```
 
-**To create a `ssgo` project starter** just run:
+**To create a `ssgo` project** just run:
 
 ```bash
 mkdir my-ssgo-project && cd my-ssgo-project
@@ -46,7 +46,7 @@ Here's what a `ssgo` project looks like:
 ssgo
 ```
 
-Your site will be built inside of the `dist/` directory.s
+Your site will be built inside of the `dist/` directory.
 
 **To start development mode** with file watching, and a hot reloaded dev server:
 
