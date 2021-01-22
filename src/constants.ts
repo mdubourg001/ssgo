@@ -26,10 +26,6 @@ const FLAGS = parse(Deno.args);
 
 export let VERBOSITY = 1;
 
-export const IS_DEV_MODE = FLAGS["_"].includes(DEV_FLAG);
-export const IS_PROD_MODE = FLAGS["_"].includes(BUILD_FLAG) ||
-  FLAGS["_"].length === 0;
-
 export const TEMP_FILES_PREFIX = "__ssgo";
 
 export const WATCHER_THROTTLE = 300;
@@ -62,16 +58,16 @@ export let COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`);
 export let DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`);
 export let DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
 
-export function setSsgoDir(path: string) {
-  Deno.chdir(path);
+// export function setSsgoDir(path: string) {
+//   Deno.chdir(path);
 
-  CREATORS_DIR_ABS = normalize(`${CWD}/${CREATORS_DIR_BASE}/`);
-  TEMPLATES_DIR_ABS = normalize(`${CWD}/${TEMPLATES_DIR_BASE}/`);
-  STATIC_DIR_ABS = normalize(`${CWD}/${STATIC_DIR_BASE}/`);
-  COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`);
-  DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`);
-  DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
-}
+//   CREATORS_DIR_ABS = normalize(`${CWD}/${CREATORS_DIR_BASE}/`);
+//   TEMPLATES_DIR_ABS = normalize(`${CWD}/${TEMPLATES_DIR_BASE}/`);
+//   STATIC_DIR_ABS = normalize(`${CWD}/${STATIC_DIR_BASE}/`);
+//   COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`);
+//   DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`);
+//   DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
+// }
 
 export function setVerbosity(verbosity: number) {
   VERBOSITY = verbosity;

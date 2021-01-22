@@ -106,8 +106,6 @@ export default async function (buildPage: BuildPage) {
 
 ## Roadmap
 
-- [ ] Provide --compress option (brotli or choice between brotli and gzip ?)
-- [ ] Provide --format option to format built pages using prettier
 - [ ] Pass undefined if variable doesn't exist when passing props
 - [ ] Use CWD's `.tsconfig.json` for typescript compilation if exists
 - [ ] Add a support for a config file (.ssgorc, ssgo.config.js)

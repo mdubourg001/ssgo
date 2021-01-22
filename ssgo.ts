@@ -1,20 +1,12 @@
 import { parse } from "https://deno.land/std@0.80.0/flags/mod.ts";
 import type { WebSocket } from "https://deno.land/std@0.80.0/ws/mod.ts";
-import {
-  build,
-  compress,
-  init,
-  serve,
-  sitemap,
-  upgrade,
-  watch,
-} from "./src/index.ts";
+
+import { build, init, serve, sitemap, upgrade, watch } from "./src/index.ts";
 import {
   BUILD_FLAG,
   CLEAN_OPTION,
   CWD_OPTION,
   DEV_FLAG,
-  DIST_DIR_BASE,
   HELP_FLAG,
   HELP_TEXT,
   INIT_FLAG,

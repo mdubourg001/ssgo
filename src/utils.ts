@@ -31,17 +31,17 @@ import type {
   IStaticFile,
 } from "./types.ts";
 import {
+  BUILD_FLAG,
   BUILDABLE_STATIC_EXT,
   COMPONENTS_DIR_ABS,
   CREATORS_DIR_ABS,
   CREATORS_DIR_BASE,
   CWD,
+  CWD_OPTION,
   DEV_FLAG,
   DIST_DIR_ABS,
   DIST_STATIC_BASE,
   HOST_OPTION,
-  IS_DEV_MODE,
-  IS_PROD_MODE,
   ONLY_CREATORS_OPTION,
   PORT_OPTION,
   SERVE_HOST,
@@ -61,6 +61,12 @@ import defaultStaticFile from "./default/_static.ts";
 
 export function isDevelopmentEnv(): boolean {
   return parse(Deno.args)["_"].includes(DEV_FLAG);
+}
+
+export function isProductionEnv(): boolean {
+  const flags = parse(Deno.args);
+
+  return flags["_"].includes(BUILD_FLAG) || flags["_"].length === 0;
 }
 
 export function tapLog<T extends Array<any>>(...args: T): T {
@@ -301,12 +307,14 @@ export function writeTempFileWithContentOf(contentAbs: string): string {
  * Using a temp file to hack import cache if in development mode
  */
 export async function importModule(moduleAbs: string) {
-  const tempModuleAbs = IS_DEV_MODE
+  const isDevEnv = isDevelopmentEnv();
+
+  const tempModuleAbs = isDevEnv
     ? writeTempFileWithContentOf(moduleAbs)
     : moduleAbs;
 
   const module = await import(`file://${tempModuleAbs}`);
-  IS_DEV_MODE && Deno.remove(tempModuleAbs);
+  isDevEnv && Deno.remove(tempModuleAbs);
   return module;
 }
 
@@ -536,16 +544,19 @@ export function checkIsValidCWD(str: string, throwErr = true) {
  * Check if provided CLI flags are valid
  */
 export function checkAreValidCLIOptions(options: Record<string, any>) {
+  const isDevEnv = isDevelopmentEnv();
+  const isProdEnv = isProductionEnv();
+
   const validators: Record<string, Function> = {
     [SITEMAP_OPTION]: (value: string) =>
-      !IS_PROD_MODE || checkIsValidHttpUrl(value, false),
+      !isProdEnv || checkIsValidHttpUrl(value, false),
     [PORT_OPTION]: (value: string) =>
-      !IS_DEV_MODE || checkIsValidPortNumber(value, false),
+      !isDevEnv || checkIsValidPortNumber(value, false),
     [HOST_OPTION]: (value: string) =>
-      !IS_DEV_MODE || checkIsValidHostnameOrIP(value, false),
+      !isDevEnv || checkIsValidHostnameOrIP(value, false),
     [ONLY_CREATORS_OPTION]: (value: string) =>
       checkIsValidOnlyCreatorsString(value, false),
-    [CWD]: (value: string) => checkIsValidCWD(value, false),
+    [CWD_OPTION]: (value: string) => checkIsValidCWD(value, false),
   };
 
   for (let key of Object.keys(options)) {

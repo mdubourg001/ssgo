@@ -25,6 +25,8 @@ Builds the `ssgo` project of the current directory to the `dist/` directory.
 
 Serves the build locally (on _http://localhost:5580_ by default).
 
+**This intends to be used for testing purposes only: you should not use it in production.**
+
 ### Options
 
 - **`--host`**: Set the host to serve `dist/` over (default 'localhost'). Example: `ssgo serve --host=0.0.0.0` (to serve `dist/` on local network).
