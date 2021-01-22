@@ -8,6 +8,7 @@ import {
   DIST_DIR_BASE,
   HELP_FLAG,
   INIT_FLAG,
+  SERVE_FLAG,
   SITEMAP_OPTION,
   UPGRADE_FLAG,
   VERSION_FLAG,
@@ -20,6 +21,7 @@ const t0 = performance.now();
 log.info(`ssgo ${getVersion()}`);
 
 const FLAGS = checkAreValidCLIOptions(parse(Deno.args));
+const clean = !!FLAGS[CLEAN_OPTION];
 
 if (FLAGS[CWD_OPTION]) {
   log.info(`Setting the current working directory to ${FLAGS[CWD_OPTION]}`);
@@ -64,7 +66,7 @@ switch (true) {
   // dev: build, watch files and serve
 
   case FLAGS["_"].includes(DEV_FLAG):
-    build().then(() => {
+    build(clean).then(() => {
       log.success(`Project started in ${getSecondsFrom(t0)} seconds.`);
 
       const listeners: Array<WebSocket> = [];
@@ -83,11 +85,17 @@ switch (true) {
   // build only
 
   case FLAGS["_"].includes(BUILD_FLAG) || FLAGS["_"].length === 0:
-    build().then(() => {
+    build(clean).then(() => {
       sitemap(FLAGS[SITEMAP_OPTION]);
 
       log.success(`Project built in ${getSecondsFrom(t0)} seconds.`);
     });
+    break;
+
+  // serve only
+
+  case FLAGS["_"].includes(SERVE_FLAG):
+    serve();
     break;
 
   // unknow arguments
