@@ -478,15 +478,15 @@ export async function runCreator(creator: WalkEntry) {
 /**
  * Build the project
  */
-export async function build(skipCleaning = false) {
+export async function build(clean = false) {
   checkProjectDirectoriesExist(true)
-  if (!skipCleaning) cleanTempFiles()
+  cleanTempFiles()
   walkCreatorsAndComponents()
 
   checkComponentNameUnicity(components)
 
   ensureDirSync(DIST_DIR_ABS)
-  if (!CREATORS_FILTERING) {
+  if (clean) {
     emptyDirSync(DIST_DIR_ABS)
 
     log.info(`Creating or emptying ${getRel(DIST_DIR_ABS)} directory...`)

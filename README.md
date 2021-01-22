@@ -106,7 +106,6 @@ export default async function (buildPage: BuildPage) {
 
 ## Roadmap
 
-- [ ] Stop cleaning dist dir by default (provide --clean option ?)
 - [ ] Provide --compress option (brotli or choice between brotli and gzip ?)
 - [ ] Provide --format option to format built pages using prettier
 - [ ] Pass undefined if variable doesn't exist when passing props
