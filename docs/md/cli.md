@@ -11,14 +11,24 @@ Here's the reference of the command line interface commands built in `ssgo`:
 
 ## `ssgo build`
 
-> Note that the `build` keyword is optional as running `ssgo` without specified command will simply trigger a build by default.
+> Note that the `build` is the default command: running `ssgo` without the `build` keyword is similar.
 
 Builds the `ssgo` project of the current directory to the `dist/` directory.
 
 ### Options
 
 - **`--sitemap`**: Generate a sitemap.xml file of the build pages for the given host. Example: `ssgo build --sitemap=https://example.com`. Works only with the `build` command.
-- **`--only-creators`**: Filter the creators to run. Example: `ssgo dev --only-creators=index.ts,other.js`. Specifying this option will prevent `ssgo` to empty the `dist/` directory before building. Useful to rebuilt only some pages.
+- **`--only-creators`**: Filter the creators to run. Example: `ssgo dev --only-creators=index.ts,other.js`.
+- **`--clean`**: Clean the `dist/` directory before building.
+
+## `ssgo serve`
+
+Serves the build locally (on _http://localhost:5580_ by default).
+
+### Options
+
+- **`--host`**: Set the host to serve `dist/` over (default 'localhost'). Example: `ssgo serve --host=0.0.0.0` (to serve `dist/` on local network).
+- **`--port`**: Set the port to serve `dist/` over (default 5580). Example: `ssgo serve --port=8080`.
 
 ## `ssgo dev`
 
@@ -28,9 +38,10 @@ It will also spawn a file watcher on your project files to re-build specific par
 
 ### Options
 
-- **`--host`**: Set the host to serve `dist/` over (default 'localhost'). Example: `ssgo dev --host=0.0.0.0` (to serve `dist/` on local network). Works only with the `dev` command.
-- **`--port`**: Set the port to serve `dist/` over (default 5580). Example: `ssgo dev --port=8080`. Works only with the `dev` command.
+- **`--host`**: See `ssgo serve > Options`.
+- **`--port`**: See `ssgo serve > Options`.
 - **`--only-creators`**: See `ssgo build > Options`.
+- **`--clean`**: See `ssgo build > Options`.
 
 ## `ssgo init`
 

@@ -1,12 +1,22 @@
 import { parse } from "https://deno.land/std@0.80.0/flags/mod.ts";
 import type { WebSocket } from "https://deno.land/std@0.80.0/ws/mod.ts";
-import { build, init, serve, sitemap, upgrade, watch } from "./src/index.ts";
+import {
+  build,
+  compress,
+  init,
+  serve,
+  sitemap,
+  upgrade,
+  watch,
+} from "./src/index.ts";
 import {
   BUILD_FLAG,
+  CLEAN_OPTION,
   CWD_OPTION,
   DEV_FLAG,
   DIST_DIR_BASE,
   HELP_FLAG,
+  HELP_TEXT,
   INIT_FLAG,
   SERVE_FLAG,
   SITEMAP_OPTION,
@@ -36,25 +46,7 @@ switch (true) {
   // display help
 
   case FLAGS["_"].includes(HELP_FLAG):
-    log.info(
-      `ssgo commands:
-       - dev: build project to ${DIST_DIR_BASE} and watch project files for changes
-            options:
-            --host [host]: serve dist/ over specified host (default 'localhost')
-            --port [port]: serve dist/ over specified port (default 5580)
-
-       - build (default): build project to ${DIST_DIR_BASE}
-            options:
-            --sitemap [host]: generate a sitemap of the built pages for the given host
-            --only-creators [creators]: narrow the creators to run to the comma-separated list provided
-
-       - init: initialize project directories (does NOT override if these already exist)
-       - help: display help menu
-
-       global options:
-       --cwd [path]: set the current working directory to the given path
-    `,
-    );
+    log.info(HELP_TEXT);
     break;
 
   // upgrade ssgo version if exists
