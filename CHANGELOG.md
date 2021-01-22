@@ -2,6 +2,14 @@
 
 _This page is updated automatically for every new release._
 
+## v0.19.0 (2021-01-23)
+
+- 0123d7c feat: added the serve flag to allow serving the dist/ directory
+- 46cec61 feat: added the --clean option to empty dist directory before building
+- 9c8483a feat: exposing buildTemplateToString from mod.ts
+- a7ea7c7 feat: added the --clean option to empty dist directory before building
+- aba77cf feat: exposing buildTemplateToString from mod.ts
+
 ## v0.18.5 (2021-01-21)
 
 - e63a5db feat: added the --cwd option and added projectRoot to ssgoBag's context
