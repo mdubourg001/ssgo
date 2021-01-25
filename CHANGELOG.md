@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.19.1 (2021-01-25)
+
+- 76e84ea chore: bumped to std@0.84.0 (deno v1.7.0)
+
 ## v0.19.0 (2021-01-23)
 
 - 0123d7c feat: added the serve flag to allow serving the dist/ directory
@@ -70,3 +74,4 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
+
