@@ -70,4 +70,3 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
-

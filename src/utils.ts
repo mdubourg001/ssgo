@@ -1,11 +1,11 @@
-import tosource from "https://cdn.skypack.dev/tosource";
-import { parse } from "https://deno.land/std@0.80.0/flags/mod.ts";
+import tosource from "https://cdn.skypack.dev/tosource"
+import { parse } from "https://deno.land/std@0.84.0/flags/mod.ts"
 import {
   blue,
   green,
   red,
   yellow,
-} from "https://deno.land/std@0.80.0/fmt/colors.ts";
+} from "https://deno.land/std@0.84.0/fmt/colors.ts"
 import {
   basename,
   common,
@@ -15,12 +15,12 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.80.0/path/mod.ts";
+} from "https://deno.land/std@0.84.0/path/mod.ts"
 import {
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.80.0/fs/mod.ts";
+} from "https://deno.land/std@0.84.0/fs/mod.ts"
 
 import type {
   IBuildPageOptions,
@@ -29,7 +29,7 @@ import type {
   IHTMLAttr,
   INode,
   IStaticFile,
-} from "./types.ts";
+} from "./types.ts"
 import {
   BUILD_FLAG,
   BUILDABLE_STATIC_EXT,
@@ -54,61 +54,61 @@ import {
   VERBOSITY,
   WS_HOT_RELOAD_KEY,
   WS_PING_KEY,
-} from "./constants.ts";
-import defaultTemplate from "./default/_template.ts";
-import defaultCreator from "./default/_creator.ts";
-import defaultStaticFile from "./default/_static.ts";
+} from "./constants.ts"
+import defaultTemplate from "./default/_template.ts"
+import defaultCreator from "./default/_creator.ts"
+import defaultStaticFile from "./default/_static.ts"
 
 export function isDevelopmentEnv(): boolean {
-  return parse(Deno.args)["_"].includes(DEV_FLAG);
+  return parse(Deno.args)["_"].includes(DEV_FLAG)
 }
 
 export function isProductionEnv(): boolean {
-  const flags = parse(Deno.args);
+  const flags = parse(Deno.args)
 
-  return flags["_"].includes(BUILD_FLAG) || flags["_"].length === 0;
+  return flags["_"].includes(BUILD_FLAG) || flags["_"].length === 0
 }
 
 export function tapLog<T extends Array<any>>(...args: T): T {
-  console.log(...args);
-  return args;
+  console.log(...args)
+  return args
 }
 
 export const log = {
   info: (message: string) => {
-    VERBOSITY === 1 && console.log(blue("info"), message);
+    VERBOSITY === 1 && console.log(blue("info"), message)
   },
   error: (message: string, throwErr: boolean = false) => {
-    if (throwErr) throw new Error(message);
-    else VERBOSITY === 1 && console.log(red("error"), message);
+    if (throwErr) throw new Error(message)
+    else VERBOSITY === 1 && console.log(red("error"), message)
   },
   warning: (message: string) => {
-    VERBOSITY === 1 && console.log(yellow("warning"), message);
+    VERBOSITY === 1 && console.log(yellow("warning"), message)
   },
   success: (message: string) => {
-    VERBOSITY === 1 && console.log(green("success"), message);
+    VERBOSITY === 1 && console.log(green("success"), message)
   },
-};
+}
 
 /**
  * Get number of seconds between a number (performance.now) and now
  */
 export function getSecondsFrom(t0: number): string {
-  return ((performance.now() - t0) / 1000).toFixed(3);
+  return ((performance.now() - t0) / 1000).toFixed(3)
 }
 
 /**
  * Check if a file is a script file (JS or TS)
  */
 export function isScript(filename: string): boolean {
-  return filename.endsWith(".ts") || filename.endsWith(".js");
+  return filename.endsWith(".ts") || filename.endsWith(".js")
 }
 
 /**
  * Check if a file is a template file (HTML or HTM)
  */
 export function isTemplate(filename: string): boolean {
-  return filename.endsWith(".html") || filename.endsWith(".htm");
+  return filename.endsWith(".html") || filename.endsWith(".htm")
 }
 
 /**
@@ -117,7 +117,7 @@ export function isTemplate(filename: string): boolean {
 export function contextEval(
   expression: string,
   context: IContextData,
-  errorContext?: string,
+  errorContext?: string
 ) {
   try {
     const richContext = {
@@ -127,21 +127,21 @@ export function contextEval(
           tosource(expression).replaceAll(/(?<!\\)(?:\\\\)*"/gi, `'`),
       },
       ...context,
-    };
+    }
 
     // @ts-ignore
-    for (const key of Object.keys(richContext)) window[key] = richContext[key];
-    const evaluation = eval(`(${expression})`);
+    for (const key of Object.keys(richContext)) window[key] = richContext[key]
+    const evaluation = eval(`(${expression})`)
 
     // @ts-ignore
-    for (const key of Object.keys(richContext)) delete window[key];
-    return evaluation;
+    for (const key of Object.keys(richContext)) delete window[key]
+    return evaluation
   } catch (e) {
     if (typeof errorContext !== "undefined") {
       log.error(
         `When trying to evaluate '${errorContext.trim()}': ${e.message}`,
-        true,
-      );
+        true
+      )
     }
   }
 }
@@ -150,16 +150,16 @@ export function contextEval(
  * Get attributes as a name="value" string
  */
 export function formatAttributes(attributes: IHTMLAttr[]): string {
-  let result = "";
+  let result = ""
 
   for (let attribute of attributes) {
-    result += ` ${attribute.name.value}`;
+    result += ` ${attribute.name.value}`
     if (typeof attribute.value?.value !== "undefined") {
-      result += `="${attribute.value.value}"`;
+      result += `="${attribute.value.value}"`
     }
   }
 
-  return result.trim();
+  return result.trim()
 }
 
 /**
@@ -169,24 +169,24 @@ export function interpolate(templateStr: string, data?: IContextData) {
   // FIXME - This allow everything as long as the second char isn't a opening bracket ('{')
   return templateStr.replace(/{{(([^}][^}]?|[^}]}?)*)}}/g, (match) => {
     // remove "{{" and "}}"
-    const cleanedMatch = match.trim().slice(2, -2).trim();
+    const cleanedMatch = match.trim().slice(2, -2).trim()
 
-    return contextEval(cleanedMatch, data ?? {}, templateStr);
-  });
+    return contextEval(cleanedMatch, data ?? {}, templateStr)
+  })
 }
 
 /**
  * Remove the extension from a file name
  */
 export function removeExt(basename: string) {
-  return basename.split(".").slice(0, -1).join(".");
+  return basename.split(".").slice(0, -1).join(".")
 }
 
 /**
  * Tell if node is a comment node
  */
 export function isComment(node: INode): boolean {
-  return "rawName" in node && node.rawName === "!--";
+  return "rawName" in node && node.rawName === "!--"
 }
 
 /**
@@ -194,10 +194,10 @@ export function isComment(node: INode): boolean {
  */
 export function removeFromParent(node: INode) {
   if (!!node.parent) {
-    const parent = "body" in node.parent ? node.parent?.body : node.parent;
-    const index = (parent as Array<INode>).findIndex((n) => n === node);
+    const parent = "body" in node.parent ? node.parent?.body : node.parent
+    const index = (parent as Array<INode>).findIndex((n) => n === node)
 
-    if (index !== -1) (parent as Array<INode>).splice(index, 1);
+    if (index !== -1) (parent as Array<INode>).splice(index, 1)
   }
 }
 
@@ -205,15 +205,15 @@ export function removeFromParent(node: INode) {
  * Add a item next to another inside of parent
  */
 export function pushBefore<T>(array: T[], before: T, ...items: T[]) {
-  const index = array.findIndex((i) => i === before);
-  array.splice(index, 0, ...items);
+  const index = array.findIndex((i) => i === before)
+  array.splice(index, 0, ...items)
 }
 
 /**
  * Get attribute name without its prefix (eval:, static:)
  */
 export function getUnprefixedAttributeName(attribute: IHTMLAttr) {
-  return attribute.name.value.split(":").slice(1).join(":");
+  return attribute.name.value.split(":").slice(1).join(":")
 }
 
 /**
@@ -226,27 +226,27 @@ export function getOutputPagePath(options: IBuildPageOptions): string {
     options.dir ?? "",
     options.filename.endsWith(".html")
       ? options.filename
-      : options.filename + ".html",
-  );
+      : options.filename + ".html"
+  )
 }
 
 /**
  * Check if a URL leads to an external ressource
  */
 export function isExternalURL(url: string) {
-  return new RegExp("^(?:[a-z]+:)?//", "i").test(url);
+  return new RegExp("^(?:[a-z]+:)?//", "i").test(url)
 }
 
 export function getStaticFileFromRel(staticRel: string): IStaticFile {
-  const staticFileAbs = normalize(`${STATIC_DIR_ABS}/${staticRel}`);
-  const staticFileBasename = basename(staticFileAbs);
+  const staticFileAbs = normalize(`${STATIC_DIR_ABS}/${staticRel}`)
+  const staticFileBasename = basename(staticFileAbs)
 
   return {
     path: staticFileAbs,
     isCompiled: BUILDABLE_STATIC_EXT.includes(
-      posix.extname(staticFileBasename),
+      posix.extname(staticFileBasename)
     ),
-  };
+  }
 }
 
 /**
@@ -255,11 +255,11 @@ export function getStaticFileFromRel(staticRel: string): IStaticFile {
 export function getStaticFileBundlePath(staticRel: string): string {
   const ext = [".jsx", ".tsx", ".ts"].includes(extname(staticRel))
     ? ".js"
-    : extname(staticRel);
-  const base = basename(staticRel);
-  const filename = base.startsWith(".") ? staticRel : removeExt(staticRel);
+    : extname(staticRel)
+  const base = basename(staticRel)
+  const filename = base.startsWith(".") ? staticRel : removeExt(staticRel)
 
-  return normalize(`/${DIST_STATIC_BASE}/${filename}${ext}`);
+  return normalize(`/${DIST_STATIC_BASE}/${filename}${ext}`)
 }
 
 /**
@@ -269,37 +269,37 @@ export function isFileInDir(fileAbs: string, dirAbs: string): boolean {
   return (
     common([fileAbs, dirAbs]) === dirAbs ||
     common([fileAbs, dirAbs]) === dirAbs + "/"
-  );
+  )
 }
 
 /**
  * Check if a given path is absolute
  */
 export function isPathAbsolute(path: string) {
-  return /^(?:\/|[a-z]+:\/\/)/.test(path);
+  return /^(?:\/|[a-z]+:\/\/)/.test(path)
 }
 
 /**
  * Get path relative to cwd
  */
 export function getRel(abs: string): string {
-  return relative(CWD, abs);
+  return relative(CWD, abs)
 }
 
 /**
  * Copy the content of a file to a temp file and returns the temp path
  */
 export function writeTempFileWithContentOf(contentAbs: string): string {
-  const contentStr = Deno.readTextFileSync(contentAbs);
+  const contentStr = Deno.readTextFileSync(contentAbs)
 
   const tempAbs = Deno.makeTempFileSync({
     dir: dirname(contentAbs),
     prefix: TEMP_FILES_PREFIX,
     suffix: extname(contentAbs),
-  });
-  Deno.writeTextFileSync(tempAbs, contentStr);
+  })
+  Deno.writeTextFileSync(tempAbs, contentStr)
 
-  return tempAbs;
+  return tempAbs
 }
 
 /**
@@ -307,15 +307,15 @@ export function writeTempFileWithContentOf(contentAbs: string): string {
  * Using a temp file to hack import cache if in development mode
  */
 export async function importModule(moduleAbs: string) {
-  const isDevEnv = isDevelopmentEnv();
+  const isDevEnv = isDevelopmentEnv()
 
   const tempModuleAbs = isDevEnv
     ? writeTempFileWithContentOf(moduleAbs)
-    : moduleAbs;
+    : moduleAbs
 
-  const module = await import(`file://${tempModuleAbs}`);
-  isDevEnv && Deno.remove(tempModuleAbs);
-  return module;
+  const module = await import(`file://${tempModuleAbs}`)
+  isDevEnv && Deno.remove(tempModuleAbs)
+  return module
 }
 
 /**
@@ -323,11 +323,11 @@ export async function importModule(moduleAbs: string) {
  */
 export function cleanTempFiles() {
   const tempFiles: WalkEntry[] = Array.from(
-    walkSync(CWD),
-  ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX));
+    walkSync(CWD)
+  ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX))
 
   for (const file of tempFiles) {
-    Deno.removeSync(file.path, { recursive: true });
+    Deno.removeSync(file.path, { recursive: true })
   }
 }
 
@@ -338,16 +338,14 @@ export function cleanTempFiles() {
  */
 export function checkEmptyTemplate(
   parsedTemplate: INode[],
-  templateAbs: string,
+  templateAbs: string
 ) {
   if (parsedTemplate.length === 0) {
     log.warning(
-      `When parsing '${
-        getRel(
-          templateAbs,
-        )
-      }': This template/component file is empty.`,
-    );
+      `When parsing '${getRel(
+        templateAbs
+      )}': This template/component file is empty.`
+    )
   }
 }
 
@@ -360,17 +358,15 @@ export function checkComponentNameUnicity(components: ICustomComponent[]) {
       components.some(
         (c) =>
           removeExt(c.name) === removeExt(component.name) &&
-          c.path !== component.path,
+          c.path !== component.path
       )
     ) {
       log.error(
-        `When listing custom components: Two components with the same name '${
-          removeExt(
-            component.name,
-          )
-        }' found.`,
-        true,
-      );
+        `When listing custom components: Two components with the same name '${removeExt(
+          component.name
+        )}' found.`,
+        true
+      )
     }
   }
 }
@@ -380,13 +376,13 @@ export function checkComponentNameUnicity(components: ICustomComponent[]) {
  */
 export function checkBuildPageOptions(
   templateRel: string,
-  options: IBuildPageOptions,
+  options: IBuildPageOptions
 ) {
   if (!options.filename) {
     log.error(
       `When building page with template '${templateRel}': No filename given to 'buildPage' call.`,
-      true,
-    );
+      true
+    )
   }
 }
 
@@ -395,15 +391,15 @@ export function checkBuildPageOptions(
  */
 export function checkStaticFileExists(
   staticFileAbs: string,
-  staticAttrValue: string,
+  staticAttrValue: string
 ): boolean {
   if (!existsSync(staticFileAbs)) {
     log.warning(
-      `Could not resolve ${staticAttrValue}: won't be included in output build.`,
-    );
-    return false;
+      `Could not resolve ${staticAttrValue}: won't be included in output build.`
+    )
+    return false
   }
-  return true;
+  return true
 }
 
 /**
@@ -411,15 +407,15 @@ export function checkStaticFileExists(
  */
 export function checkStaticFileIsInsideStaticDir(
   staticFileAbs: string,
-  staticAttrValue: string,
+  staticAttrValue: string
 ) {
   if (common([staticFileAbs, STATIC_DIR_ABS]) !== STATIC_DIR_ABS) {
     log.warning(
-      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`,
-    );
-    return false;
+      `Could not resolve ${staticAttrValue} inside of 'static/' dir: won't be included in output build.`
+    )
+    return false
   }
-  return true;
+  return true
 }
 
 /**
@@ -433,27 +429,27 @@ export function getDirState(abs: string): "exists" | "empty" | "noexists" {
     ? "noexists"
     : Array.from(walkSync(abs)).filter((e) => e.path !== abs).length > 0
     ? "exists"
-    : "empty";
+    : "empty"
 }
 
 /**
  * Check that mandatory directories exist
  */
 export function checkProjectDirectoriesExist(throwErr: boolean = false) {
-  const creatorsState = getDirState(CREATORS_DIR_ABS);
+  const creatorsState = getDirState(CREATORS_DIR_ABS)
   if (creatorsState === "noexists" && throwErr) {
     log.error(
       `Could not find mandatory '${CREATORS_DIR_BASE}/' directory.`,
-      throwErr,
-    );
+      throwErr
+    )
   }
 
-  const templatesState = getDirState(TEMPLATES_DIR_ABS);
+  const templatesState = getDirState(TEMPLATES_DIR_ABS)
   if (templatesState === "noexists" && throwErr) {
     log.error(
       `Could not find mandatory '${TEMPLATES_DIR_BASE}/' directory.`,
-      throwErr,
-    );
+      throwErr
+    )
   }
 
   return {
@@ -461,29 +457,28 @@ export function checkProjectDirectoriesExist(throwErr: boolean = false) {
     [TEMPLATES_DIR_ABS]: templatesState,
     [STATIC_DIR_ABS]: getDirState(STATIC_DIR_ABS),
     [COMPONENTS_DIR_ABS]: getDirState(COMPONENTS_DIR_ABS),
-  };
+  }
 }
 
 /**
  * Check if a string is a valid URL starting with http or https
  */
 export function checkIsValidHttpUrl(str: string, throwErr = true) {
-  let url;
+  let url
 
   try {
-    url = new URL(str);
+    url = new URL(str)
 
     if (url.protocol !== "http:" && url.protocol !== "https:") {
-      throw "";
+      throw ""
     }
   } catch (_) {
-    const error =
-      `When trying to build sitemap.xml: '${str}' is not a valid URL starting with 'http://' or 'https://'.`;
-    log.error(error, throwErr);
-    return false;
+    const error = `When trying to build sitemap.xml: '${str}' is not a valid URL starting with 'http://' or 'https://'.`
+    log.error(error, throwErr)
+    return false
   }
 
-  return true;
+  return true
 }
 
 /**
@@ -491,13 +486,12 @@ export function checkIsValidHttpUrl(str: string, throwErr = true) {
  */
 export function checkIsValidPortNumber(str: string, throwErr = true) {
   if (Number.isNaN(Number.parseInt(str, 10))) {
-    const error =
-      `When trying to serve 'dist/': '${str}' is not a valid port number.`;
-    log.error(error, throwErr);
-    return false;
+    const error = `When trying to serve 'dist/': '${str}' is not a valid port number.`
+    log.error(error, throwErr)
+    return false
   }
 
-  return true;
+  return true
 }
 
 /**
@@ -506,46 +500,43 @@ export function checkIsValidPortNumber(str: string, throwErr = true) {
 export function checkIsValidHostnameOrIP(str: string, throwErr = true) {
   if (
     !new RegExp(
-      /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gm,
+      /^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)+([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$/gm
     ).test(str)
   ) {
-    const error =
-      `When trying to serve 'dist/': '${str}' is not a valid host or IP.`;
-    log.error(error, throwErr);
-    return false;
+    const error = `When trying to serve 'dist/': '${str}' is not a valid host or IP.`
+    log.error(error, throwErr)
+    return false
   }
 
-  return true;
+  return true
 }
 
 export function checkIsValidOnlyCreatorsString(str: string, throwErr = true) {
   if (typeof str !== "string") {
-    const error =
-      `When trying to narrow creators to run: '${str}' is not a valid list of creators (comma separated).`;
-    log.error(error, throwErr);
-    return false;
+    const error = `When trying to narrow creators to run: '${str}' is not a valid list of creators (comma separated).`
+    log.error(error, throwErr)
+    return false
   }
 
-  return true;
+  return true
 }
 
 export function checkIsValidCWD(str: string, throwErr = true) {
   if (!existsSync(CWD)) {
-    const error =
-      `Invalid current working directory provided: ${CWD} does not exists.`;
-    log.error(error, throwErr);
-    return false;
+    const error = `Invalid current working directory provided: ${CWD} does not exists.`
+    log.error(error, throwErr)
+    return false
   }
 
-  return true;
+  return true
 }
 
 /**
  * Check if provided CLI flags are valid
  */
 export function checkAreValidCLIOptions(options: Record<string, any>) {
-  const isDevEnv = isDevelopmentEnv();
-  const isProdEnv = isProductionEnv();
+  const isDevEnv = isDevelopmentEnv()
+  const isProdEnv = isProductionEnv()
 
   const validators: Record<string, Function> = {
     [SITEMAP_OPTION]: (value: string) =>
@@ -557,15 +548,15 @@ export function checkAreValidCLIOptions(options: Record<string, any>) {
     [ONLY_CREATORS_OPTION]: (value: string) =>
       checkIsValidOnlyCreatorsString(value, false),
     [CWD_OPTION]: (value: string) => checkIsValidCWD(value, false),
-  };
+  }
 
   for (let key of Object.keys(options)) {
     if (key in validators) {
-      !validators[key](options[key]) && Deno.exit(1);
+      !validators[key](options[key]) && Deno.exit(1)
     }
   }
 
-  return options;
+  return options
 }
 
 /**
@@ -573,39 +564,39 @@ export function checkAreValidCLIOptions(options: Record<string, any>) {
  */
 export function getFormattedErrorPage(
   errorMessage: string,
-  errorStack?: string,
+  errorStack?: string
 ) {
   const escapeTags = (str: string) =>
-    str.replace("<", "&lt;").replace(">", "&gt;");
+    str.replace("<", "&lt;").replace(">", "&gt;")
 
   return `
   <section style="font-family: sans-serif; padding: 1px 10px;">
     <h1 style="color: #D2283C;"><code>${escapeTags(errorMessage)}</code></h1>
     <div style="padding: 10px; background-color: #FDF3F4; border-radius: 1px; width: fit-content;">
       <code style="font-weight: bold; font-size: 1.3rem; white-space: pre-wrap;">${
-    errorStack ? escapeTags(errorStack) : "No error stack provided."
-  }</code>
+        errorStack ? escapeTags(errorStack) : "No error stack provided."
+      }</code>
     </div>
   </section>
-  `;
+  `
 }
 
 export function createDefaultTemplate() {
   Deno.writeTextFileSync(
     resolve(TEMPLATES_DIR_ABS, "index.html"),
-    defaultTemplate,
-  );
+    defaultTemplate
+  )
 }
 
 export function createDefaultCreator() {
-  Deno.writeTextFileSync(resolve(CREATORS_DIR_ABS, "index.ts"), defaultCreator);
+  Deno.writeTextFileSync(resolve(CREATORS_DIR_ABS, "index.ts"), defaultCreator)
 }
 
 export function createDefaultStaticFile() {
   Deno.writeTextFileSync(
     resolve(STATIC_DIR_ABS, "index.css"),
-    defaultStaticFile,
-  );
+    defaultStaticFile
+  )
 }
 
 /**
@@ -641,7 +632,7 @@ export function injectServeWebsocketScript(pageContent: string): string {
     }
 
     connect();
-  </script>`;
+  </script>`
 
-  return pageContent + scriptContent;
+  return pageContent + scriptContent
 }
