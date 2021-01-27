@@ -12,11 +12,5 @@ export default async (buildPage: BuildPage) => {
     version = matches[1] as string
   }
 
-  buildPage(
-    "index.html",
-    {
-      currentVersion: version,
-    },
-    { filename: "index" }
-  )
+  buildPage("index.html", { currentVersion: version }, { filename: "index" })
 }

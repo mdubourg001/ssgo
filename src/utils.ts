@@ -166,7 +166,6 @@ export function formatAttributes(attributes: IHTMLAttr[]): string {
  * Handle interpolation of text with context data
  */
 export function interpolate(templateStr: string, data?: IContextData) {
-  // FIXME - This allow everything as long as the second char isn't a opening bracket ('{')
   return templateStr.replace(/{{(([^}][^}]?|[^}]}?)*)}}/g, (match) => {
     // remove "{{" and "}}"
     const cleanedMatch = match.trim().slice(2, -2).trim()
