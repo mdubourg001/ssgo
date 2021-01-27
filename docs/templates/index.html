@@ -27,28 +27,28 @@
     <docs-header isDocs="false" pageUrl="''"></docs-header>
 
     <article class="flex flex-col items-center pt-12" style="min-height: 95vh">
-      <section class="w-full relative mb-20 lg:pt-10">
+      <section class="relative w-full mb-20 lg:pt-10">
         <div
           id="top-diagonal"
-          class="transition-transform duration-1000 absolute h-full bg-gradient-to-t from-yellow-400 to-yellow-600 shadow-inner"
+          class="absolute h-full transition-transform duration-1000 shadow-inner bg-gradient-to-t from-yellow-400 to-yellow-600"
         ></div>
 
         <div
-          class="container mx-auto flex flex-col md:flex-row items-center space-x-8 z-10 px-4"
+          class="container z-10 flex flex-col items-center px-4 mx-auto space-x-8 md:flex-row"
         >
-          <div class="w-full sm:w-2/3 md:w-1/2 flex flex-col">
+          <div class="flex flex-col w-full sm:w-2/3 md:w-1/2">
             <!-- <div class="h-20 mb-8">
               <img class="h-full" src="images/logo.png" alt="SSGO Logo" />
             </div> -->
             <h1
-              class="text-center md:text-left font-bold mb-10 text-5xl text-left"
+              class="mb-10 text-5xl font-bold text-left text-center md:text-left"
               style="line-height: 3.5rem"
             >
               the minimalistic but flexible static site generator
             </h1>
 
             <p
-              class="text-center md:text-left text-gray-800 md:text-gray-700 text-lg"
+              class="text-lg text-center text-gray-800 md:text-left md:text-gray-700"
             >
               ssgo generates static websites in a breeze.<br />
               it's built on top of Deno and uses HTML templates and data to
@@ -56,14 +56,14 @@
             </p>
           </div>
 
-          <div class="w-full sm:w-4/5 md:w-1/2 flex flex-col text-left">
+          <div class="flex flex-col w-full text-left sm:w-4/5 md:w-1/2">
             <div
-              class="my-6 bg-gradient-to-br from-white to-gray-100 shadow-lg p-4"
+              class="p-4 my-6 shadow-lg bg-gradient-to-br from-white to-gray-100"
             >
               <div class="flex items-center mb-6">
-                <div class="rounded-full h-3 w-3 bg-red-500 mr-2"></div>
-                <div class="rounded-full h-3 w-3 bg-yellow-500 mr-2"></div>
-                <div class="rounded-full h-3 w-3 bg-green-500 mr-2"></div>
+                <div class="w-3 h-3 mr-2 bg-red-500 rounded-full"></div>
+                <div class="w-3 h-3 mr-2 bg-yellow-500 rounded-full"></div>
+                <div class="w-3 h-3 mr-2 bg-green-500 rounded-full"></div>
               </div>
 
               <code>
@@ -84,7 +84,7 @@
 
             <a
               href="/docs/quickstart.html"
-              class="--scale-on-click transition-all duration-200 w-fit ease-in-out px-8 py-3 mt-4 font-bold text-black bg-yellow-500 shadow hover:shadow-xl"
+              class="px-8 py-3 mt-4 font-bold text-black transition-all duration-200 ease-in-out bg-yellow-500 shadow --scale-on-click w-fit hover:shadow-xl"
             >
               Quickstart</a
             >
@@ -93,17 +93,17 @@
       </section>
 
       <section
-        class="relative w-full bg-gradient-to-b from-white to-gray-200 py-12 pb-24 md:py-16 md:pb-32 lg:py-24 lg:pb-32"
+        class="relative w-full py-12 pb-24 bg-gradient-to-b from-white to-gray-200 md:py-16 md:pb-32 lg:py-24 lg:pb-32"
       >
         <hr
-          class="absolute left-0 top-0 w-full border-t border-dashed border-gray-200"
+          class="absolute top-0 left-0 w-full border-t border-gray-200 border-dashed"
         />
         <div
-          class="container mx-auto flex flex-col space-x-8 items-center px-4 md:flex-row md:justify-between"
+          class="container flex flex-col items-center px-4 mx-auto space-x-8 md:flex-row md:justify-between"
         >
-          <div class="hidden md:flex flex-col items-center md:w-1/2 lg:w-2/5">
+          <div class="flex-col items-center hidden md:flex md:w-1/2 lg:w-2/5">
             <div
-              class="w-fit bg-black text-white flex flex-col rounded p-10 mb-4"
+              class="flex flex-col p-10 mb-4 text-white bg-black rounded w-fit"
             >
               <code class="text-sm lg:text-lg"
                 >deno install --unstable -A
@@ -113,15 +113,15 @@
 
             <p if="typeof currentVersion !== 'undefined'" class="text-center">
               current version:&nbsp;
-              <span class="text-yellow-600 font-bold"
+              <span class="font-bold text-yellow-600"
                 >v{{ currentVersion }}</span
               >
             </p>
           </div>
 
-          <div class="md:w-1/2 lg:w-2/5 px-4 md:px-0">
-            <h2 class="font-bold mb-10 text-3xl">features at a glance</h2>
-            <ul class="text-gray-800 list-inside list-disc leading-8">
+          <div class="px-4 md:w-1/2 lg:w-2/5 md:px-0">
+            <h2 class="mb-10 text-3xl font-bold">features at a glance</h2>
+            <ul class="leading-8 text-gray-800 list-disc list-inside">
               <li>flexible page build engine</li>
               <li>out-of-the-box TypeScript support</li>
               <li>built-in components system</li>
@@ -138,18 +138,18 @@
         </div>
       </section>
 
-      <!-- <div class="w-full text-white relative mb-20 pt-10 text-center">
+      <!-- <div class="relative w-full pt-10 mb-20 text-center text-white">
         <div
-          class="transform -rotate-3 absolute top-0 h-full bg-gradient-to-br from-yellow-500 to-yellow-700 shadow-inner"
+          class="absolute top-0 h-full transform shadow-inner -rotate-3 bg-gradient-to-br from-yellow-500 to-yellow-700"
           style="left: -50%; width: 150vw; z-index: -1"
         ></div>
 
         <div class="z-10">
-          <h2 class="font-bold mb-10 text-2xl mb-64">Features</h2>
+          <h2 class="mb-10 mb-64 text-2xl font-bold">Features</h2>
         </div>
       </div>
 
-      <h2 class="font-bold mb-10 text-2xl border-b">CodeSandbox example</h2> -->
+      <h2 class="mb-10 text-2xl font-bold border-b">CodeSandbox example</h2> -->
       <!-- <iframe
         class="border-r border-black"
         src="https://codesandbox.io/embed/ssgo-0ee26?fontsize=14&hidenavigation=1&module=%2Fcreators%2Findex.ts&theme=dark"

@@ -238,23 +238,29 @@ function addStaticToBundle(
         const tempAbs = writeTempFileWithContentOf(staticFile.path)
 
         // @ts-ignore
-        const [diag, emit] = await Deno.bundle(tempAbs, undefined, {
-          lib: ["dom", "esnext", "deno.ns"],
-          allowJs: true,
+        const { diagnostics, files } = await Deno.emit(tempAbs, undefined, {
+          bundle: "esm",
+          compilerOptions: { lib: ["dom", "esnext", "deno.ns"], allowJs: true },
         })
         Deno.remove(tempAbs)
 
-        if (!diag) {
-          Deno.writeTextFileSync(destAbs, emit)
+        if (!diagnostics || diagnostics.length === 0) {
+          const bundle = files["deno:///bundle.js"]
+          Deno.writeTextFileSync(destAbs, bundle)
+
           resolve({
             destRel,
-            result: emit,
+            result: bundle,
           })
         } else {
           log.error(
-            `Error when calling Deno.bundle on ${getRel(staticFile.path)}:`
+            `Error when bundling ${getRel(staticFile.path)}: ${JSON.stringify(
+              diagnostics[0].messageText,
+              null,
+              1
+            )}`
           )
-          throw new Error(JSON.stringify(diag, null, 1))
+          Deno.exit(1)
         }
       })
     )
