@@ -105,7 +105,7 @@ function computeForOf(
     const parent = "body" in node.parent ? node.parent.body : node.parent;
 
     let index = evaluatedOf.length - 1;
-    for (const item of evaluatedOf.reverse()) {
+    for (const item of [...evaluatedOf].reverse()) {
       const clone: INode = cloneDeep(node);
       clone.parent = node.parent;
       pushBefore(parent as INode[], node, clone);

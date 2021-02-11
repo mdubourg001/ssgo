@@ -45,4 +45,12 @@ Deno.test("for/of attribute should be properly computed", async () => {
     ),
     "<div><p>0 - foo - false</p><p>1 - bar - true</p></div>"
   )
+
+  // values are not mutated
+  const items = ["foo", "bar"]
+  await buildHtmlAndSerialize(
+    `<p for="item" of="items">{{ item }}</p>`,
+    { items }
+  )
+  assertEquals(items, ["foo", "bar"])
 })
