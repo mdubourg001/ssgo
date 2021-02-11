@@ -2,7 +2,7 @@
 title: API
 description: Here's the reference of JavaScript (TypeScript) ssgo API. Keep in mind that ssgo is built upon Deno, so the API intend to be used only from Deno scripts.
 path: api
-weight: 6
+weight: 5
 ---
 
 # API
