@@ -45,7 +45,7 @@ export const STATIC_DIR_BASE = "static"
 export const DIST_DIR_BASE = "dist"
 export const DIST_STATIC_BASE = "static"
 
-export const CWD = FLAGS[CWD_OPTION]
+export let CWD = FLAGS[CWD_OPTION]
   ? isPathAbsolute(FLAGS[CWD_OPTION])
     ? FLAGS[CWD_OPTION]
     : normalize(`${Deno.cwd()}/${FLAGS[CWD_OPTION]}/`)
@@ -58,16 +58,20 @@ export let COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`)
 export let DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`)
 export let DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`)
 
-// export function setSsgoDir(path: string) {
-//   Deno.chdir(path);
+/**
+ * Used in tests context to change ssgo project directory at runtime
+ */
+export function setSsgoDir(path: string) {
+  Deno.chdir(path)
+  CWD = path
 
-//   CREATORS_DIR_ABS = normalize(`${CWD}/${CREATORS_DIR_BASE}/`);
-//   TEMPLATES_DIR_ABS = normalize(`${CWD}/${TEMPLATES_DIR_BASE}/`);
-//   STATIC_DIR_ABS = normalize(`${CWD}/${STATIC_DIR_BASE}/`);
-//   COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`);
-//   DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`);
-//   DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`);
-// }
+  CREATORS_DIR_ABS = normalize(`${CWD}/${CREATORS_DIR_BASE}/`)
+  TEMPLATES_DIR_ABS = normalize(`${CWD}/${TEMPLATES_DIR_BASE}/`)
+  STATIC_DIR_ABS = normalize(`${CWD}/${STATIC_DIR_BASE}/`)
+  COMPONENTS_DIR_ABS = normalize(`${CWD}/${COMPONENTS_DIR_BASE}/`)
+  DIST_DIR_ABS = normalize(`${CWD}/${DIST_DIR_BASE}/`)
+  DIST_STATIC_ABS = normalize(`${DIST_DIR_ABS}/${DIST_STATIC_BASE}/`)
+}
 
 export function setVerbosity(verbosity: number) {
   VERBOSITY = verbosity

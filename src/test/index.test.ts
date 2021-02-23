@@ -1,19 +1,16 @@
 import { assertEquals } from "https://deno.land/std@0.84.0/testing/asserts.ts"
-import { join, resolve } from "https://deno.land/std@0.84.0/path/mod.ts"
+import { join } from "https://deno.land/std@0.84.0/path/mod.ts"
 import { existsSync } from "https://deno.land/std@0.84.0/fs/mod.ts"
 
 import {
   COMPONENTS_DIR_ABS,
-  COMPONENTS_DIR_BASE,
   CREATORS_DIR_ABS,
   CREATORS_DIR_BASE,
-  DIST_DIR_ABS,
   STATIC_DIR_ABS,
-  STATIC_DIR_BASE,
   TEMPLATES_DIR_ABS,
   TEMPLATES_DIR_BASE,
 } from "../constants.ts"
-import { build, init } from "../index.ts"
+import { init } from "../index.ts"
 import { getTestEnv } from "./helpers.ts"
 
 // -----
@@ -24,6 +21,7 @@ Deno.test(
   "`ssgo init` in an empty dir should initialize a project",
   async () => {
     getTestEnv({})
+
     await init()
 
     assertEquals(existsSync(CREATORS_DIR_ABS), true)

@@ -82,6 +82,7 @@ export default async (
             title: metadata.title,
             description: metadata.description,
             md: doc.path.replace("md/", ""),
+            filename: doc.name,
             content: parsed,
             sidebarEntries: sidebarEntries,
             isDocs: true,
