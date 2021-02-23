@@ -1,4 +1,4 @@
-import { assertEquals } from "https://deno.land/std@0.84.0/testing/asserts.ts"
+import { assertEquals } from "https://deno.land/std@0.88.0/testing/asserts.ts"
 
 import { buildHtmlAndSerialize } from "./utils.ts"
 
@@ -48,9 +48,8 @@ Deno.test("for/of attribute should be properly computed", async () => {
 
   // values are not mutated
   const items = ["foo", "bar"]
-  await buildHtmlAndSerialize(
-    `<p for="item" of="items">{{ item }}</p>`,
-    { items }
-  )
+  await buildHtmlAndSerialize(`<p for="item" of="items">{{ item }}</p>`, {
+    items,
+  })
   assertEquals(items, ["foo", "bar"])
 })

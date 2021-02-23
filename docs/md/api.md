@@ -19,7 +19,7 @@ Given the path of a template file and some context data, builds the HTML and ret
 
 ```typescript
 import { buildTemplateToString } from "https://deno.land/x/ssgo/mod.ts"
-import * as path from "https://deno.land/std@0.84.0/path/mod.ts"
+import * as path from "https://deno.land/std@0.88.0/path/mod.ts"
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url))
 const template = `${__dirname}/template.html`

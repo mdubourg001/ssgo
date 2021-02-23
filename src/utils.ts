@@ -1,11 +1,11 @@
 import tosource from "https://cdn.skypack.dev/tosource"
-import { parse } from "https://deno.land/std@0.84.0/flags/mod.ts"
+import { parse } from "https://deno.land/std@0.88.0/flags/mod.ts"
 import {
   blue,
   green,
   red,
   yellow,
-} from "https://deno.land/std@0.84.0/fmt/colors.ts"
+} from "https://deno.land/std@0.88.0/fmt/colors.ts"
 import {
   basename,
   common,
@@ -15,12 +15,12 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.84.0/path/mod.ts"
+} from "https://deno.land/std@0.88.0/path/mod.ts"
 import {
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.84.0/fs/mod.ts"
+} from "https://deno.land/std@0.88.0/fs/mod.ts"
 
 import type {
   IBuildPageOptions,
