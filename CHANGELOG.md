@@ -2,6 +2,11 @@
 
 _This page is updated automatically for every new release._
 
+## v0.19.2 (2021-02-23)
+
+- a62636c chore: bumped to std@0.88.0 (deno v1.7.5)
+- cba5df1 chore: updated Deno.bundle calls to new Deno.emit API
+
 ## v0.19.1 (2021-01-25)
 
 - 76e84ea chore: bumped to std@0.88.0 (deno v1.7.0)
@@ -74,3 +79,4 @@ _This page is updated automatically for every new release._
 - 086cb12 feat: serve dist/ directory on dev mode
 - 62a4bb6 chore: set up of automatic changelog generation on release
 - 072548b chore: fixed egg.json config
+
