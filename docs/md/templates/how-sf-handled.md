@@ -1,6 +1,6 @@
 ---
 title: Static files resolution
-description: ssgo provides a simple way to use static ressources (like images, stylesheets, scripts...) inside of your templates and components. To be able to use static ressources, add them to the 'static/' directory.
+description: ssgo provides a simple way to use static resources (like images, stylesheets, scripts...) inside of your templates and components. To be able to use static resources, add them to the 'static/' directory.
 path: static-files-resolution
 weight: 6
 category: Templates
@@ -8,7 +8,7 @@ category: Templates
 
 # Static files resolution
 
-`ssgo` provides a simple way to use static ressources (like images, stylesheets, scripts...) inside of your templates and components. To be able to use static ressources, **add them to the `static/` directory at the root of your project**. Then you can simply reference them from any template or component using common html attributes pointing to your static ressource in the form of **a path relative to the root of the `static/` directory**.
+`ssgo` provides a simple way to use static resources (like images, stylesheets, scripts...) inside of your templates and components. To be able to use static resources, **add them to the `static/` directory at the root of your project**. Then you can simply reference them from any template or component using common html attributes pointing to your static resource in the form of **a path relative to the root of the `static/` directory**.
 
 For example, let's say you want to use an image in one of your templates:
 
@@ -17,7 +17,7 @@ For example, let's say you want to use an image in one of your templates:
 <img src="path/to/my/image.jpg" alt="Cake" />
 ```
 
-When building, `ssgo` will automatically detect that this `src` attribute leads to an existing static ressources into the `static/` directory, and will copy it to the `dist/static/` directory, **keeping the sub-directory structure**. When built, we will have:
+When building, `ssgo` will automatically detect that this `src` attribute leads to an existing static resource in the `static/` directory, and will copy it to the `dist/static/` directory, **keeping the sub-directory structure**. When built, we will have:
 
 ```html
 <img src="/static/path/to/my/image.jpg" alt="Cake" />
