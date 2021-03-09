@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.19.3 (2021-03-09)
+
+- abc8e2e fix: static files compilation + automatic cleaning for prod builds
+
 ## v0.19.2 (2021-02-23)
 
 - a62636c chore: bumped to std@0.88.0 (deno v1.7.5)
