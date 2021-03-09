@@ -1,7 +1,7 @@
 import { resolve } from "https://deno.land/std@0.88.0/path/mod.ts"
 import { log } from "./src/utils.ts"
 
-const VERSION = "0.19.2"
+const VERSION = "0.19.3"
 
 function hasBumpFlag() {
   return (

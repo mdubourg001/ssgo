@@ -238,7 +238,7 @@ function addStaticToBundle(
         const tempAbs = writeTempFileWithContentOf(staticFile.path)
 
         // @ts-ignore
-        const { diagnostics, files } = await Deno.emit(tempAbs, undefined, {
+        const { diagnostics, files } = await Deno.emit(tempAbs, {
           bundle: "esm",
           compilerOptions: { lib: ["dom", "esnext", "deno.ns"], allowJs: true },
         })

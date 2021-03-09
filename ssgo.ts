@@ -69,7 +69,7 @@ switch (true) {
   // build only
 
   case FLAGS["_"].includes(BUILD_FLAG) || FLAGS["_"].length === 0:
-    build(clean).then(() => {
+    build(true).then(() => {
       sitemap(FLAGS[SITEMAP_OPTION])
 
       log.success(`Project built in ${getSecondsFrom(t0)} seconds.`)
