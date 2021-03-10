@@ -1,5 +1,5 @@
-import { parse } from "https://deno.land/std@0.88.0/flags/mod.ts"
-import { normalize } from "https://deno.land/std@0.88.0/path/mod.ts"
+import { parse } from "https://deno.land/std@0.90.0/flags/mod.ts"
+import { normalize } from "https://deno.land/std@0.90.0/path/mod.ts"
 
 import { isPathAbsolute } from "./utils.ts"
 

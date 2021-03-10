@@ -5,7 +5,7 @@ import {
   send,
 } from "https://deno.land/x/oak@v6.3.2/mod.ts"
 
-import type { WebSocket } from "https://deno.land/std@0.88.0/ws/mod.ts"
+import type { WebSocket } from "https://deno.land/std@0.90.0/ws/mod.ts"
 import {
   copySync,
   emptyDirSync,
@@ -13,7 +13,7 @@ import {
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.88.0/fs/mod.ts"
+} from "https://deno.land/std@0.90.0/fs/mod.ts"
 import {
   basename,
   common,
@@ -22,7 +22,7 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.88.0/path/mod.ts"
+} from "https://deno.land/std@0.90.0/path/mod.ts"
 
 import {
   BUILDABLE_STATIC_EXT,
