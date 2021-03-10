@@ -92,12 +92,9 @@ export default async function (buildPage: BuildPage) {
   const title = await fetchTitle()
 
   buildPage(
-    "my-template.html",
-    { title: title },
-    {
-      filename: "index.html",
-      dir: "",
-    }
+    "my-template.html" // template to use to build the page,
+    { title: title } // data to use to build the page,
+    { filename: "index.html", dir: "" } // build options
   )
 }
 ```
