@@ -3,17 +3,16 @@ import {
   Application,
   Context,
   send,
-} from "https://deno.land/x/oak@v6.3.2/mod.ts"
+} from "https://deno.land/x/oak@v9.0.1/mod.ts"
 
-import type { WebSocket } from "https://deno.land/std@0.90.0/ws/mod.ts"
+import { copySync } from "https://deno.land/std@0.118.0/fs/copy.ts"
 import {
-  copySync,
   emptyDirSync,
   ensureDirSync,
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.90.0/fs/mod.ts"
+} from "https://deno.land/std@0.118.0/fs/mod.ts"
 import {
   basename,
   common,
@@ -22,7 +21,7 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.90.0/path/mod.ts"
+} from "https://deno.land/std@0.118.0/path/mod.ts"
 
 import {
   BUILDABLE_STATIC_EXT,
@@ -239,7 +238,7 @@ function addStaticToBundle(
 
         // @ts-ignore
         const { diagnostics, files } = await Deno.emit(tempAbs, {
-          bundle: "esm",
+          bundle: "module",
           compilerOptions: { lib: ["dom", "esnext", "deno.ns"], allowJs: true },
         })
         Deno.remove(tempAbs)
@@ -513,14 +512,18 @@ export async function build(clean = false) {
 /**
  * Watch project files for change
  */
-export async function watch(listeners: Array<WebSocket>) {
+export async function watch(listeners: Array<[WebSocket, string]>) {
   // https://github.com/Caesar2011/rhinoder/blob/master/mod.ts
   let timeout: number | null = null
 
   // notify listening websockets that dist/ changed
   function notifyListeners() {
     for (let listener of listeners) {
-      if (!listener.isClosed) listener.send(WS_HOT_RELOAD_KEY)
+      const ws = listener[0]
+
+      if (ws.readyState === 1) {
+        ws.send(WS_HOT_RELOAD_KEY)
+      }
     }
   }
 
@@ -628,7 +631,7 @@ export async function watch(listeners: Array<WebSocket>) {
 /**
  * Serve the bundle locally
  */
-export async function serve(listeners: Array<WebSocket> = []) {
+export async function serve(listeners: Array<[WebSocket, string]> = []) {
   if (!existsSync(`${CWD}/${DIST_DIR_BASE}`)) {
     log.error(
       `Can't serve from '${CWD}/${DIST_DIR_BASE}': directory does not exists. Try running a build first (ssgo build).`
@@ -644,15 +647,13 @@ export async function serve(listeners: Array<WebSocket> = []) {
       if (context.request.url.pathname === "/__ws" && context.isUpgradable) {
         const sock = await context.upgrade()
         const index = listeners.findIndex(
-          (l) =>
-            (l.conn.remoteAddr as any).hostname ===
-            (sock.conn.remoteAddr as any).hostname
+          (listener) => listener[1] === context.request.ip
         )
 
         if (index === -1) {
-          listeners.push(sock)
+          listeners.push([sock, context.request.ip])
         } else {
-          listeners[index] = sock
+          listeners[index] = [sock, context.request.ip]
         }
       } // handling files requests
       else {

@@ -1,3 +1,4 @@
 example-project/
 .vscode/
 .DS_Store
+.ssgo-test

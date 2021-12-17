@@ -1,9 +1,9 @@
-import { normalize } from "https://deno.land/std@0.90.0/path/mod.ts"
+import { normalize } from "https://deno.land/std@0.118.0/path/mod.ts"
 import {
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.90.0/fs/mod.ts"
+} from "https://deno.land/std@0.118.0/fs/mod.ts"
 
 import { IContextData } from "./types.ts"
 import { buildPage } from "./index.ts"

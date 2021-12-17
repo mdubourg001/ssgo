@@ -1,5 +1,4 @@
-import { parse } from "https://deno.land/std@0.90.0/flags/mod.ts"
-import type { WebSocket } from "https://deno.land/std@0.90.0/ws/mod.ts"
+import { parse } from "https://deno.land/std@0.118.0/flags/mod.ts"
 
 import { build, init, serve, sitemap, upgrade, watch } from "./src/index.ts"
 import {
@@ -53,7 +52,8 @@ switch (true) {
     build(clean).then(() => {
       log.success(`Project started in ${getSecondsFrom(t0)} seconds.`)
 
-      const listeners: Array<WebSocket> = []
+      // pairs of [WebSockets, IP address]
+      const listeners: Array<[WebSocket, string]> = []
 
       serve(listeners)
       watch(listeners)

@@ -1,11 +1,11 @@
 import tosource from "https://cdn.skypack.dev/tosource"
-import { parse } from "https://deno.land/std@0.90.0/flags/mod.ts"
+import { parse } from "https://deno.land/std@0.118.0/flags/mod.ts"
 import {
   blue,
   green,
   red,
   yellow,
-} from "https://deno.land/std@0.90.0/fmt/colors.ts"
+} from "https://deno.land/std@0.118.0/fmt/colors.ts"
 import {
   basename,
   common,
@@ -15,12 +15,12 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.90.0/path/mod.ts"
+} from "https://deno.land/std@0.118.0/path/mod.ts"
 import {
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.90.0/fs/mod.ts"
+} from "https://deno.land/std@0.118.0/fs/mod.ts"
 
 import type {
   IBuildPageOptions,
@@ -321,9 +321,9 @@ export async function importModule(moduleAbs: string) {
  * Clean the temp files left in project
  */
 export function cleanTempFiles() {
-  const tempFiles: WalkEntry[] = Array.from(
-    walkSync(CWD)
-  ).filter((file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX))
+  const tempFiles: WalkEntry[] = Array.from(walkSync(CWD)).filter(
+    (file: WalkEntry) => file.name.startsWith(TEMP_FILES_PREFIX)
+  )
 
   for (const file of tempFiles) {
     Deno.removeSync(file.path, { recursive: true })
