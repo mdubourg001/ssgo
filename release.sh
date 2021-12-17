@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -e
+
 previous_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION = "//' |sed 's/"//' |sed 's/;//')
 vr bump-version $1
 new_version=$(head version.ts|grep 'const VERSION' | sed 's/const VERSION = "//' |sed 's/"//' |sed 's/;//')

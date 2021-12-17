@@ -2,9 +2,11 @@
 
 _This page is updated automatically for every new release._
 
-## v0.19.3 (2021-12-17)
+## v0.20.0 (2021-12-17)
 
-
+- 8f7d748 chore: upgraded to std@0.118 + upgraded to oak@9.1
+- 4e83355 chore: updated README.md
+- 6d1ba51 chore: bumped to std@0.90.0
 
 ## v0.19.3 (2021-03-09)
 
