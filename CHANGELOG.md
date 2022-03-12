@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.20.1 (2022-03-12)
+
+- 3180195 chore: upgraded to std@0.129
+
 ## v0.20.0 (2021-12-17)
 
 - 8f7d748 chore: upgraded to std@0.118 + upgraded to oak@9.1
