@@ -1,6 +1,6 @@
-import { assertEquals } from "https://deno.land/std@0.118.0/testing/asserts.ts"
-import { join } from "https://deno.land/std@0.118.0/path/mod.ts"
-import { existsSync } from "https://deno.land/std@0.118.0/fs/mod.ts"
+import { assertEquals } from "https://deno.land/std@0.129.0/testing/asserts.ts"
+import { join } from "https://deno.land/std@0.129.0/path/mod.ts"
+import { existsSync } from "https://deno.land/std@0.129.0/fs/mod.ts"
 
 import {
   COMPONENTS_DIR_ABS,

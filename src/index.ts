@@ -5,14 +5,14 @@ import {
   send,
 } from "https://deno.land/x/oak@v9.0.1/mod.ts"
 
-import { copySync } from "https://deno.land/std@0.118.0/fs/copy.ts"
+import { copySync } from "https://deno.land/std@0.129.0/fs/copy.ts"
 import {
   emptyDirSync,
   ensureDirSync,
   existsSync,
   WalkEntry,
   walkSync,
-} from "https://deno.land/std@0.118.0/fs/mod.ts"
+} from "https://deno.land/std@0.129.0/fs/mod.ts"
 import {
   basename,
   common,
@@ -21,7 +21,7 @@ import {
   posix,
   relative,
   resolve,
-} from "https://deno.land/std@0.118.0/path/mod.ts"
+} from "https://deno.land/std@0.129.0/path/mod.ts"
 
 import {
   BUILDABLE_STATIC_EXT,

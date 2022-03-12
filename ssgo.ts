@@ -1,4 +1,4 @@
-import { parse } from "https://deno.land/std@0.118.0/flags/mod.ts"
+import { parse } from "https://deno.land/std@0.129.0/flags/mod.ts"
 
 import { build, init, serve, sitemap, upgrade, watch } from "./src/index.ts"
 import {
