@@ -335,10 +335,18 @@ export function serialize(node: INode) {
   } else if (node.type === "Tag") {
     const attributes = formatAttributes(node.attributes)
     result += `<${node.rawName}${attributes.length > 0 ? " " + attributes : ""}`
-    if (node.close === null) return result + "/>"
-    else result += ">"
 
-    for (let child of node.body || []) result += serialize(child)
+    if (node.rawName.toLowerCase() === "!doctype") {
+      return result + ">"
+    } else if (node.close === null) {
+      return result + "/>"
+    } else {
+      result += ">"
+    }
+
+    for (let child of node.body || []) {
+      result += serialize(child)
+    }
 
     result += node.close?.value
   }

@@ -22,7 +22,7 @@ $(git log --pretty=oneline --abbrev-commit v$previous_version..v$new_version| gr
 $(tail -n +4 CHANGELOG.md)
 " > CHANGELOG.md
 
-eggs publish --version $new_version --no-check
+#eggs publish --version $new_version --no-check
 
 git add CHANGELOG.md egg.json
 git commit -m "release: v$new_version"
