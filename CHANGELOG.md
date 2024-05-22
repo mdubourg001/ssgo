@@ -2,6 +2,10 @@
 
 _This page is updated automatically for every new release._
 
+## v0.20.2 (2024-05-22)
+
+- 9568aa8 fix: prevent autoclosing tag on doctype tag
+
 ## v0.20.1 (2022-03-12)
 
 - 3180195 chore: upgraded to std@0.129
